@@ -1,4 +1,5 @@
 #pragma once
+#include "MainForm.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -37,7 +38,8 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Label^ label1;
 	protected:
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ f_enter_login;
+
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::TextBox^ textBox1;
 	private: System::Windows::Forms::TextBox^ textBox2;
@@ -60,7 +62,7 @@ namespace UVNControlSystem2v6 {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(LoginForm::typeid));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->f_enter_login = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
@@ -74,7 +76,7 @@ namespace UVNControlSystem2v6 {
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label1->Location = System::Drawing::Point(12, 56);
+			this->label1->Location = System::Drawing::Point(12, 53);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(54, 21);
 			this->label1->TabIndex = 0;
@@ -91,16 +93,17 @@ namespace UVNControlSystem2v6 {
 			this->label2->TabIndex = 1;
 			this->label2->Text = L"Пароль";
 			// 
-			// button1
+			// f_enter_login
 			// 
-			this->button1->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_enter_login->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button1->Location = System::Drawing::Point(12, 140);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(86, 27);
-			this->button1->TabIndex = 2;
-			this->button1->Text = L"Войти";
-			this->button1->UseVisualStyleBackColor = true;
+			this->f_enter_login->Location = System::Drawing::Point(12, 140);
+			this->f_enter_login->Name = L"f_enter_login";
+			this->f_enter_login->Size = System::Drawing::Size(86, 27);
+			this->f_enter_login->TabIndex = 2;
+			this->f_enter_login->Text = L"Войти";
+			this->f_enter_login->UseVisualStyleBackColor = true;
+			this->f_enter_login->Click += gcnew System::EventHandler(this, &LoginForm::f_enter_login_Click);
 			// 
 			// button2
 			// 
@@ -115,16 +118,16 @@ namespace UVNControlSystem2v6 {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(90, 56);
+			this->textBox1->Location = System::Drawing::Point(81, 56);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(148, 20);
+			this->textBox1->Size = System::Drawing::Size(176, 20);
 			this->textBox1->TabIndex = 4;
 			// 
 			// textBox2
 			// 
-			this->textBox2->Location = System::Drawing::Point(90, 97);
+			this->textBox2->Location = System::Drawing::Point(81, 95);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(148, 20);
+			this->textBox2->Size = System::Drawing::Size(176, 20);
 			this->textBox2->TabIndex = 5;
 			// 
 			// label3
@@ -159,11 +162,13 @@ namespace UVNControlSystem2v6 {
 			this->Controls->Add(this->textBox2);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button2);
-			this->Controls->Add(this->button1);
+			this->Controls->Add(this->f_enter_login);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"LoginForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"UVN Control System 2.0";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
@@ -171,5 +176,13 @@ namespace UVNControlSystem2v6 {
 
 		}
 #pragma endregion
-	};
+
+	private: System::Void f_enter_login_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		MainForm^ form = gcnew MainForm();
+		form->Show();
+		LoginForm::Hide();
+
+	}
+};
 }
