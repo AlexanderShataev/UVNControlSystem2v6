@@ -41,8 +41,10 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Button^ f_enter_login;
 
 	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::TextBox^ textBox1;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ f_textbox_log;
+	private: System::Windows::Forms::TextBox^ f_textbox_pas;
+
+
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 
@@ -64,8 +66,8 @@ namespace UVNControlSystem2v6 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->f_enter_login = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_log = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_pas = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
@@ -116,19 +118,19 @@ namespace UVNControlSystem2v6 {
 			this->button2->Text = L"Закрыть";
 			this->button2->UseVisualStyleBackColor = true;
 			// 
-			// textBox1
+			// f_textbox_log
 			// 
-			this->textBox1->Location = System::Drawing::Point(81, 56);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(176, 20);
-			this->textBox1->TabIndex = 4;
+			this->f_textbox_log->Location = System::Drawing::Point(81, 56);
+			this->f_textbox_log->Name = L"f_textbox_log";
+			this->f_textbox_log->Size = System::Drawing::Size(176, 20);
+			this->f_textbox_log->TabIndex = 4;
 			// 
-			// textBox2
+			// f_textbox_pas
 			// 
-			this->textBox2->Location = System::Drawing::Point(81, 95);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(176, 20);
-			this->textBox2->TabIndex = 5;
+			this->f_textbox_pas->Location = System::Drawing::Point(81, 95);
+			this->f_textbox_pas->Name = L"f_textbox_pas";
+			this->f_textbox_pas->Size = System::Drawing::Size(176, 20);
+			this->f_textbox_pas->TabIndex = 5;
 			// 
 			// label3
 			// 
@@ -159,8 +161,8 @@ namespace UVNControlSystem2v6 {
 			this->ClientSize = System::Drawing::Size(269, 175);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->label3);
-			this->Controls->Add(this->textBox2);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->f_textbox_pas);
+			this->Controls->Add(this->f_textbox_log);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->f_enter_login);
 			this->Controls->Add(this->label2);
@@ -177,11 +179,52 @@ namespace UVNControlSystem2v6 {
 		}
 #pragma endregion
 
+		void authentification(String^ login, String^ password) {
+
+			if (login == "" && password == "") {  // потом добавить данные
+
+				MainForm^ form = gcnew MainForm();
+				form->Show();
+				LoginForm::Hide();
+
+			}
+
+			else if (login == "student" && password == "1234") {  
+
+				MainForm^ form = gcnew MainForm();
+				form->Show();
+				LoginForm::Hide();
+
+			}
+
+			else if (login == "demo" && password == "") {
+
+				MainForm^ form = gcnew MainForm();
+				form->Show();
+				LoginForm::Hide();
+
+			}
+
+			else MessageBox:: Show("Введите корректные данные еще раз", "UVN Control System 2.0", MessageBoxButtons::OK, MessageBoxIcon::Exclamation);
+
+	
+
+
+	}
+
 	private: System::Void f_enter_login_Click(System::Object^ sender, System::EventArgs^ e) {
 
-		MainForm^ form = gcnew MainForm();
-		form->Show();
-		LoginForm::Hide();
+		//MainForm^ form = gcnew MainForm();
+		//form->Show();
+		//LoginForm::Hide();
+		String^ login;
+		String^ password;
+
+		login = this->f_textbox_log->Text;
+
+		password = this->f_textbox_pas->Text;
+
+		authentification (login, password);
 
 	}
 };

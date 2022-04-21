@@ -177,6 +177,7 @@ private: System::Windows::Forms::Button^ f_button_auto_mode_flap_start;
 
 
 private: System::Windows::Forms::ProgressBar^ progressBar_flap;
+private: System::Windows::Forms::Button^ f_button_exit;
 
 
 
@@ -344,6 +345,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label60 = (gcnew System::Windows::Forms::Label());
 			this->button17 = (gcnew System::Windows::Forms::Button());
+			this->f_button_exit = (gcnew System::Windows::Forms::Button());
 			this->menuStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
 			this->panel5->SuspendLayout();
@@ -450,9 +452,9 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->panel5->Controls->Add(this->groupBox8);
 			this->panel5->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel5->Location = System::Drawing::Point(0, 616);
+			this->panel5->Location = System::Drawing::Point(0, 624);
 			this->panel5->Name = L"panel5";
-			this->panel5->Size = System::Drawing::Size(334, 251);
+			this->panel5->Size = System::Drawing::Size(334, 243);
 			this->panel5->TabIndex = 21;
 			// 
 			// groupBox8
@@ -472,11 +474,11 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox8->Controls->Add(this->button15);
 			this->groupBox8->Controls->Add(this->textBox3);
 			this->groupBox8->Controls->Add(this->label56);
-			this->groupBox8->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->groupBox8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox8->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox8->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox8->Location = System::Drawing::Point(12, 15);
+			this->groupBox8->Location = System::Drawing::Point(12, 7);
 			this->groupBox8->Name = L"groupBox8";
 			this->groupBox8->Size = System::Drawing::Size(258, 233);
 			this->groupBox8->TabIndex = 20;
@@ -489,7 +491,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label59->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label59->ForeColor = System::Drawing::Color::DarkBlue;
-			this->label59->Location = System::Drawing::Point(12, 162);
+			this->label59->Location = System::Drawing::Point(6, 162);
 			this->label59->Name = L"label59";
 			this->label59->Size = System::Drawing::Size(35, 26);
 			this->label59->TabIndex = 30;
@@ -501,7 +503,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label58->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label58->ForeColor = System::Drawing::Color::Crimson;
-			this->label58->Location = System::Drawing::Point(12, 195);
+			this->label58->Location = System::Drawing::Point(6, 197);
 			this->label58->Name = L"label58";
 			this->label58->Size = System::Drawing::Size(27, 26);
 			this->label58->TabIndex = 29;
@@ -511,7 +513,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->textBox6->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox6->Location = System::Drawing::Point(53, 159);
+			this->textBox6->Location = System::Drawing::Point(41, 162);
 			this->textBox6->Name = L"textBox6";
 			this->textBox6->Size = System::Drawing::Size(63, 29);
 			this->textBox6->TabIndex = 28;
@@ -521,6 +523,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button16
 			// 
 			this->button16->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button16->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button16->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button16->Location = System::Drawing::Point(120, 159);
@@ -536,7 +539,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->radioButton2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->radioButton2->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->radioButton2->Location = System::Drawing::Point(7, 114);
+			this->radioButton2->Location = System::Drawing::Point(6, 111);
 			this->radioButton2->Name = L"radioButton2";
 			this->radioButton2->Size = System::Drawing::Size(194, 23);
 			this->radioButton2->TabIndex = 26;
@@ -550,7 +553,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->radioButton1->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->radioButton1->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->radioButton1->Location = System::Drawing::Point(6, 135);
+			this->radioButton1->Location = System::Drawing::Point(6, 133);
 			this->radioButton1->Name = L"radioButton1";
 			this->radioButton1->Size = System::Drawing::Size(185, 23);
 			this->radioButton1->TabIndex = 25;
@@ -575,7 +578,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->textBox5->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->textBox5->ForeColor = System::Drawing::Color::Crimson;
-			this->textBox5->Location = System::Drawing::Point(128, 53);
+			this->textBox5->Location = System::Drawing::Point(125, 57);
 			this->textBox5->Name = L"textBox5";
 			this->textBox5->Size = System::Drawing::Size(77, 31);
 			this->textBox5->TabIndex = 23;
@@ -599,7 +602,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->textBox4->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->textBox4->ForeColor = System::Drawing::Color::MidnightBlue;
-			this->textBox4->Location = System::Drawing::Point(128, 18);
+			this->textBox4->Location = System::Drawing::Point(125, 21);
 			this->textBox4->Name = L"textBox4";
 			this->textBox4->Size = System::Drawing::Size(77, 31);
 			this->textBox4->TabIndex = 21;
@@ -612,7 +615,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label57->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label57->ForeColor = System::Drawing::Color::MediumBlue;
-			this->label57->Location = System::Drawing::Point(211, 21);
+			this->label57->Location = System::Drawing::Point(211, 24);
 			this->label57->Name = L"label57";
 			this->label57->Size = System::Drawing::Size(20, 23);
 			this->label57->TabIndex = 20;
@@ -622,10 +625,10 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->label53->AutoSize = true;
 			this->label53->BackColor = System::Drawing::Color::White;
-			this->label53->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label53->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label53->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label53->Location = System::Drawing::Point(51, 90);
+			this->label53->Location = System::Drawing::Point(30, 91);
 			this->label53->Name = L"label53";
 			this->label53->Size = System::Drawing::Size(180, 23);
 			this->label53->TabIndex = 19;
@@ -634,10 +637,11 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button15
 			// 
 			this->button15->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button15->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button15->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button15->ForeColor = System::Drawing::Color::Crimson;
-			this->button15->Location = System::Drawing::Point(119, 197);
+			this->button15->Location = System::Drawing::Point(119, 198);
 			this->button15->Name = L"button15";
 			this->button15->Size = System::Drawing::Size(126, 29);
 			this->button15->TabIndex = 18;
@@ -648,7 +652,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->textBox3->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox3->Location = System::Drawing::Point(53, 197);
+			this->textBox3->Location = System::Drawing::Point(41, 197);
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(63, 29);
 			this->textBox3->TabIndex = 17;
@@ -661,7 +665,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label56->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label56->ForeColor = System::Drawing::Color::MediumBlue;
-			this->label56->Location = System::Drawing::Point(12, 24);
+			this->label56->Location = System::Drawing::Point(8, 24);
 			this->label56->Name = L"label56";
 			this->label56->Size = System::Drawing::Size(111, 23);
 			this->label56->TabIndex = 11;
@@ -687,7 +691,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox7->Controls->Add(this->label44);
 			this->groupBox7->Controls->Add(this->label45);
 			this->groupBox7->Controls->Add(this->label46);
-			this->groupBox7->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->groupBox7->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox7->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox7->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -702,6 +706,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button11->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button11->Enabled = false;
+			this->button11->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button11->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button11->Location = System::Drawing::Point(120, 254);
@@ -715,6 +720,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button12->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button12->Enabled = false;
+			this->button12->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button12->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button12->Location = System::Drawing::Point(120, 222);
@@ -728,6 +734,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button13->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button13->Enabled = false;
+			this->button13->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button13->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button13->Location = System::Drawing::Point(6, 254);
@@ -741,7 +748,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->label52->AutoSize = true;
 			this->label52->BackColor = System::Drawing::Color::White;
-			this->label52->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label52->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label52->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label52->Location = System::Drawing::Point(49, 193);
@@ -753,6 +760,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button14
 			// 
 			this->button14->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button14->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button14->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button14->Location = System::Drawing::Point(6, 222);
@@ -777,12 +785,12 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label49
 			// 
 			this->label49->AutoSize = true;
-			this->label49->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label49->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label49->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->label49->ForeColor = System::Drawing::Color::Black;
 			this->label49->Location = System::Drawing::Point(81, 176);
 			this->label49->Name = L"label49";
-			this->label49->Size = System::Drawing::Size(75, 17);
+			this->label49->Size = System::Drawing::Size(78, 18);
 			this->label49->TabIndex = 26;
 			this->label49->Text = L"(сигнал au)";
 			// 
@@ -814,6 +822,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button10->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button10->Enabled = false;
+			this->button10->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button10->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button10->Location = System::Drawing::Point(120, 121);
@@ -827,6 +836,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button9->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button9->Enabled = false;
+			this->button9->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button9->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button9->Location = System::Drawing::Point(120, 89);
@@ -840,6 +850,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button8->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button8->Enabled = false;
+			this->button8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button8->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button8->Location = System::Drawing::Point(6, 121);
@@ -865,7 +876,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->label43->AutoSize = true;
 			this->label43->BackColor = System::Drawing::Color::White;
-			this->label43->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label43->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label43->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label43->Location = System::Drawing::Point(49, 63);
@@ -877,6 +888,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button7
 			// 
 			this->button7->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button7->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button7->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button7->Location = System::Drawing::Point(6, 89);
@@ -889,12 +901,12 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label44
 			// 
 			this->label44->AutoSize = true;
-			this->label44->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label44->Font = (gcnew System::Drawing::Font(L"Calibri", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label44->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->label44->ForeColor = System::Drawing::Color::Black;
 			this->label44->Location = System::Drawing::Point(81, 46);
 			this->label44->Name = L"label44";
-			this->label44->Size = System::Drawing::Size(75, 17);
+			this->label44->Size = System::Drawing::Size(78, 18);
 			this->label44->TabIndex = 13;
 			this->label44->Text = L"(сигнал au)";
 			// 
@@ -930,7 +942,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox6->Controls->Add(this->label40);
 			this->groupBox6->Controls->Add(this->label41);
 			this->groupBox6->Controls->Add(this->label42);
-			this->groupBox6->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->groupBox6->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox6->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox6->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -945,7 +957,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->label39->AutoSize = true;
 			this->label39->BackColor = System::Drawing::Color::White;
-			this->label39->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label39->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label39->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label39->Location = System::Drawing::Point(22, 73);
@@ -957,6 +969,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button6
 			// 
 			this->button6->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button6->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button6->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button6->Location = System::Drawing::Point(84, 99);
@@ -970,6 +983,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->textBox2->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
+			this->textBox2->HideSelection = false;
 			this->textBox2->Location = System::Drawing::Point(15, 99);
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(63, 29);
@@ -980,12 +994,12 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label40
 			// 
 			this->label40->AutoSize = true;
-			this->label40->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label40->Font = (gcnew System::Drawing::Font(L"Calibri", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label40->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->label40->ForeColor = System::Drawing::Color::Black;
 			this->label40->Location = System::Drawing::Point(50, 53);
 			this->label40->Name = L"label40";
-			this->label40->Size = System::Drawing::Size(126, 17);
+			this->label40->Size = System::Drawing::Size(123, 17);
 			this->label40->TabIndex = 13;
 			this->label40->Text = L"(открытие клапана)";
 			// 
@@ -1035,6 +1049,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox5->Controls->Add(this->label20);
 			this->groupBox5->Controls->Add(this->label21);
 			this->groupBox5->Controls->Add(this->label19);
+			this->groupBox5->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox5->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox5->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -1048,7 +1063,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label38
 			// 
 			this->label38->AutoSize = true;
-			this->label38->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label38->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label38->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label38->Location = System::Drawing::Point(256, 142);
@@ -1060,7 +1075,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label37
 			// 
 			this->label37->AutoSize = true;
-			this->label37->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label37->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label37->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label37->Location = System::Drawing::Point(199, 142);
@@ -1072,7 +1087,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label36
 			// 
 			this->label36->AutoSize = true;
-			this->label36->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label36->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label36->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label36->Location = System::Drawing::Point(150, 142);
@@ -1084,7 +1099,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label35
 			// 
 			this->label35->AutoSize = true;
-			this->label35->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label35->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label35->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label35->Location = System::Drawing::Point(246, 112);
@@ -1096,7 +1111,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label34
 			// 
 			this->label34->AutoSize = true;
-			this->label34->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label34->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label34->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label34->Location = System::Drawing::Point(246, 83);
@@ -1108,7 +1123,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label33
 			// 
 			this->label33->AutoSize = true;
-			this->label33->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label33->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label33->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label33->Location = System::Drawing::Point(12, 137);
@@ -1120,7 +1135,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label32
 			// 
 			this->label32->AutoSize = true;
-			this->label32->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label32->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label32->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label32->Location = System::Drawing::Point(197, 112);
@@ -1132,7 +1147,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label31
 			// 
 			this->label31->AutoSize = true;
-			this->label31->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label31->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label31->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label31->Location = System::Drawing::Point(145, 112);
@@ -1144,7 +1159,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label30
 			// 
 			this->label30->AutoSize = true;
-			this->label30->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label30->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label30->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label30->Location = System::Drawing::Point(2, 112);
@@ -1156,7 +1171,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label29
 			// 
 			this->label29->AutoSize = true;
-			this->label29->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label29->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label29->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label29->Location = System::Drawing::Point(197, 83);
@@ -1168,7 +1183,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label28
 			// 
 			this->label28->AutoSize = true;
-			this->label28->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label28->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label28->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label28->Location = System::Drawing::Point(145, 83);
@@ -1180,7 +1195,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label27
 			// 
 			this->label27->AutoSize = true;
-			this->label27->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label27->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label27->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label27->Location = System::Drawing::Point(12, 83);
@@ -1192,7 +1207,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label26
 			// 
 			this->label26->AutoSize = true;
-			this->label26->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label26->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label26->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label26->Location = System::Drawing::Point(197, 55);
@@ -1204,7 +1219,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label25
 			// 
 			this->label25->AutoSize = true;
-			this->label25->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label25->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label25->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label25->Location = System::Drawing::Point(197, 25);
@@ -1216,7 +1231,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label24
 			// 
 			this->label24->AutoSize = true;
-			this->label24->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label24->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label24->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label24->Location = System::Drawing::Point(246, 55);
@@ -1228,7 +1243,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label23
 			// 
 			this->label23->AutoSize = true;
-			this->label23->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label23->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label23->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label23->Location = System::Drawing::Point(145, 55);
@@ -1240,7 +1255,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label22
 			// 
 			this->label22->AutoSize = true;
-			this->label22->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label22->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label22->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label22->Location = System::Drawing::Point(49, 55);
@@ -1252,7 +1267,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label20
 			// 
 			this->label20->AutoSize = true;
-			this->label20->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label20->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label20->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label20->Location = System::Drawing::Point(145, 25);
@@ -1264,7 +1279,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label21
 			// 
 			this->label21->AutoSize = true;
-			this->label21->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label21->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label21->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label21->Location = System::Drawing::Point(246, 25);
@@ -1276,7 +1291,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label19
 			// 
 			this->label19->AutoSize = true;
-			this->label19->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label19->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label19->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label19->Location = System::Drawing::Point(2, 27);
@@ -1312,13 +1327,13 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox_flap->Controls->Add(this->f_button_manual_open_flap);
 			this->groupBox_flap->Controls->Add(this->i_label_flap_status);
 			this->groupBox_flap->Controls->Add(this->f_label_flap_status);
-			this->groupBox_flap->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->groupBox_flap->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox_flap->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->groupBox_flap->Location = System::Drawing::Point(3, 472);
 			this->groupBox_flap->Name = L"groupBox_flap";
-			this->groupBox_flap->Size = System::Drawing::Size(237, 225);
+			this->groupBox_flap->Size = System::Drawing::Size(237, 180);
 			this->groupBox_flap->TabIndex = 19;
 			this->groupBox_flap->TabStop = false;
 			this->groupBox_flap->Text = L"Управление заслонкой";
@@ -1339,11 +1354,11 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			// f_textBox_set_time_flap
 			// 
-			this->f_textBox_set_time_flap->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_textBox_set_time_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_textBox_set_time_flap->Location = System::Drawing::Point(156, 133);
 			this->f_textBox_set_time_flap->Name = L"f_textBox_set_time_flap";
-			this->f_textBox_set_time_flap->Size = System::Drawing::Size(48, 29);
+			this->f_textBox_set_time_flap->Size = System::Drawing::Size(48, 27);
 			this->f_textBox_set_time_flap->TabIndex = 19;
 			this->f_textBox_set_time_flap->Text = L"100";
 			this->f_textBox_set_time_flap->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -1355,11 +1370,13 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->progressBar_flap->Name = L"progressBar_flap";
 			this->progressBar_flap->Size = System::Drawing::Size(216, 23);
 			this->progressBar_flap->TabIndex = 11;
+			this->progressBar_flap->Visible = false;
 			// 
 			// f_button_auto_mode_flap_stop
 			// 
 			this->f_button_auto_mode_flap_stop->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->f_button_auto_mode_flap_stop->Enabled = false;
+			this->f_button_auto_mode_flap_stop->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->f_button_auto_mode_flap_stop->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_auto_mode_flap_stop->Location = System::Drawing::Point(120, 192);
@@ -1386,7 +1403,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// radioButton_flap_auto_mode
 			// 
 			this->radioButton_flap_auto_mode->AutoSize = true;
-			this->radioButton_flap_auto_mode->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->radioButton_flap_auto_mode->ForeColor = System::Drawing::Color::Black;
 			this->radioButton_flap_auto_mode->Location = System::Drawing::Point(10, 37);
 			this->radioButton_flap_auto_mode->Name = L"radioButton_flap_auto_mode";
 			this->radioButton_flap_auto_mode->Size = System::Drawing::Size(140, 23);
@@ -1399,7 +1416,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->radioButton_flap_manual_mode->AutoSize = true;
 			this->radioButton_flap_manual_mode->Checked = true;
-			this->radioButton_flap_manual_mode->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->radioButton_flap_manual_mode->ForeColor = System::Drawing::Color::Black;
 			this->radioButton_flap_manual_mode->Location = System::Drawing::Point(10, 18);
 			this->radioButton_flap_manual_mode->Name = L"radioButton_flap_manual_mode";
 			this->radioButton_flap_manual_mode->Size = System::Drawing::Size(76, 23);
@@ -1412,6 +1429,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// f_button_auto_mode_flap_start
 			// 
 			this->f_button_auto_mode_flap_start->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_auto_mode_flap_start->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->f_button_auto_mode_flap_start->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_auto_mode_flap_start->ForeColor = System::Drawing::Color::Crimson;
@@ -1427,6 +1445,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->f_button_manual_close_flap->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->f_button_manual_close_flap->Enabled = false;
+			this->f_button_manual_close_flap->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->f_button_manual_close_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_manual_close_flap->Location = System::Drawing::Point(119, 136);
@@ -1439,6 +1458,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// f_button_manual_open_flap
 			// 
 			this->f_button_manual_open_flap->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_manual_open_flap->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->f_button_manual_open_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_manual_open_flap->ForeColor = System::Drawing::Color::Crimson;
@@ -1454,7 +1474,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->i_label_flap_status->AutoSize = true;
 			this->i_label_flap_status->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->i_label_flap_status->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->i_label_flap_status->ForeColor = System::Drawing::Color::Black;
 			this->i_label_flap_status->Location = System::Drawing::Point(74, 49);
 			this->i_label_flap_status->Name = L"i_label_flap_status";
 			this->i_label_flap_status->Size = System::Drawing::Size(87, 17);
@@ -1503,6 +1523,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox4->Controls->Add(this->label16);
 			this->groupBox4->Controls->Add(this->label15);
 			this->groupBox4->Controls->Add(this->pictureBox1);
+			this->groupBox4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox4->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox4->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -1518,7 +1539,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label17->AutoSize = true;
 			this->label17->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label17->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->label17->ForeColor = System::Drawing::Color::Black;
 			this->label17->Location = System::Drawing::Point(59, 70);
 			this->label17->Name = L"label17";
 			this->label17->Size = System::Drawing::Size(158, 19);
@@ -1530,7 +1551,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label16->AutoSize = true;
 			this->label16->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label16->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->label16->ForeColor = System::Drawing::Color::Black;
 			this->label16->Location = System::Drawing::Point(11, 70);
 			this->label16->Name = L"label16";
 			this->label16->Size = System::Drawing::Size(42, 19);
@@ -1569,7 +1590,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox3->Controls->Add(this->label13);
 			this->groupBox3->Controls->Add(this->label12);
 			this->groupBox3->Controls->Add(this->label11);
-			this->groupBox3->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->groupBox3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox3->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -1583,6 +1604,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button5
 			// 
 			this->button5->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button5->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button5->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button5->Location = System::Drawing::Point(81, 86);
@@ -1620,6 +1642,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button4->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button4->Enabled = false;
+			this->button4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button4->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button4->Location = System::Drawing::Point(12, 158);
@@ -1632,6 +1655,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button3
 			// 
 			this->button3->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button3->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button3->ForeColor = System::Drawing::Color::Crimson;
@@ -1647,7 +1671,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label13->AutoSize = true;
 			this->label13->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label13->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->label13->ForeColor = System::Drawing::Color::Black;
 			this->label13->Location = System::Drawing::Point(67, 45);
 			this->label13->Name = L"label13";
 			this->label13->Size = System::Drawing::Size(101, 17);
@@ -1691,6 +1715,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox2->Controls->Add(this->label5);
 			this->groupBox2->Controls->Add(this->label6);
 			this->groupBox2->Controls->Add(this->label8);
+			this->groupBox2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox2->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox2->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -1709,7 +1734,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->label18->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label18->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label18->Location = System::Drawing::Point(27, 103);
+			this->label18->Location = System::Drawing::Point(22, 103);
 			this->label18->Name = L"label18";
 			this->label18->Size = System::Drawing::Size(184, 23);
 			this->label18->TabIndex = 19;
@@ -1719,6 +1744,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->button2->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->button2->Enabled = false;
+			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button2->Location = System::Drawing::Point(118, 129);
@@ -1731,6 +1757,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// button1
 			// 
 			this->button1->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button1->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->button1->Location = System::Drawing::Point(6, 129);
@@ -1828,6 +1855,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->groupBox1->Controls->Add(this->label3);
 			this->groupBox1->Controls->Add(this->label2);
 			this->groupBox1->Controls->Add(this->label1);
+			this->groupBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox1->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -1911,7 +1939,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// 
 			this->pictureBox2->Cursor = System::Windows::Forms::Cursors::Default;
 			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
-			this->pictureBox2->Location = System::Drawing::Point(230, 3);
+			this->pictureBox2->Location = System::Drawing::Point(239, 3);
 			this->pictureBox2->Name = L"pictureBox2";
 			this->pictureBox2->Size = System::Drawing::Size(44, 31);
 			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
@@ -1921,12 +1949,12 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			// label60
 			// 
 			this->label60->AutoSize = true;
-			this->label60->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->label60->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label60->ForeColor = System::Drawing::Color::SeaGreen;
 			this->label60->Location = System::Drawing::Point(6, 10);
 			this->label60->Name = L"label60";
-			this->label60->Size = System::Drawing::Size(227, 19);
+			this->label60->Size = System::Drawing::Size(224, 19);
 			this->label60->TabIndex = 1;
 			this->label60->Text = L"Cоединение с PLC установлено";
 			// 
@@ -1937,10 +1965,24 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 				static_cast<System::Byte>(204)));
 			this->button17->Location = System::Drawing::Point(6, 32);
 			this->button17->Name = L"button17";
-			this->button17->Size = System::Drawing::Size(150, 31);
+			this->button17->Size = System::Drawing::Size(189, 31);
 			this->button17->TabIndex = 0;
 			this->button17->Text = L"Соединение с PLC";
 			this->button17->UseVisualStyleBackColor = true;
+			// 
+			// f_button_exit
+			// 
+			this->f_button_exit->BackColor = System::Drawing::Color::Crimson;
+			this->f_button_exit->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_exit->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_exit->ForeColor = System::Drawing::Color::WhiteSmoke;
+			this->f_button_exit->Location = System::Drawing::Point(1120, 2);
+			this->f_button_exit->Name = L"f_button_exit";
+			this->f_button_exit->Size = System::Drawing::Size(30, 16);
+			this->f_button_exit->TabIndex = 12;
+			this->f_button_exit->UseVisualStyleBackColor = false;
+			this->f_button_exit->Click += gcnew System::EventHandler(this, &MainForm::f_button_exit_Click);
 			// 
 			// MainForm
 			// 
@@ -1948,6 +1990,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(1161, 891);
+			this->Controls->Add(this->f_button_exit);
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->panel4);
 			this->Controls->Add(this->panel2);
@@ -1957,6 +2000,7 @@ private: System::Windows::Forms::ProgressBar^ progressBar_flap;
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MainForm";
 			this->Text = L"UVN Control System 2.0 - Автоматическая система управления";
+			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &MainForm::MainForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
@@ -2030,6 +2074,15 @@ private: System::Void radioButton_flap_manual_mode_CheckedChanged(System::Object
 	I_label_set_time_flap->Visible = false;
 	progressBar_flap->Visible = false;
 	f_textBox_set_time_flap->Visible = false;
+}
+private: System::Void f_button_exit_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	Application::Exit();
+}
+private: System::Void MainForm_FormClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
+
+	Application::Exit();
+
 }
 };
 }
