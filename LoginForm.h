@@ -1,5 +1,6 @@
 #pragma once
 #include "MainForm.h"
+#include "accounts.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -13,6 +14,8 @@ namespace UVNControlSystem2v6 {
 	/// <summary>
 	/// Сводка для LoginForm
 	/// </summary>
+	/// 
+	/// 
 	public ref class LoginForm : public System::Windows::Forms::Form
 	{
 	public:
@@ -41,8 +44,8 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Button^ f_enter_login;
 
 	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::TextBox^ f_textbox_log;
-	private: System::Windows::Forms::TextBox^ f_textbox_pas;
+	public: System::Windows::Forms::TextBox^ f_textbox_log;
+	public: System::Windows::Forms::TextBox^ f_textbox_pas;
 
 
 	private: System::Windows::Forms::Label^ label3;
@@ -179,7 +182,7 @@ namespace UVNControlSystem2v6 {
 		}
 #pragma endregion
 
-		void authentification(String^ login, String^ password) {
+		/* void authentification(String^ login, String^ password) {
 
 			if (login == "" && password == "") {  // потом добавить данные
 
@@ -211,12 +214,14 @@ namespace UVNControlSystem2v6 {
 
 
 	}
+	*/
+
+
+
 
 	private: System::Void f_enter_login_Click(System::Object^ sender, System::EventArgs^ e) {
 
-		//MainForm^ form = gcnew MainForm();
-		//form->Show();
-		//LoginForm::Hide();
+
 		String^ login;
 		String^ password;
 
@@ -224,7 +229,16 @@ namespace UVNControlSystem2v6 {
 
 		password = this->f_textbox_pas->Text;
 
-		authentification (login, password);
+		accounts^ account = gcnew accounts();
+
+		if (account->login(login, password)) {
+
+			account->show_MainForm();
+			this->Hide();
+		}
+
+		
+
 
 	}
 };

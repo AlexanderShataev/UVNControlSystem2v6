@@ -76,7 +76,6 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Label^ label13;
-
 	private: System::Windows::Forms::GroupBox^ groupBox4;
 	private: System::Windows::Forms::Label^ label17;
 	private: System::Windows::Forms::Label^ label16;
@@ -155,7 +154,8 @@ private: System::Windows::Forms::Panel^ panel5;
 private: System::Windows::Forms::Panel^ panel6;
 private: System::Windows::Forms::PictureBox^ pictureBox2;
 private: System::Windows::Forms::Label^ label60;
-private: System::Windows::Forms::Button^ button17;
+private: System::Windows::Forms::Button^ f_button_connect_to_PLC;
+
 private: System::Windows::Forms::GroupBox^ groupBox_flap;
 private: System::Windows::Forms::GroupBox^ subgroupBox_mode;
 private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
@@ -344,7 +344,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label60 = (gcnew System::Windows::Forms::Label());
-			this->button17 = (gcnew System::Windows::Forms::Button());
+			this->f_button_connect_to_PLC = (gcnew System::Windows::Forms::Button());
 			this->f_button_exit = (gcnew System::Windows::Forms::Button());
 			this->menuStrip1->SuspendLayout();
 			this->panel1->SuspendLayout();
@@ -1665,6 +1665,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->button3->TabIndex = 11;
 			this->button3->Text = L"Включить нагрев";
 			this->button3->UseVisualStyleBackColor = false;
+			this->button3->Click += gcnew System::EventHandler(this, &MainForm::button3_Click);
 			// 
 			// label13
 			// 
@@ -1928,7 +1929,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->panel6->BackColor = System::Drawing::Color::White;
 			this->panel6->Controls->Add(this->pictureBox2);
 			this->panel6->Controls->Add(this->label60);
-			this->panel6->Controls->Add(this->button17);
+			this->panel6->Controls->Add(this->f_button_connect_to_PLC);
 			this->panel6->Dock = System::Windows::Forms::DockStyle::Top;
 			this->panel6->Location = System::Drawing::Point(334, 24);
 			this->panel6->Name = L"panel6";
@@ -1958,17 +1959,17 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label60->TabIndex = 1;
 			this->label60->Text = L"Cоединение с PLC установлено";
 			// 
-			// button17
+			// f_button_connect_to_PLC
 			// 
-			this->button17->Enabled = false;
-			this->button17->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_connect_to_PLC->Enabled = false;
+			this->f_button_connect_to_PLC->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button17->Location = System::Drawing::Point(6, 32);
-			this->button17->Name = L"button17";
-			this->button17->Size = System::Drawing::Size(189, 31);
-			this->button17->TabIndex = 0;
-			this->button17->Text = L"Соединение с PLC";
-			this->button17->UseVisualStyleBackColor = true;
+			this->f_button_connect_to_PLC->Location = System::Drawing::Point(6, 32);
+			this->f_button_connect_to_PLC->Name = L"f_button_connect_to_PLC";
+			this->f_button_connect_to_PLC->Size = System::Drawing::Size(189, 31);
+			this->f_button_connect_to_PLC->TabIndex = 0;
+			this->f_button_connect_to_PLC->Text = L"Соединение с PLC";
+			this->f_button_connect_to_PLC->UseVisualStyleBackColor = true;
 			// 
 			// f_button_exit
 			// 
@@ -2082,6 +2083,10 @@ private: System::Void f_button_exit_Click(System::Object^ sender, System::EventA
 private: System::Void MainForm_FormClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
 
 	Application::Exit();
+
+}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+
 
 }
 };
