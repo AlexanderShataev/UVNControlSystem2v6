@@ -1,5 +1,4 @@
 #pragma once
-#include "MainForm.h"
 #include "accounts.h"
 
 namespace UVNControlSystem2v6 {
@@ -79,28 +78,29 @@ namespace UVNControlSystem2v6 {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label1->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label1->Location = System::Drawing::Point(12, 53);
+			this->label1->Location = System::Drawing::Point(16, 54);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(54, 21);
+			this->label1->Size = System::Drawing::Size(51, 19);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Логин";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label2->Location = System::Drawing::Point(12, 94);
+			this->label2->Location = System::Drawing::Point(16, 94);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(63, 21);
+			this->label2->Size = System::Drawing::Size(59, 19);
 			this->label2->TabIndex = 1;
 			this->label2->Text = L"Пароль";
 			// 
 			// f_enter_login
 			// 
-			this->f_enter_login->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_enter_login->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_enter_login->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_enter_login->Location = System::Drawing::Point(12, 140);
 			this->f_enter_login->Name = L"f_enter_login";
@@ -112,9 +112,10 @@ namespace UVNControlSystem2v6 {
 			// 
 			// button2
 			// 
-			this->button2->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button2->Location = System::Drawing::Point(171, 140);
+			this->button2->Location = System::Drawing::Point(184, 140);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(86, 27);
 			this->button2->TabIndex = 3;
@@ -123,34 +124,38 @@ namespace UVNControlSystem2v6 {
 			// 
 			// f_textbox_log
 			// 
-			this->f_textbox_log->Location = System::Drawing::Point(81, 56);
+			this->f_textbox_log->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_log->Location = System::Drawing::Point(81, 50);
 			this->f_textbox_log->Name = L"f_textbox_log";
-			this->f_textbox_log->Size = System::Drawing::Size(176, 20);
+			this->f_textbox_log->Size = System::Drawing::Size(176, 27);
 			this->f_textbox_log->TabIndex = 4;
 			// 
 			// f_textbox_pas
 			// 
-			this->f_textbox_pas->Location = System::Drawing::Point(81, 95);
+			this->f_textbox_pas->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_pas->Location = System::Drawing::Point(81, 90);
 			this->f_textbox_pas->Name = L"f_textbox_pas";
-			this->f_textbox_pas->Size = System::Drawing::Size(176, 20);
+			this->f_textbox_pas->Size = System::Drawing::Size(176, 27);
 			this->f_textbox_pas->TabIndex = 5;
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI Semibold", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->label3->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label3->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label3->Location = System::Drawing::Point(10, 18);
+			this->label3->Location = System::Drawing::Point(35, 17);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(185, 21);
+			this->label3->Size = System::Drawing::Size(171, 19);
 			this->label3->TabIndex = 6;
 			this->label3->Text = L"UVN Control System 2.0";
 			// 
 			// pictureBox1
 			// 
 			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(199, 15);
+			this->pictureBox1->Location = System::Drawing::Point(212, 12);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(58, 28);
 			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
@@ -161,9 +166,9 @@ namespace UVNControlSystem2v6 {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(269, 175);
-			this->Controls->Add(this->pictureBox1);
+			this->ClientSize = System::Drawing::Size(282, 175);
 			this->Controls->Add(this->label3);
+			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->f_textbox_pas);
 			this->Controls->Add(this->f_textbox_log);
 			this->Controls->Add(this->button2);
@@ -216,9 +221,6 @@ namespace UVNControlSystem2v6 {
 	}
 	*/
 
-
-
-
 	private: System::Void f_enter_login_Click(System::Object^ sender, System::EventArgs^ e) {
 
 
@@ -231,11 +233,9 @@ namespace UVNControlSystem2v6 {
 
 		accounts^ account = gcnew accounts();
 
-		if (account->login(login, password)) {
+		account->access_account (login, password);
 
-			account->show_MainForm();
-			this->Hide();
-		}
+		this->Hide();
 
 		
 

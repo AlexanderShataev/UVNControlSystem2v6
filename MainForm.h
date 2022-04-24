@@ -1,4 +1,5 @@
 #pragma once
+#include "dataPLC.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -15,11 +16,221 @@ namespace UVNControlSystem2v6 {
 	public ref class MainForm : public System::Windows::Forms::Form
 	{
 	public:
+
+		dataPLC^ currentData = gcnew dataPLC();
+
+		String^ ID;
+		int work_time = 0;// рабочее время
+
+	private: System::Windows::Forms::TabControl^ tabControl1;
+	private: System::Windows::Forms::TabPage^ tabPage1;
+	private: System::Windows::Forms::Button^ f_button_PSV2_m30mv;
+
+	private: System::Windows::Forms::Button^ f_button_PSV1_m30mv;
+	private: System::Windows::Forms::Button^ f_button_PSV2_p30mv;
+
+
+	private: System::Windows::Forms::Label^ f_label_PSV1_status_mV;
+	private: System::Windows::Forms::Button^ f_button_PSV1_p30mv;
+
+
+
+	private: System::Windows::Forms::Label^ label8;
+	private: System::Windows::Forms::Label^ label7;
+	private: System::Windows::Forms::Button^ f_button_start_stop_PSV2;
+
+
+
+
+	private: System::Windows::Forms::Label^ label9;
+	private: System::Windows::Forms::Label^ label5;
+	private: System::Windows::Forms::Label^ label12;
+	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::Label^ f_label_PSV2_status_mV;
+
+	private: System::Windows::Forms::Label^ label16;
+	private: System::Windows::Forms::Button^ f_button_start_stop_PSV1;
+
+
+
+	private: System::Windows::Forms::Label^ label4;
+	private: System::Windows::Forms::TabPage^ tabPage2;
+	private: System::Windows::Forms::GroupBox^ groupBox6;
+	private: System::Windows::Forms::GroupBox^ groupbox_butterfly;
+	private: System::Windows::Forms::Label^ label39;
+	private: System::Windows::Forms::Button^ button6;
+	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::Label^ label40;
+	private: System::Windows::Forms::Label^ f_label_batterfly_status;
+	private: System::Windows::Forms::Label^ label42;
+	private: System::Windows::Forms::Label^ label15;
+	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Button^ button7;
+	private: System::Windows::Forms::Panel^ panel4;
+	private: System::Windows::Forms::Panel^ down_panel;
+
+
+
+	private: System::Windows::Forms::Label^ f_textbox_current_ma;
+	private: System::Windows::Forms::Label^ f_textbox_voltage_V;
+	private: System::Windows::Forms::Button^ f_button_auto_start_flap;
+	private: System::Windows::Forms::Label^ label17;
+	private: System::Windows::Forms::Label^ label20;
+	private: System::Windows::Forms::TabControl^ tabControl2;
+	private: System::Windows::Forms::TabPage^ tabPage3;
+	private: System::Windows::Forms::TabPage^ tabPage4;
+
+	private: System::Windows::Forms::Label^ label21;
+	private: System::Windows::Forms::Label^ label23;
+	private: System::Windows::Forms::Label^ label24;
+	private: System::Windows::Forms::TextBox^ textBox4;
+	private: System::Windows::Forms::Label^ label25;
+	private: System::Windows::Forms::Label^ label26;
+	private: System::Windows::Forms::Label^ label28;
+	private: System::Windows::Forms::TextBox^ textBox5;
+	private: System::Windows::Forms::Label^ label29;
+	private: System::Windows::Forms::Button^ button8;
+	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::Button^ button4;
+	private: System::Windows::Forms::Label^ label31;
+	private: System::Windows::Forms::ToolStripMenuItem^ автоматизированныйРежимToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ автоматическийРежимToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ adminToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ studentToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ демоверсияToolStripMenuItem;
+
+
+	public:
+
+		DateTime^ date1 = gcnew DateTime(0);
+
+		void start_timer() {
+
+			Timer->Enabled = true;
+			Timer->Interval = 1000;
+
+		}
+		
+
+		// ФУНКЦИИ РАБОТА С ФОРМОЙ 
+
+		void MainForm_block() { //блокируем элементы на форме
+
+			left_down_panel->Enabled = false;
+			left_panel->Enabled = false;
+			right_panel->Enabled = false;
+			right_down_panel->Enabled = false;
+
+		}
+
+		void MainForm_unblock() { // активируем элементы на форме
+
+			left_down_panel->Enabled = true;
+			left_panel->Enabled = true;
+			right_panel->Enabled = true;
+			right_down_panel->Enabled = true;
+		}
+
+		void MainFormClear() {
+		//GroupBoxTime 
+		//Первая строка Старт Откачки
+			f_label_timer_current_start_pump->Text = "-"; /// Зачищаем первую строку radogroup_time
+			f_label_timer_time_start_pump->Text = "-";
+			f_label_timer_start_start_pump->Text = "-";
+		
+		//Вторая строка  Откачка
+			f_label_timer_start_pump->Text = "-";
+			f_label_timer_current_pump->Text = "-";
+			f_label_timer_time_pump->Text = "-";
+
+		//Третья строка Газы
+			f_label_timer_start_gases->Text = "-";
+			f_label_timer_current_gases->Text = "-";
+			f_label_timer_time_gases->Text = "-";
+
+		//Четвертая строка 
+			f_label_timer_start_TPlB->Text = "-";
+			f_label_timer_time_TPlB->Text = "-";
+			f_label_timer_current_TPlB->Text = "-";
+
+		//Пятая строка Стоп Откачки
+			f_label_timer_start_stop_pump->Text = "-";
+			f_label_timer_time_stop_pump->Text = "-";
+			f_label_timer_current_stop_pump->Text = "-";
+
+
+		//Клапан бабочка -- положение
+			f_label_batterfly_status->Text = "-";
+
+
+		//Газы
+			f_label_PSV1_status_mV->Text = "-";
+			f_label_PSV2_status_mV->Text = "-";
+
+
+		//APG WRD
+			f_label_APG_status->Text = "-";
+			f_label_WRG_status->Text = "-";
+	
+		//TPlB
+			f_textbox_current_ma->Text = "-";
+			f_textbox_voltage_V->Text = "-";
+
+		//Temperature
+			f_label_temp_status_deg->Text = "-";
+
+		//Flap
+			f_label_flap_status->Text = "-";
+
+		//Recording
+			//f_label_recording->Visible = false;
+			//i_label_name_recording->Visible = false;
+			//f_label_name_recording->Visible = false;
+			//pictureBox_recording->Visible = false;
+
+		//pumps
+			f_label_turbopump_status->Text = "-";
+			f_label_turbopump_status->ForeColor=System::Drawing::Color::Crimson;
+			f_label_backpump_status->Text = "-";
+			f_label_backpump_status->ForeColor = System::Drawing::Color::Crimson;
+			i_label_backpump_status->ForeColor = System::Drawing::Color::Crimson;
+			i_label_turbopump_status->ForeColor = System::Drawing::Color::Crimson;
+			progressBar_Turbopump->Value = 0;
+			f_label_trubo_percent->Text = "0";
+		}
+
+		void start_show_user() { // очистка данных для admin и student
+			
+			MainForm_block();
+			MainFormClear();
+			picture_connection->Visible = false;
+			picture_not_connection->Visible = true;
+			f_button_connect_to_PLC->Enabled = true;
+			i_button_connect_to_PLC->Text = "Нет соединения с PLC";
+			i_button_connect_to_PLC->ForeColor = System::Drawing::Color::Crimson;
+		}
+
+
+		void access_admin() {
+			
+			start_show_user();
+		}
+
+		void access_demo() {
+			
+			this->Show();
+	
+		}
+
+
+
 		MainForm(void)
 		{
 			InitializeComponent();
 			//
 			//TODO: добавьте код конструктора
+
+			
 			//
 		}
 
@@ -49,111 +260,163 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::ToolStripMenuItem^ настройкаДоступаToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ сетевойДоступToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ учетнаяЗаписьToolStripMenuItem;
-	private: System::Windows::Forms::Panel^ panel1;
-	private: System::Windows::Forms::Panel^ panel2;
+	private: System::Windows::Forms::Panel^ left_panel;
+	private: System::Windows::Forms::Panel^ right_panel;
+
+
 	private: System::Windows::Forms::Button^ f_stop_button;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
-	private: System::Windows::Forms::Label^ label4;
+private: System::Windows::Forms::Label^ f_label_WRG_status;
+
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::Label^ label2;
+private: System::Windows::Forms::Label^ f_label_APG_status;
+
+
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::GroupBox^ groupBox2;
-	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::Button^ button1;
-	private: System::Windows::Forms::Label^ label9;
+private: System::Windows::Forms::Button^ f_button_stop_pump;
+
+private: System::Windows::Forms::Button^ f_button_start_pump;
+
+private: System::Windows::Forms::Label^ f_label_trubo_percent;
+
 	private: System::Windows::Forms::Label^ label10;
-	private: System::Windows::Forms::ProgressBar^ progressBar1;
-	private: System::Windows::Forms::Label^ label7;
-	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::Label^ label8;
+private: System::Windows::Forms::ProgressBar^ progressBar_Turbopump;
+
+private: System::Windows::Forms::Label^ f_label_turbopump_status;
+
+private: System::Windows::Forms::Label^ f_label_backpump_status;
+private: System::Windows::Forms::Label^ i_label_turbopump_status;
+
+
+private: System::Windows::Forms::Label^ i_label_backpump_status;
+
 	private: System::Windows::Forms::GroupBox^ groupBox3;
-	private: System::Windows::Forms::Label^ label12;
+private: System::Windows::Forms::Label^ f_label_temp_status_deg;
+
 	private: System::Windows::Forms::Label^ label11;
 	private: System::Windows::Forms::Button^ button5;
 	private: System::Windows::Forms::TextBox^ textBox1;
 	private: System::Windows::Forms::Label^ label14;
-	private: System::Windows::Forms::Button^ button4;
-	private: System::Windows::Forms::Button^ button3;
+
+private: System::Windows::Forms::Button^ f_button_on_off_heat;
+
 	private: System::Windows::Forms::Label^ label13;
-	private: System::Windows::Forms::GroupBox^ groupBox4;
-	private: System::Windows::Forms::Label^ label17;
-	private: System::Windows::Forms::Label^ label16;
-	private: System::Windows::Forms::Label^ label15;
-	private: System::Windows::Forms::PictureBox^ pictureBox1;
-	private: System::Windows::Forms::Panel^ panel4;
-	private: System::Windows::Forms::Panel^ panel3;
+
+
+private: System::Windows::Forms::Label^ f_label_name_recording;
+private: System::Windows::Forms::Label^ i_label_name_recording;
+
+
+private: System::Windows::Forms::Label^ f_label_recording;
+private: System::Windows::Forms::PictureBox^ pictureBox_recording;
+
+
+
+
+
+	private: System::Windows::Forms::Panel^ right_down_panel;
+
 	private: System::Windows::Forms::Label^ label18;
-	private: System::Windows::Forms::GroupBox^ groupBox5;
-	private: System::Windows::Forms::Label^ label38;
-	private: System::Windows::Forms::Label^ label37;
-	private: System::Windows::Forms::Label^ label36;
-	private: System::Windows::Forms::Label^ label35;
-	private: System::Windows::Forms::Label^ label34;
+	private: System::Windows::Forms::GroupBox^ groupBox_time;
+private: System::Windows::Forms::Label^ f_label_timer_time_stop_pump;
+
+
+private: System::Windows::Forms::Label^ f_label_timer_current_stop_pump;
+
+private: System::Windows::Forms::Label^ f_label_timer_start_stop_pump;
+
+private: System::Windows::Forms::Label^ f_label_timer_time_TPlB;
+
+private: System::Windows::Forms::Label^ f_label_timer_time_gases;
+
 	private: System::Windows::Forms::Label^ label33;
-	private: System::Windows::Forms::Label^ label32;
-	private: System::Windows::Forms::Label^ label31;
+private: System::Windows::Forms::Label^ f_label_timer_current_TPlB;
+private: System::Windows::Forms::Label^ f_label_timer_start_TPlB;
+
+
+
+
 	private: System::Windows::Forms::Label^ label30;
-	private: System::Windows::Forms::Label^ label29;
-	private: System::Windows::Forms::Label^ label28;
+private: System::Windows::Forms::Label^ f_label_timer_current_gases;
+
+private: System::Windows::Forms::Label^ f_label_timer_start_gases;
+
 	private: System::Windows::Forms::Label^ label27;
-	private: System::Windows::Forms::Label^ label26;
-	private: System::Windows::Forms::Label^ label25;
-	private: System::Windows::Forms::Label^ label24;
-	private: System::Windows::Forms::Label^ label23;
+private: System::Windows::Forms::Label^ f_label_timer_current_pump;
+
+private: System::Windows::Forms::Label^ f_label_timer_current_start_pump;
+private: System::Windows::Forms::Label^ f_label_timer_time_pump;
+
+
+private: System::Windows::Forms::Label^ f_label_timer_start_pump;
+
 	private: System::Windows::Forms::Label^ label22;
-	private: System::Windows::Forms::Label^ label20;
-	private: System::Windows::Forms::Label^ label21;
+private: System::Windows::Forms::Label^ f_label_timer_start_start_pump;
+private: System::Windows::Forms::Label^ f_label_timer_time_start_pump;
+
+
+
 	private: System::Windows::Forms::Label^ label19;
-	private: System::Windows::Forms::GroupBox^ groupBox6;
-	private: System::Windows::Forms::Button^ button6;
-	private: System::Windows::Forms::TextBox^ textBox2;
 
 
 
-	private: System::Windows::Forms::Label^ label40;
-	private: System::Windows::Forms::Label^ label41;
-	private: System::Windows::Forms::Label^ label42;
+
+
+
+
+
+
+
+
 private: System::Windows::Forms::GroupBox^ groupBox8;
-private: System::Windows::Forms::Label^ label59;
-private: System::Windows::Forms::Label^ label58;
+
+
 private: System::Windows::Forms::TextBox^ textBox6;
-private: System::Windows::Forms::Button^ button16;
-private: System::Windows::Forms::RadioButton^ radioButton2;
-private: System::Windows::Forms::RadioButton^ radioButton1;
-private: System::Windows::Forms::Label^ label55;
-private: System::Windows::Forms::TextBox^ textBox5;
+
+
+
+
+
+
 private: System::Windows::Forms::Label^ label54;
-private: System::Windows::Forms::TextBox^ textBox4;
-private: System::Windows::Forms::Label^ label57;
-private: System::Windows::Forms::Label^ label53;
-private: System::Windows::Forms::Button^ button15;
+
+
+
+
+
 private: System::Windows::Forms::TextBox^ textBox3;
 private: System::Windows::Forms::Label^ label56;
-private: System::Windows::Forms::GroupBox^ groupBox7;
-private: System::Windows::Forms::Button^ button11;
-private: System::Windows::Forms::Button^ button12;
-private: System::Windows::Forms::Button^ button13;
-private: System::Windows::Forms::Label^ label52;
-private: System::Windows::Forms::Button^ button14;
-private: System::Windows::Forms::Label^ label48;
-private: System::Windows::Forms::Label^ label49;
-private: System::Windows::Forms::Label^ label50;
-private: System::Windows::Forms::Label^ label51;
-private: System::Windows::Forms::Button^ button10;
-private: System::Windows::Forms::Button^ button9;
-private: System::Windows::Forms::Button^ button8;
-private: System::Windows::Forms::Label^ label47;
-private: System::Windows::Forms::Label^ label43;
-private: System::Windows::Forms::Button^ button7;
-private: System::Windows::Forms::Label^ label44;
-private: System::Windows::Forms::Label^ label45;
-private: System::Windows::Forms::Label^ label46;
-private: System::Windows::Forms::Label^ label39;
-private: System::Windows::Forms::Panel^ panel5;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+private: System::Windows::Forms::Panel^ left_down_panel;
+
 private: System::Windows::Forms::Panel^ panel6;
-private: System::Windows::Forms::PictureBox^ pictureBox2;
-private: System::Windows::Forms::Label^ label60;
+private: System::Windows::Forms::PictureBox^ picture_connection;
+
+private: System::Windows::Forms::Label^ i_button_connect_to_PLC;
+
 private: System::Windows::Forms::Button^ f_button_connect_to_PLC;
 
 private: System::Windows::Forms::GroupBox^ groupBox_flap;
@@ -169,40 +432,21 @@ private: System::Windows::Forms::Label^ f_label_flap_status;
 private: System::Windows::Forms::Label^ I_label_set_time_flap;
 private: System::Windows::Forms::TextBox^ f_textBox_set_time_flap;
 
-private: System::Windows::Forms::Button^ f_button_auto_mode_flap_stop;
 
-private: System::Windows::Forms::Button^ f_button_auto_mode_flap_start;
+
+
 
 
 
 
 private: System::Windows::Forms::ProgressBar^ progressBar_flap;
-private: System::Windows::Forms::Button^ f_button_exit;
 
+private: System::Windows::Forms::GroupBox^ groupBox5;
+private: System::Windows::Forms::PictureBox^ picture_not_connection;
+private: System::Windows::Forms::Timer^ Timer;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+private: System::Windows::Forms::Label^ data_label;
+private: System::ComponentModel::IContainer^ components;
 
 
 
@@ -210,7 +454,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -219,9 +463,12 @@ private: System::Windows::Forms::Button^ f_button_exit;
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->управлениеПроцессомToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->автоматизированныйРежимToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->автоматическийРежимToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->настройкаНагреваToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->выборРегулятораToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->настройкаПИДToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -229,141 +476,166 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->настройкаДоступаToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->сетевойДоступToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->учетнаяЗаписьToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->panel5 = (gcnew System::Windows::Forms::Panel());
-			this->groupBox8 = (gcnew System::Windows::Forms::GroupBox());
-			this->label59 = (gcnew System::Windows::Forms::Label());
-			this->label58 = (gcnew System::Windows::Forms::Label());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
-			this->button16 = (gcnew System::Windows::Forms::Button());
-			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
-			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
-			this->label55 = (gcnew System::Windows::Forms::Label());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
-			this->label54 = (gcnew System::Windows::Forms::Label());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
-			this->label57 = (gcnew System::Windows::Forms::Label());
-			this->label53 = (gcnew System::Windows::Forms::Label());
-			this->button15 = (gcnew System::Windows::Forms::Button());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->label56 = (gcnew System::Windows::Forms::Label());
-			this->groupBox7 = (gcnew System::Windows::Forms::GroupBox());
-			this->button11 = (gcnew System::Windows::Forms::Button());
-			this->button12 = (gcnew System::Windows::Forms::Button());
-			this->button13 = (gcnew System::Windows::Forms::Button());
-			this->label52 = (gcnew System::Windows::Forms::Label());
-			this->button14 = (gcnew System::Windows::Forms::Button());
-			this->label48 = (gcnew System::Windows::Forms::Label());
-			this->label49 = (gcnew System::Windows::Forms::Label());
-			this->label50 = (gcnew System::Windows::Forms::Label());
-			this->label51 = (gcnew System::Windows::Forms::Label());
-			this->button10 = (gcnew System::Windows::Forms::Button());
-			this->button9 = (gcnew System::Windows::Forms::Button());
-			this->button8 = (gcnew System::Windows::Forms::Button());
-			this->label47 = (gcnew System::Windows::Forms::Label());
-			this->label43 = (gcnew System::Windows::Forms::Label());
-			this->button7 = (gcnew System::Windows::Forms::Button());
-			this->label44 = (gcnew System::Windows::Forms::Label());
-			this->label45 = (gcnew System::Windows::Forms::Label());
-			this->label46 = (gcnew System::Windows::Forms::Label());
+			this->adminToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->studentToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->демоверсияToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->left_panel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
+			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->f_button_PSV2_m30mv = (gcnew System::Windows::Forms::Button());
+			this->f_button_PSV1_m30mv = (gcnew System::Windows::Forms::Button());
+			this->f_button_PSV2_p30mv = (gcnew System::Windows::Forms::Button());
+			this->f_label_PSV1_status_mV = (gcnew System::Windows::Forms::Label());
+			this->f_button_PSV1_p30mv = (gcnew System::Windows::Forms::Button());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->f_button_start_stop_PSV2 = (gcnew System::Windows::Forms::Button());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->f_label_PSV2_status_mV = (gcnew System::Windows::Forms::Label());
+			this->label16 = (gcnew System::Windows::Forms::Label());
+			this->f_button_start_stop_PSV1 = (gcnew System::Windows::Forms::Button());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->left_down_panel = (gcnew System::Windows::Forms::Panel());
+			this->f_label_recording = (gcnew System::Windows::Forms::Label());
+			this->i_label_name_recording = (gcnew System::Windows::Forms::Label());
+			this->pictureBox_recording = (gcnew System::Windows::Forms::PictureBox());
+			this->f_label_name_recording = (gcnew System::Windows::Forms::Label());
+			this->groupbox_butterfly = (gcnew System::Windows::Forms::GroupBox());
 			this->label39 = (gcnew System::Windows::Forms::Label());
 			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->label40 = (gcnew System::Windows::Forms::Label());
-			this->label41 = (gcnew System::Windows::Forms::Label());
+			this->f_label_batterfly_status = (gcnew System::Windows::Forms::Label());
 			this->label42 = (gcnew System::Windows::Forms::Label());
-			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
-			this->label38 = (gcnew System::Windows::Forms::Label());
-			this->label37 = (gcnew System::Windows::Forms::Label());
-			this->label36 = (gcnew System::Windows::Forms::Label());
-			this->label35 = (gcnew System::Windows::Forms::Label());
-			this->label34 = (gcnew System::Windows::Forms::Label());
+			this->groupBox_time = (gcnew System::Windows::Forms::GroupBox());
+			this->f_label_timer_time_stop_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_current_stop_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_start_stop_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_time_TPlB = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_time_gases = (gcnew System::Windows::Forms::Label());
 			this->label33 = (gcnew System::Windows::Forms::Label());
-			this->label32 = (gcnew System::Windows::Forms::Label());
-			this->label31 = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_current_TPlB = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_start_TPlB = (gcnew System::Windows::Forms::Label());
 			this->label30 = (gcnew System::Windows::Forms::Label());
-			this->label29 = (gcnew System::Windows::Forms::Label());
-			this->label28 = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_current_gases = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_start_gases = (gcnew System::Windows::Forms::Label());
 			this->label27 = (gcnew System::Windows::Forms::Label());
-			this->label26 = (gcnew System::Windows::Forms::Label());
-			this->label25 = (gcnew System::Windows::Forms::Label());
-			this->label24 = (gcnew System::Windows::Forms::Label());
-			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_current_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_current_start_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_time_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_start_pump = (gcnew System::Windows::Forms::Label());
 			this->label22 = (gcnew System::Windows::Forms::Label());
-			this->label20 = (gcnew System::Windows::Forms::Label());
-			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_start_start_pump = (gcnew System::Windows::Forms::Label());
+			this->f_label_timer_time_start_pump = (gcnew System::Windows::Forms::Label());
 			this->label19 = (gcnew System::Windows::Forms::Label());
-			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->data_label = (gcnew System::Windows::Forms::Label());
+			this->groupBox8 = (gcnew System::Windows::Forms::GroupBox());
+			this->tabControl2 = (gcnew System::Windows::Forms::TabControl());
+			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->label29 = (gcnew System::Windows::Forms::Label());
+			this->button8 = (gcnew System::Windows::Forms::Button());
+			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->f_textbox_current_ma = (gcnew System::Windows::Forms::Label());
+			this->label56 = (gcnew System::Windows::Forms::Label());
+			this->f_textbox_voltage_V = (gcnew System::Windows::Forms::Label());
+			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->label15 = (gcnew System::Windows::Forms::Label());
+			this->label54 = (gcnew System::Windows::Forms::Label());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
+			this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
+			this->label31 = (gcnew System::Windows::Forms::Label());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->label24 = (gcnew System::Windows::Forms::Label());
+			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->label25 = (gcnew System::Windows::Forms::Label());
+			this->label26 = (gcnew System::Windows::Forms::Label());
+			this->label28 = (gcnew System::Windows::Forms::Label());
+			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
+			this->right_panel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox_flap = (gcnew System::Windows::Forms::GroupBox());
+			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->f_button_auto_start_flap = (gcnew System::Windows::Forms::Button());
 			this->I_label_set_time_flap = (gcnew System::Windows::Forms::Label());
 			this->f_textBox_set_time_flap = (gcnew System::Windows::Forms::TextBox());
 			this->progressBar_flap = (gcnew System::Windows::Forms::ProgressBar());
-			this->f_button_auto_mode_flap_stop = (gcnew System::Windows::Forms::Button());
 			this->subgroupBox_mode = (gcnew System::Windows::Forms::GroupBox());
 			this->radioButton_flap_auto_mode = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton_flap_manual_mode = (gcnew System::Windows::Forms::RadioButton());
-			this->f_button_auto_mode_flap_start = (gcnew System::Windows::Forms::Button());
 			this->f_button_manual_close_flap = (gcnew System::Windows::Forms::Button());
 			this->f_button_manual_open_flap = (gcnew System::Windows::Forms::Button());
 			this->i_label_flap_status = (gcnew System::Windows::Forms::Label());
 			this->f_label_flap_status = (gcnew System::Windows::Forms::Label());
-			this->panel3 = (gcnew System::Windows::Forms::Panel());
+			this->right_down_panel = (gcnew System::Windows::Forms::Panel());
 			this->f_stop_button = (gcnew System::Windows::Forms::Button());
-			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
-			this->label17 = (gcnew System::Windows::Forms::Label());
-			this->label16 = (gcnew System::Windows::Forms::Label());
-			this->label15 = (gcnew System::Windows::Forms::Label());
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label14 = (gcnew System::Windows::Forms::Label());
-			this->button4 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->f_button_on_off_heat = (gcnew System::Windows::Forms::Button());
 			this->label13 = (gcnew System::Windows::Forms::Label());
-			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->f_label_temp_status_deg = (gcnew System::Windows::Forms::Label());
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->label20 = (gcnew System::Windows::Forms::Label());
 			this->label18 = (gcnew System::Windows::Forms::Label());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->f_button_stop_pump = (gcnew System::Windows::Forms::Button());
+			this->f_button_start_pump = (gcnew System::Windows::Forms::Button());
+			this->f_label_trubo_percent = (gcnew System::Windows::Forms::Label());
 			this->label10 = (gcnew System::Windows::Forms::Label());
-			this->progressBar1 = (gcnew System::Windows::Forms::ProgressBar());
-			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->progressBar_Turbopump = (gcnew System::Windows::Forms::ProgressBar());
+			this->f_label_turbopump_status = (gcnew System::Windows::Forms::Label());
+			this->f_label_backpump_status = (gcnew System::Windows::Forms::Label());
+			this->i_label_turbopump_status = (gcnew System::Windows::Forms::Label());
+			this->i_label_backpump_status = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->f_label_WRG_status = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->f_label_APG_status = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->panel4 = (gcnew System::Windows::Forms::Panel());
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
-			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
-			this->label60 = (gcnew System::Windows::Forms::Label());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->picture_not_connection = (gcnew System::Windows::Forms::PictureBox());
 			this->f_button_connect_to_PLC = (gcnew System::Windows::Forms::Button());
-			this->f_button_exit = (gcnew System::Windows::Forms::Button());
+			this->picture_connection = (gcnew System::Windows::Forms::PictureBox());
+			this->i_button_connect_to_PLC = (gcnew System::Windows::Forms::Label());
+			this->Timer = (gcnew System::Windows::Forms::Timer(this->components));
+			this->panel4 = (gcnew System::Windows::Forms::Panel());
+			this->down_panel = (gcnew System::Windows::Forms::Panel());
 			this->menuStrip1->SuspendLayout();
-			this->panel1->SuspendLayout();
-			this->panel5->SuspendLayout();
-			this->groupBox8->SuspendLayout();
-			this->groupBox7->SuspendLayout();
+			this->left_panel->SuspendLayout();
 			this->groupBox6->SuspendLayout();
-			this->groupBox5->SuspendLayout();
-			this->panel2->SuspendLayout();
+			this->tabControl1->SuspendLayout();
+			this->tabPage1->SuspendLayout();
+			this->left_down_panel->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_recording))->BeginInit();
+			this->groupbox_butterfly->SuspendLayout();
+			this->groupBox_time->SuspendLayout();
+			this->groupBox8->SuspendLayout();
+			this->tabControl2->SuspendLayout();
+			this->tabPage3->SuspendLayout();
+			this->tabPage4->SuspendLayout();
+			this->right_panel->SuspendLayout();
 			this->groupBox_flap->SuspendLayout();
 			this->subgroupBox_mode->SuspendLayout();
-			this->panel3->SuspendLayout();
-			this->groupBox4->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
+			this->right_down_panel->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->panel6->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
+			this->groupBox5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_not_connection))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_connection))->BeginInit();
+			this->panel4->SuspendLayout();
+			this->down_panel->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip1
@@ -375,15 +647,32 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1161, 24);
+			this->menuStrip1->Size = System::Drawing::Size(1004, 24);
 			this->menuStrip1->TabIndex = 6;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
 			// управлениеПроцессомToolStripMenuItem
 			// 
+			this->управлениеПроцессомToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->автоматизированныйРежимToolStripMenuItem,
+					this->автоматическийРежимToolStripMenuItem
+			});
 			this->управлениеПроцессомToolStripMenuItem->Name = L"управлениеПроцессомToolStripMenuItem";
 			this->управлениеПроцессомToolStripMenuItem->Size = System::Drawing::Size(150, 20);
 			this->управлениеПроцессомToolStripMenuItem->Text = L"Управление процессом";
+			// 
+			// автоматизированныйРежимToolStripMenuItem
+			// 
+			this->автоматизированныйРежимToolStripMenuItem->Enabled = false;
+			this->автоматизированныйРежимToolStripMenuItem->Name = L"автоматизированныйРежимToolStripMenuItem";
+			this->автоматизированныйРежимToolStripMenuItem->Size = System::Drawing::Size(236, 22);
+			this->автоматизированныйРежимToolStripMenuItem->Text = L"Автоматизированный режим";
+			// 
+			// автоматическийРежимToolStripMenuItem
+			// 
+			this->автоматическийРежимToolStripMenuItem->Name = L"автоматическийРежимToolStripMenuItem";
+			this->автоматическийРежимToolStripMenuItem->Size = System::Drawing::Size(236, 22);
+			this->автоматическийРежимToolStripMenuItem->Text = L"Автоматический режим";
 			// 
 			// настройкаНагреваToolStripMenuItem
 			// 
@@ -431,527 +720,405 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// 
 			// учетнаяЗаписьToolStripMenuItem
 			// 
+			this->учетнаяЗаписьToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->adminToolStripMenuItem,
+					this->studentToolStripMenuItem, this->демоверсияToolStripMenuItem
+			});
 			this->учетнаяЗаписьToolStripMenuItem->Name = L"учетнаяЗаписьToolStripMenuItem";
 			this->учетнаяЗаписьToolStripMenuItem->Size = System::Drawing::Size(159, 22);
 			this->учетнаяЗаписьToolStripMenuItem->Text = L"Учетная запись";
 			// 
-			// panel1
-			// 
-			this->panel1->BackColor = System::Drawing::Color::White;
-			this->panel1->Controls->Add(this->panel5);
-			this->panel1->Controls->Add(this->groupBox7);
-			this->panel1->Controls->Add(this->groupBox6);
-			this->panel1->Controls->Add(this->groupBox5);
-			this->panel1->Dock = System::Windows::Forms::DockStyle::Left;
-			this->panel1->Location = System::Drawing::Point(0, 24);
-			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(334, 867);
-			this->panel1->TabIndex = 7;
-			// 
-			// panel5
-			// 
-			this->panel5->Controls->Add(this->groupBox8);
-			this->panel5->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel5->Location = System::Drawing::Point(0, 624);
-			this->panel5->Name = L"panel5";
-			this->panel5->Size = System::Drawing::Size(334, 243);
-			this->panel5->TabIndex = 21;
-			// 
-			// groupBox8
-			// 
-			this->groupBox8->Controls->Add(this->label59);
-			this->groupBox8->Controls->Add(this->label58);
-			this->groupBox8->Controls->Add(this->textBox6);
-			this->groupBox8->Controls->Add(this->button16);
-			this->groupBox8->Controls->Add(this->radioButton2);
-			this->groupBox8->Controls->Add(this->radioButton1);
-			this->groupBox8->Controls->Add(this->label55);
-			this->groupBox8->Controls->Add(this->textBox5);
-			this->groupBox8->Controls->Add(this->label54);
-			this->groupBox8->Controls->Add(this->textBox4);
-			this->groupBox8->Controls->Add(this->label57);
-			this->groupBox8->Controls->Add(this->label53);
-			this->groupBox8->Controls->Add(this->button15);
-			this->groupBox8->Controls->Add(this->textBox3);
-			this->groupBox8->Controls->Add(this->label56);
-			this->groupBox8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->groupBox8->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->groupBox8->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox8->Location = System::Drawing::Point(12, 7);
-			this->groupBox8->Name = L"groupBox8";
-			this->groupBox8->Size = System::Drawing::Size(258, 233);
-			this->groupBox8->TabIndex = 20;
-			this->groupBox8->TabStop = false;
-			this->groupBox8->Text = L"Источник тока";
-			// 
-			// label59
-			// 
-			this->label59->AutoSize = true;
-			this->label59->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label59->ForeColor = System::Drawing::Color::DarkBlue;
-			this->label59->Location = System::Drawing::Point(6, 162);
-			this->label59->Name = L"label59";
-			this->label59->Size = System::Drawing::Size(35, 26);
-			this->label59->TabIndex = 30;
-			this->label59->Text = L"U=";
-			// 
-			// label58
-			// 
-			this->label58->AutoSize = true;
-			this->label58->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label58->ForeColor = System::Drawing::Color::Crimson;
-			this->label58->Location = System::Drawing::Point(6, 197);
-			this->label58->Name = L"label58";
-			this->label58->Size = System::Drawing::Size(27, 26);
-			this->label58->TabIndex = 29;
-			this->label58->Text = L"I=";
-			// 
-			// textBox6
-			// 
-			this->textBox6->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->textBox6->Location = System::Drawing::Point(41, 162);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(63, 29);
-			this->textBox6->TabIndex = 28;
-			this->textBox6->Text = L"10000";
-			this->textBox6->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// button16
-			// 
-			this->button16->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button16->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button16->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button16->Location = System::Drawing::Point(120, 159);
-			this->button16->Name = L"button16";
-			this->button16->Size = System::Drawing::Size(125, 29);
-			this->button16->TabIndex = 27;
-			this->button16->Text = L"Установить В";
-			this->button16->UseVisualStyleBackColor = false;
-			// 
-			// radioButton2
-			// 
-			this->radioButton2->AutoSize = true;
-			this->radioButton2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->radioButton2->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->radioButton2->Location = System::Drawing::Point(6, 111);
-			this->radioButton2->Name = L"radioButton2";
-			this->radioButton2->Size = System::Drawing::Size(194, 23);
-			this->radioButton2->TabIndex = 26;
-			this->radioButton2->TabStop = true;
-			this->radioButton2->Text = L"Высоковольтный режим";
-			this->radioButton2->UseVisualStyleBackColor = true;
-			// 
-			// radioButton1
-			// 
-			this->radioButton1->AutoSize = true;
-			this->radioButton1->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->radioButton1->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->radioButton1->Location = System::Drawing::Point(6, 133);
-			this->radioButton1->Name = L"radioButton1";
-			this->radioButton1->Size = System::Drawing::Size(185, 23);
-			this->radioButton1->TabIndex = 25;
-			this->radioButton1->TabStop = true;
-			this->radioButton1->Text = L"Низковольтный режим";
-			this->radioButton1->UseVisualStyleBackColor = true;
-			// 
-			// label55
-			// 
-			this->label55->AutoSize = true;
-			this->label55->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label55->ForeColor = System::Drawing::Color::Crimson;
-			this->label55->Location = System::Drawing::Point(211, 57);
-			this->label55->Name = L"label55";
-			this->label55->Size = System::Drawing::Size(34, 23);
-			this->label55->TabIndex = 24;
-			this->label55->Text = L"мА";
-			// 
-			// textBox5
-			// 
-			this->textBox5->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->textBox5->ForeColor = System::Drawing::Color::Crimson;
-			this->textBox5->Location = System::Drawing::Point(125, 57);
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(77, 31);
-			this->textBox5->TabIndex = 23;
-			this->textBox5->Text = L"300";
-			this->textBox5->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// label54
-			// 
-			this->label54->AutoSize = true;
-			this->label54->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label54->ForeColor = System::Drawing::Color::Crimson;
-			this->label54->Location = System::Drawing::Point(12, 57);
-			this->label54->Name = L"label54";
-			this->label54->Size = System::Drawing::Size(88, 23);
-			this->label54->TabIndex = 22;
-			this->label54->Text = L"Сила тока";
-			// 
-			// textBox4
-			// 
-			this->textBox4->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->textBox4->ForeColor = System::Drawing::Color::MidnightBlue;
-			this->textBox4->Location = System::Drawing::Point(125, 21);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(77, 31);
-			this->textBox4->TabIndex = 21;
-			this->textBox4->Text = L"300";
-			this->textBox4->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// label57
-			// 
-			this->label57->AutoSize = true;
-			this->label57->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label57->ForeColor = System::Drawing::Color::MediumBlue;
-			this->label57->Location = System::Drawing::Point(211, 24);
-			this->label57->Name = L"label57";
-			this->label57->Size = System::Drawing::Size(20, 23);
-			this->label57->TabIndex = 20;
-			this->label57->Text = L"В";
-			// 
-			// label53
-			// 
-			this->label53->AutoSize = true;
-			this->label53->BackColor = System::Drawing::Color::White;
-			this->label53->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label53->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label53->Location = System::Drawing::Point(30, 91);
-			this->label53->Name = L"label53";
-			this->label53->Size = System::Drawing::Size(180, 23);
-			this->label53->TabIndex = 19;
-			this->label53->Text = L"Настройка источника";
-			// 
-			// button15
-			// 
-			this->button15->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button15->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button15->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button15->ForeColor = System::Drawing::Color::Crimson;
-			this->button15->Location = System::Drawing::Point(119, 198);
-			this->button15->Name = L"button15";
-			this->button15->Size = System::Drawing::Size(126, 29);
-			this->button15->TabIndex = 18;
-			this->button15->Text = L"Установить мА";
-			this->button15->UseVisualStyleBackColor = false;
-			// 
-			// textBox3
-			// 
-			this->textBox3->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->textBox3->Location = System::Drawing::Point(41, 197);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(63, 29);
-			this->textBox3->TabIndex = 17;
-			this->textBox3->Text = L"10000";
-			this->textBox3->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// label56
-			// 
-			this->label56->AutoSize = true;
-			this->label56->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label56->ForeColor = System::Drawing::Color::MediumBlue;
-			this->label56->Location = System::Drawing::Point(8, 24);
-			this->label56->Name = L"label56";
-			this->label56->Size = System::Drawing::Size(111, 23);
-			this->label56->TabIndex = 11;
-			this->label56->Text = L"Напряжение";
-			// 
-			// groupBox7
-			// 
-			this->groupBox7->Controls->Add(this->button11);
-			this->groupBox7->Controls->Add(this->button12);
-			this->groupBox7->Controls->Add(this->button13);
-			this->groupBox7->Controls->Add(this->label52);
-			this->groupBox7->Controls->Add(this->button14);
-			this->groupBox7->Controls->Add(this->label48);
-			this->groupBox7->Controls->Add(this->label49);
-			this->groupBox7->Controls->Add(this->label50);
-			this->groupBox7->Controls->Add(this->label51);
-			this->groupBox7->Controls->Add(this->button10);
-			this->groupBox7->Controls->Add(this->button9);
-			this->groupBox7->Controls->Add(this->button8);
-			this->groupBox7->Controls->Add(this->label47);
-			this->groupBox7->Controls->Add(this->label43);
-			this->groupBox7->Controls->Add(this->button7);
-			this->groupBox7->Controls->Add(this->label44);
-			this->groupBox7->Controls->Add(this->label45);
-			this->groupBox7->Controls->Add(this->label46);
-			this->groupBox7->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->groupBox7->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->groupBox7->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox7->Location = System::Drawing::Point(12, 329);
-			this->groupBox7->Name = L"groupBox7";
-			this->groupBox7->Size = System::Drawing::Size(237, 289);
-			this->groupBox7->TabIndex = 20;
-			this->groupBox7->TabStop = false;
-			this->groupBox7->Text = L"Напуск газов";
-			// 
-			// button11
-			// 
-			this->button11->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button11->Enabled = false;
-			this->button11->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button11->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button11->Location = System::Drawing::Point(120, 254);
-			this->button11->Name = L"button11";
-			this->button11->Size = System::Drawing::Size(108, 26);
-			this->button11->TabIndex = 32;
-			this->button11->Text = L"- 30 мВ";
-			this->button11->UseVisualStyleBackColor = false;
-			// 
-			// button12
-			// 
-			this->button12->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button12->Enabled = false;
-			this->button12->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button12->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button12->Location = System::Drawing::Point(120, 222);
-			this->button12->Name = L"button12";
-			this->button12->Size = System::Drawing::Size(108, 26);
-			this->button12->TabIndex = 31;
-			this->button12->Text = L"+ 30 мВ";
-			this->button12->UseVisualStyleBackColor = false;
-			// 
-			// button13
-			// 
-			this->button13->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button13->Enabled = false;
-			this->button13->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button13->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button13->Location = System::Drawing::Point(6, 254);
-			this->button13->Name = L"button13";
-			this->button13->Size = System::Drawing::Size(108, 26);
-			this->button13->TabIndex = 30;
-			this->button13->Text = L"Отключить";
-			this->button13->UseVisualStyleBackColor = false;
-			// 
-			// label52
-			// 
-			this->label52->AutoSize = true;
-			this->label52->BackColor = System::Drawing::Color::White;
-			this->label52->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label52->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label52->Location = System::Drawing::Point(49, 193);
-			this->label52->Name = L"label52";
-			this->label52->Size = System::Drawing::Size(148, 23);
-			this->label52->TabIndex = 29;
-			this->label52->Text = L"Напуск газа PSV1";
-			// 
-			// button14
-			// 
-			this->button14->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button14->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button14->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button14->Location = System::Drawing::Point(6, 222);
-			this->button14->Name = L"button14";
-			this->button14->Size = System::Drawing::Size(108, 26);
-			this->button14->TabIndex = 28;
-			this->button14->Text = L"Включить PSV1";
-			this->button14->UseVisualStyleBackColor = false;
-			// 
-			// label48
-			// 
-			this->label48->AutoSize = true;
-			this->label48->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label48->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label48->Location = System::Drawing::Point(168, 150);
-			this->label48->Name = L"label48";
-			this->label48->Size = System::Drawing::Size(37, 26);
-			this->label48->TabIndex = 27;
-			this->label48->Text = L"мВ";
-			// 
-			// label49
-			// 
-			this->label49->AutoSize = true;
-			this->label49->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label49->ForeColor = System::Drawing::Color::Black;
-			this->label49->Location = System::Drawing::Point(81, 176);
-			this->label49->Name = L"label49";
-			this->label49->Size = System::Drawing::Size(78, 18);
-			this->label49->TabIndex = 26;
-			this->label49->Text = L"(сигнал au)";
-			// 
-			// label50
-			// 
-			this->label50->AutoSize = true;
-			this->label50->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label50->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label50->Location = System::Drawing::Point(110, 150);
-			this->label50->Name = L"label50";
-			this->label50->Size = System::Drawing::Size(56, 26);
-			this->label50->TabIndex = 25;
-			this->label50->Text = L"1200";
-			// 
-			// label51
-			// 
-			this->label51->AutoSize = true;
-			this->label51->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label51->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label51->Location = System::Drawing::Point(38, 150);
-			this->label51->Name = L"label51";
-			this->label51->Size = System::Drawing::Size(66, 26);
-			this->label51->TabIndex = 24;
-			this->label51->Text = L"PSV 2 ";
-			// 
-			// button10
-			// 
-			this->button10->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button10->Enabled = false;
-			this->button10->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button10->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button10->Location = System::Drawing::Point(120, 121);
-			this->button10->Name = L"button10";
-			this->button10->Size = System::Drawing::Size(108, 26);
-			this->button10->TabIndex = 23;
-			this->button10->Text = L"- 30 мВ";
-			this->button10->UseVisualStyleBackColor = false;
-			// 
-			// button9
-			// 
-			this->button9->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button9->Enabled = false;
-			this->button9->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button9->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button9->Location = System::Drawing::Point(120, 89);
-			this->button9->Name = L"button9";
-			this->button9->Size = System::Drawing::Size(108, 26);
-			this->button9->TabIndex = 22;
-			this->button9->Text = L"+ 30 мВ";
-			this->button9->UseVisualStyleBackColor = false;
-			// 
-			// button8
-			// 
-			this->button8->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button8->Enabled = false;
-			this->button8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button8->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button8->Location = System::Drawing::Point(6, 121);
-			this->button8->Name = L"button8";
-			this->button8->Size = System::Drawing::Size(108, 26);
-			this->button8->TabIndex = 21;
-			this->button8->Text = L"Отключить";
-			this->button8->UseVisualStyleBackColor = false;
-			// 
-			// label47
-			// 
-			this->label47->AutoSize = true;
-			this->label47->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label47->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label47->Location = System::Drawing::Point(168, 20);
-			this->label47->Name = L"label47";
-			this->label47->Size = System::Drawing::Size(37, 26);
-			this->label47->TabIndex = 20;
-			this->label47->Text = L"мВ";
-			// 
-			// label43
-			// 
-			this->label43->AutoSize = true;
-			this->label43->BackColor = System::Drawing::Color::White;
-			this->label43->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label43->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label43->Location = System::Drawing::Point(49, 63);
-			this->label43->Name = L"label43";
-			this->label43->Size = System::Drawing::Size(148, 23);
-			this->label43->TabIndex = 19;
-			this->label43->Text = L"Напуск газа PSV1";
-			// 
-			// button7
-			// 
-			this->button7->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button7->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button7->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button7->Location = System::Drawing::Point(6, 89);
-			this->button7->Name = L"button7";
-			this->button7->Size = System::Drawing::Size(108, 26);
-			this->button7->TabIndex = 18;
-			this->button7->Text = L"Включить PSV1";
-			this->button7->UseVisualStyleBackColor = false;
-			// 
-			// label44
-			// 
-			this->label44->AutoSize = true;
-			this->label44->Font = (gcnew System::Drawing::Font(L"Calibri", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label44->ForeColor = System::Drawing::Color::Black;
-			this->label44->Location = System::Drawing::Point(81, 46);
-			this->label44->Name = L"label44";
-			this->label44->Size = System::Drawing::Size(78, 18);
-			this->label44->TabIndex = 13;
-			this->label44->Text = L"(сигнал au)";
-			// 
-			// label45
-			// 
-			this->label45->AutoSize = true;
-			this->label45->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label45->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label45->Location = System::Drawing::Point(110, 20);
-			this->label45->Name = L"label45";
-			this->label45->Size = System::Drawing::Size(56, 26);
-			this->label45->TabIndex = 12;
-			this->label45->Text = L"1200";
-			// 
-			// label46
-			// 
-			this->label46->AutoSize = true;
-			this->label46->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label46->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label46->Location = System::Drawing::Point(38, 20);
-			this->label46->Name = L"label46";
-			this->label46->Size = System::Drawing::Size(66, 26);
-			this->label46->TabIndex = 11;
-			this->label46->Text = L"PSV 1 ";
+			// adminToolStripMenuItem
+			// 
+			this->adminToolStripMenuItem->Enabled = false;
+			this->adminToolStripMenuItem->Name = L"adminToolStripMenuItem";
+			this->adminToolStripMenuItem->Size = System::Drawing::Size(147, 22);
+			this->adminToolStripMenuItem->Text = L"Admin";
+			// 
+			// studentToolStripMenuItem
+			// 
+			this->studentToolStripMenuItem->Name = L"studentToolStripMenuItem";
+			this->studentToolStripMenuItem->Size = System::Drawing::Size(147, 22);
+			this->studentToolStripMenuItem->Text = L"Student";
+			// 
+			// демоверсияToolStripMenuItem
+			// 
+			this->демоверсияToolStripMenuItem->Name = L"демоверсияToolStripMenuItem";
+			this->демоверсияToolStripMenuItem->Size = System::Drawing::Size(147, 22);
+			this->демоверсияToolStripMenuItem->Text = L"Демо-версия";
+			// 
+			// left_panel
+			// 
+			this->left_panel->BackColor = System::Drawing::Color::White;
+			this->left_panel->Controls->Add(this->groupBox6);
+			this->left_panel->Controls->Add(this->left_down_panel);
+			this->left_panel->Controls->Add(this->groupbox_butterfly);
+			this->left_panel->Controls->Add(this->groupBox_time);
+			this->left_panel->Dock = System::Windows::Forms::DockStyle::Left;
+			this->left_panel->Location = System::Drawing::Point(0, 24);
+			this->left_panel->Name = L"left_panel";
+			this->left_panel->Size = System::Drawing::Size(317, 705);
+			this->left_panel->TabIndex = 7;
 			// 
 			// groupBox6
 			// 
-			this->groupBox6->Controls->Add(this->label39);
-			this->groupBox6->Controls->Add(this->button6);
-			this->groupBox6->Controls->Add(this->textBox2);
-			this->groupBox6->Controls->Add(this->label40);
-			this->groupBox6->Controls->Add(this->label41);
-			this->groupBox6->Controls->Add(this->label42);
+			this->groupBox6->Controls->Add(this->tabControl1);
 			this->groupBox6->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox6->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox6->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox6->Location = System::Drawing::Point(12, 186);
+			this->groupBox6->Location = System::Drawing::Point(9, 319);
 			this->groupBox6->Name = L"groupBox6";
-			this->groupBox6->Size = System::Drawing::Size(237, 142);
-			this->groupBox6->TabIndex = 19;
+			this->groupBox6->Size = System::Drawing::Size(304, 347);
+			this->groupBox6->TabIndex = 33;
 			this->groupBox6->TabStop = false;
-			this->groupBox6->Text = L"Клапан бабочка";
+			this->groupBox6->Text = L"Напуск газов";
+			// 
+			// tabControl1
+			// 
+			this->tabControl1->Controls->Add(this->tabPage1);
+			this->tabControl1->Controls->Add(this->tabPage2);
+			this->tabControl1->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->tabControl1->Location = System::Drawing::Point(6, 30);
+			this->tabControl1->Name = L"tabControl1";
+			this->tabControl1->SelectedIndex = 0;
+			this->tabControl1->Size = System::Drawing::Size(292, 309);
+			this->tabControl1->TabIndex = 25;
+			// 
+			// tabPage1
+			// 
+			this->tabPage1->Controls->Add(this->f_button_PSV2_m30mv);
+			this->tabPage1->Controls->Add(this->f_button_PSV1_m30mv);
+			this->tabPage1->Controls->Add(this->f_button_PSV2_p30mv);
+			this->tabPage1->Controls->Add(this->f_label_PSV1_status_mV);
+			this->tabPage1->Controls->Add(this->f_button_PSV1_p30mv);
+			this->tabPage1->Controls->Add(this->label8);
+			this->tabPage1->Controls->Add(this->label7);
+			this->tabPage1->Controls->Add(this->f_button_start_stop_PSV2);
+			this->tabPage1->Controls->Add(this->label9);
+			this->tabPage1->Controls->Add(this->label5);
+			this->tabPage1->Controls->Add(this->label12);
+			this->tabPage1->Controls->Add(this->label2);
+			this->tabPage1->Controls->Add(this->f_label_PSV2_status_mV);
+			this->tabPage1->Controls->Add(this->label16);
+			this->tabPage1->Controls->Add(this->f_button_start_stop_PSV1);
+			this->tabPage1->Controls->Add(this->label4);
+			this->tabPage1->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->tabPage1->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
+			this->tabPage1->Location = System::Drawing::Point(4, 24);
+			this->tabPage1->Name = L"tabPage1";
+			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage1->Size = System::Drawing::Size(284, 281);
+			this->tabPage1->TabIndex = 0;
+			this->tabPage1->Text = L"Ручной режим";
+			this->tabPage1->UseVisualStyleBackColor = true;
+			// 
+			// f_button_PSV2_m30mv
+			// 
+			this->f_button_PSV2_m30mv->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_PSV2_m30mv->Enabled = false;
+			this->f_button_PSV2_m30mv->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_PSV2_m30mv->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_PSV2_m30mv->ForeColor = System::Drawing::Color::Navy;
+			this->f_button_PSV2_m30mv->Location = System::Drawing::Point(158, 245);
+			this->f_button_PSV2_m30mv->Name = L"f_button_PSV2_m30mv";
+			this->f_button_PSV2_m30mv->Size = System::Drawing::Size(120, 26);
+			this->f_button_PSV2_m30mv->TabIndex = 41;
+			this->f_button_PSV2_m30mv->Text = L"- 30 мВ";
+			this->f_button_PSV2_m30mv->UseVisualStyleBackColor = false;
+			this->f_button_PSV2_m30mv->Click += gcnew System::EventHandler(this, &MainForm::f_button_PSV2_m30mv_Click);
+			// 
+			// f_button_PSV1_m30mv
+			// 
+			this->f_button_PSV1_m30mv->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_PSV1_m30mv->Enabled = false;
+			this->f_button_PSV1_m30mv->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_PSV1_m30mv->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_PSV1_m30mv->ForeColor = System::Drawing::Color::Navy;
+			this->f_button_PSV1_m30mv->Location = System::Drawing::Point(158, 108);
+			this->f_button_PSV1_m30mv->Name = L"f_button_PSV1_m30mv";
+			this->f_button_PSV1_m30mv->Size = System::Drawing::Size(120, 26);
+			this->f_button_PSV1_m30mv->TabIndex = 41;
+			this->f_button_PSV1_m30mv->Text = L"- 30 мВ";
+			this->f_button_PSV1_m30mv->UseVisualStyleBackColor = false;
+			this->f_button_PSV1_m30mv->Click += gcnew System::EventHandler(this, &MainForm::f_button_PSV1_m30mv_Click);
+			// 
+			// f_button_PSV2_p30mv
+			// 
+			this->f_button_PSV2_p30mv->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_PSV2_p30mv->Enabled = false;
+			this->f_button_PSV2_p30mv->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_PSV2_p30mv->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_PSV2_p30mv->ForeColor = System::Drawing::Color::Crimson;
+			this->f_button_PSV2_p30mv->Location = System::Drawing::Point(158, 213);
+			this->f_button_PSV2_p30mv->Name = L"f_button_PSV2_p30mv";
+			this->f_button_PSV2_p30mv->Size = System::Drawing::Size(120, 26);
+			this->f_button_PSV2_p30mv->TabIndex = 40;
+			this->f_button_PSV2_p30mv->Text = L"+ 30 мВ";
+			this->f_button_PSV2_p30mv->UseVisualStyleBackColor = false;
+			this->f_button_PSV2_p30mv->Click += gcnew System::EventHandler(this, &MainForm::f_button_PSV2_p30mv_Click);
+			// 
+			// f_label_PSV1_status_mV
+			// 
+			this->f_label_PSV1_status_mV->AutoSize = true;
+			this->f_label_PSV1_status_mV->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_label_PSV1_status_mV->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_PSV1_status_mV->Location = System::Drawing::Point(134, 4);
+			this->f_label_PSV1_status_mV->Name = L"f_label_PSV1_status_mV";
+			this->f_label_PSV1_status_mV->Size = System::Drawing::Size(56, 26);
+			this->f_label_PSV1_status_mV->TabIndex = 34;
+			this->f_label_PSV1_status_mV->Text = L"1200";
+			// 
+			// f_button_PSV1_p30mv
+			// 
+			this->f_button_PSV1_p30mv->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_PSV1_p30mv->Enabled = false;
+			this->f_button_PSV1_p30mv->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_PSV1_p30mv->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_PSV1_p30mv->ForeColor = System::Drawing::Color::Crimson;
+			this->f_button_PSV1_p30mv->Location = System::Drawing::Point(158, 76);
+			this->f_button_PSV1_p30mv->Name = L"f_button_PSV1_p30mv";
+			this->f_button_PSV1_p30mv->Size = System::Drawing::Size(120, 26);
+			this->f_button_PSV1_p30mv->TabIndex = 40;
+			this->f_button_PSV1_p30mv->Text = L"+ 30 мВ";
+			this->f_button_PSV1_p30mv->UseVisualStyleBackColor = false;
+			this->f_button_PSV1_p30mv->Click += gcnew System::EventHandler(this, &MainForm::f_button_PSV1_p30mv_Click);
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->BackColor = System::Drawing::Color::White;
+			this->label8->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label8->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label8->Location = System::Drawing::Point(73, 180);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(148, 23);
+			this->label8->TabIndex = 38;
+			this->label8->Text = L"Напуск газа PSV2";
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label7->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->label7->Location = System::Drawing::Point(62, 4);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(66, 26);
+			this->label7->TabIndex = 33;
+			this->label7->Text = L"PSV 1 ";
+			// 
+			// f_button_start_stop_PSV2
+			// 
+			this->f_button_start_stop_PSV2->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_start_stop_PSV2->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_start_stop_PSV2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_start_stop_PSV2->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->f_button_start_stop_PSV2->Location = System::Drawing::Point(4, 213);
+			this->f_button_start_stop_PSV2->Name = L"f_button_start_stop_PSV2";
+			this->f_button_start_stop_PSV2->Size = System::Drawing::Size(147, 58);
+			this->f_button_start_stop_PSV2->TabIndex = 37;
+			this->f_button_start_stop_PSV2->Text = L"Включить PSV2";
+			this->f_button_start_stop_PSV2->UseVisualStyleBackColor = false;
+			this->f_button_start_stop_PSV2->Click += gcnew System::EventHandler(this, &MainForm::f_button_start_stop_PSV2_Click);
+			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label9->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->label9->Location = System::Drawing::Point(192, 137);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(37, 26);
+			this->label9->TabIndex = 36;
+			this->label9->Text = L"мВ";
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Font = (gcnew System::Drawing::Font(L"Calibri", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label5->ForeColor = System::Drawing::Color::Black;
+			this->label5->Location = System::Drawing::Point(105, 30);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(78, 18);
+			this->label5->TabIndex = 35;
+			this->label5->Text = L"(сигнал au)";
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label12->ForeColor = System::Drawing::Color::Black;
+			this->label12->Location = System::Drawing::Point(105, 160);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(78, 18);
+			this->label12->TabIndex = 35;
+			this->label12->Text = L"(сигнал au)";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label2->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->label2->Location = System::Drawing::Point(192, 4);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(37, 26);
+			this->label2->TabIndex = 38;
+			this->label2->Text = L"мВ";
+			// 
+			// f_label_PSV2_status_mV
+			// 
+			this->f_label_PSV2_status_mV->AutoSize = true;
+			this->f_label_PSV2_status_mV->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_label_PSV2_status_mV->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_PSV2_status_mV->Location = System::Drawing::Point(134, 137);
+			this->f_label_PSV2_status_mV->Name = L"f_label_PSV2_status_mV";
+			this->f_label_PSV2_status_mV->Size = System::Drawing::Size(56, 26);
+			this->f_label_PSV2_status_mV->TabIndex = 34;
+			this->f_label_PSV2_status_mV->Text = L"1200";
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label16->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->label16->Location = System::Drawing::Point(62, 137);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(66, 26);
+			this->label16->TabIndex = 33;
+			this->label16->Text = L"PSV 2 ";
+			// 
+			// f_button_start_stop_PSV1
+			// 
+			this->f_button_start_stop_PSV1->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_start_stop_PSV1->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_start_stop_PSV1->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_start_stop_PSV1->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->f_button_start_stop_PSV1->Location = System::Drawing::Point(8, 77);
+			this->f_button_start_stop_PSV1->Name = L"f_button_start_stop_PSV1";
+			this->f_button_start_stop_PSV1->Size = System::Drawing::Size(143, 57);
+			this->f_button_start_stop_PSV1->TabIndex = 36;
+			this->f_button_start_stop_PSV1->Text = L"Включить PSV1";
+			this->f_button_start_stop_PSV1->UseVisualStyleBackColor = false;
+			this->f_button_start_stop_PSV1->Click += gcnew System::EventHandler(this, &MainForm::f_button_start_stop_PSV1_Click);
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->BackColor = System::Drawing::Color::White;
+			this->label4->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label4->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label4->Location = System::Drawing::Point(73, 47);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(148, 23);
+			this->label4->TabIndex = 37;
+			this->label4->Text = L"Напуск газа PSV1";
+			// 
+			// tabPage2
+			// 
+			this->tabPage2->Location = System::Drawing::Point(4, 24);
+			this->tabPage2->Name = L"tabPage2";
+			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage2->Size = System::Drawing::Size(284, 281);
+			this->tabPage2->TabIndex = 1;
+			this->tabPage2->Text = L"Автоматический режим";
+			this->tabPage2->UseVisualStyleBackColor = true;
+			// 
+			// left_down_panel
+			// 
+			this->left_down_panel->Controls->Add(this->f_label_recording);
+			this->left_down_panel->Controls->Add(this->i_label_name_recording);
+			this->left_down_panel->Controls->Add(this->pictureBox_recording);
+			this->left_down_panel->Controls->Add(this->f_label_name_recording);
+			this->left_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
+			this->left_down_panel->Location = System::Drawing::Point(0, 676);
+			this->left_down_panel->Name = L"left_down_panel";
+			this->left_down_panel->Size = System::Drawing::Size(317, 29);
+			this->left_down_panel->TabIndex = 21;
+			// 
+			// f_label_recording
+			// 
+			this->f_label_recording->AutoSize = true;
+			this->f_label_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_label_recording->ForeColor = System::Drawing::Color::Crimson;
+			this->f_label_recording->Location = System::Drawing::Point(32, 5);
+			this->f_label_recording->Name = L"f_label_recording";
+			this->f_label_recording->Size = System::Drawing::Size(81, 18);
+			this->f_label_recording->TabIndex = 1;
+			this->f_label_recording->Text = L"RECORDING";
+			this->f_label_recording->Click += gcnew System::EventHandler(this, &MainForm::f_label_recording_Click);
+			// 
+			// i_label_name_recording
+			// 
+			this->i_label_name_recording->AutoSize = true;
+			this->i_label_name_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->i_label_name_recording->ForeColor = System::Drawing::Color::Black;
+			this->i_label_name_recording->Location = System::Drawing::Point(129, 5);
+			this->i_label_name_recording->Name = L"i_label_name_recording";
+			this->i_label_name_recording->Size = System::Drawing::Size(42, 19);
+			this->i_label_name_recording->TabIndex = 2;
+			this->i_label_name_recording->Text = L"Имя:";
+			// 
+			// pictureBox_recording
+			// 
+			this->pictureBox_recording->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox_recording.Image")));
+			this->pictureBox_recording->Location = System::Drawing::Point(12, 3);
+			this->pictureBox_recording->Name = L"pictureBox_recording";
+			this->pictureBox_recording->Size = System::Drawing::Size(20, 25);
+			this->pictureBox_recording->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->pictureBox_recording->TabIndex = 0;
+			this->pictureBox_recording->TabStop = false;
+			this->pictureBox_recording->Click += gcnew System::EventHandler(this, &MainForm::pictureBox_recording_Click);
+			// 
+			// f_label_name_recording
+			// 
+			this->f_label_name_recording->AutoSize = true;
+			this->f_label_name_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_label_name_recording->ForeColor = System::Drawing::Color::Black;
+			this->f_label_name_recording->Location = System::Drawing::Point(173, 5);
+			this->f_label_name_recording->Name = L"f_label_name_recording";
+			this->f_label_name_recording->Size = System::Drawing::Size(76, 19);
+			this->f_label_name_recording->TabIndex = 3;
+			this->f_label_name_recording->Text = L"Hst121.txt";
+			// 
+			// groupbox_butterfly
+			// 
+			this->groupbox_butterfly->Controls->Add(this->label39);
+			this->groupbox_butterfly->Controls->Add(this->button6);
+			this->groupbox_butterfly->Controls->Add(this->textBox2);
+			this->groupbox_butterfly->Controls->Add(this->label40);
+			this->groupbox_butterfly->Controls->Add(this->f_label_batterfly_status);
+			this->groupbox_butterfly->Controls->Add(this->label42);
+			this->groupbox_butterfly->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->groupbox_butterfly->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->groupbox_butterfly->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->groupbox_butterfly->Location = System::Drawing::Point(9, 176);
+			this->groupbox_butterfly->Name = L"groupbox_butterfly";
+			this->groupbox_butterfly->Size = System::Drawing::Size(304, 142);
+			this->groupbox_butterfly->TabIndex = 19;
+			this->groupbox_butterfly->TabStop = false;
+			this->groupbox_butterfly->Text = L"Клапан бабочка";
 			// 
 			// label39
 			// 
@@ -960,7 +1127,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label39->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label39->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label39->Location = System::Drawing::Point(22, 73);
+			this->label39->Location = System::Drawing::Point(56, 71);
 			this->label39->Name = L"label39";
 			this->label39->Size = System::Drawing::Size(193, 23);
 			this->label39->TabIndex = 19;
@@ -969,10 +1136,10 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// button6
 			// 
 			this->button6->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button6->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button6->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->button6->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button6->Location = System::Drawing::Point(84, 99);
+			this->button6->Location = System::Drawing::Point(124, 97);
 			this->button6->Name = L"button6";
 			this->button6->Size = System::Drawing::Size(137, 29);
 			this->button6->TabIndex = 18;
@@ -984,9 +1151,9 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->textBox2->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->textBox2->HideSelection = false;
-			this->textBox2->Location = System::Drawing::Point(15, 99);
+			this->textBox2->Location = System::Drawing::Point(26, 97);
 			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(63, 29);
+			this->textBox2->Size = System::Drawing::Size(90, 29);
 			this->textBox2->TabIndex = 17;
 			this->textBox2->Text = L"10000";
 			this->textBox2->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -997,23 +1164,23 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label40->Font = (gcnew System::Drawing::Font(L"Calibri", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label40->ForeColor = System::Drawing::Color::Black;
-			this->label40->Location = System::Drawing::Point(50, 53);
+			this->label40->Location = System::Drawing::Point(86, 54);
 			this->label40->Name = L"label40";
 			this->label40->Size = System::Drawing::Size(123, 17);
 			this->label40->TabIndex = 13;
 			this->label40->Text = L"(открытие клапана)";
 			// 
-			// label41
+			// f_label_batterfly_status
 			// 
-			this->label41->AutoSize = true;
-			this->label41->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_batterfly_status->AutoSize = true;
+			this->f_label_batterfly_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label41->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label41->Location = System::Drawing::Point(141, 27);
-			this->label41->Name = L"label41";
-			this->label41->Size = System::Drawing::Size(60, 26);
-			this->label41->TabIndex = 12;
-			this->label41->Text = L"100%";
+			this->f_label_batterfly_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_batterfly_status->Location = System::Drawing::Point(177, 28);
+			this->f_label_batterfly_status->Name = L"f_label_batterfly_status";
+			this->f_label_batterfly_status->Size = System::Drawing::Size(60, 26);
+			this->f_label_batterfly_status->TabIndex = 12;
+			this->f_label_batterfly_status->Text = L"100%";
 			// 
 			// label42
 			// 
@@ -1021,104 +1188,105 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label42->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label42->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label42->Location = System::Drawing::Point(29, 27);
+			this->label42->Location = System::Drawing::Point(65, 28);
 			this->label42->Name = L"label42";
 			this->label42->Size = System::Drawing::Size(114, 26);
 			this->label42->TabIndex = 11;
 			this->label42->Text = L"Положение";
 			// 
-			// groupBox5
+			// groupBox_time
 			// 
-			this->groupBox5->Controls->Add(this->label38);
-			this->groupBox5->Controls->Add(this->label37);
-			this->groupBox5->Controls->Add(this->label36);
-			this->groupBox5->Controls->Add(this->label35);
-			this->groupBox5->Controls->Add(this->label34);
-			this->groupBox5->Controls->Add(this->label33);
-			this->groupBox5->Controls->Add(this->label32);
-			this->groupBox5->Controls->Add(this->label31);
-			this->groupBox5->Controls->Add(this->label30);
-			this->groupBox5->Controls->Add(this->label29);
-			this->groupBox5->Controls->Add(this->label28);
-			this->groupBox5->Controls->Add(this->label27);
-			this->groupBox5->Controls->Add(this->label26);
-			this->groupBox5->Controls->Add(this->label25);
-			this->groupBox5->Controls->Add(this->label24);
-			this->groupBox5->Controls->Add(this->label23);
-			this->groupBox5->Controls->Add(this->label22);
-			this->groupBox5->Controls->Add(this->label20);
-			this->groupBox5->Controls->Add(this->label21);
-			this->groupBox5->Controls->Add(this->label19);
-			this->groupBox5->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->groupBox5->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->groupBox_time->Controls->Add(this->f_label_timer_time_stop_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_current_stop_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_start_stop_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_time_TPlB);
+			this->groupBox_time->Controls->Add(this->f_label_timer_time_gases);
+			this->groupBox_time->Controls->Add(this->label33);
+			this->groupBox_time->Controls->Add(this->f_label_timer_current_TPlB);
+			this->groupBox_time->Controls->Add(this->f_label_timer_start_TPlB);
+			this->groupBox_time->Controls->Add(this->label30);
+			this->groupBox_time->Controls->Add(this->f_label_timer_current_gases);
+			this->groupBox_time->Controls->Add(this->f_label_timer_start_gases);
+			this->groupBox_time->Controls->Add(this->label27);
+			this->groupBox_time->Controls->Add(this->f_label_timer_current_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_current_start_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_time_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_start_pump);
+			this->groupBox_time->Controls->Add(this->label22);
+			this->groupBox_time->Controls->Add(this->f_label_timer_start_start_pump);
+			this->groupBox_time->Controls->Add(this->f_label_timer_time_start_pump);
+			this->groupBox_time->Controls->Add(this->label19);
+			this->groupBox_time->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->groupBox_time->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->groupBox5->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox5->Location = System::Drawing::Point(12, 10);
-			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(319, 170);
-			this->groupBox5->TabIndex = 4;
-			this->groupBox5->TabStop = false;
-			this->groupBox5->Text = L"Время процесса";
+			this->groupBox_time->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->groupBox_time->Location = System::Drawing::Point(9, 3);
+			this->groupBox_time->Name = L"groupBox_time";
+			this->groupBox_time->Size = System::Drawing::Size(304, 170);
+			this->groupBox_time->TabIndex = 4;
+			this->groupBox_time->TabStop = false;
+			this->groupBox_time->Text = L"Время процесса";
 			// 
-			// label38
+			// f_label_timer_time_stop_pump
 			// 
-			this->label38->AutoSize = true;
-			this->label38->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_time_stop_pump->AutoSize = true;
+			this->f_label_timer_time_stop_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label38->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label38->Location = System::Drawing::Point(256, 142);
-			this->label38->Name = L"label38";
-			this->label38->Size = System::Drawing::Size(16, 23);
-			this->label38->TabIndex = 22;
-			this->label38->Text = L"-";
+			this->f_label_timer_time_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_time_stop_pump->Location = System::Drawing::Point(246, 137);
+			this->f_label_timer_time_stop_pump->Name = L"f_label_timer_time_stop_pump";
+			this->f_label_timer_time_stop_pump->Size = System::Drawing::Size(16, 23);
+			this->f_label_timer_time_stop_pump->TabIndex = 22;
+			this->f_label_timer_time_stop_pump->Text = L"-";
 			// 
-			// label37
+			// f_label_timer_current_stop_pump
 			// 
-			this->label37->AutoSize = true;
-			this->label37->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_current_stop_pump->AutoSize = true;
+			this->f_label_timer_current_stop_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label37->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label37->Location = System::Drawing::Point(199, 142);
-			this->label37->Name = L"label37";
-			this->label37->Size = System::Drawing::Size(16, 23);
-			this->label37->TabIndex = 21;
-			this->label37->Text = L"-";
+			this->f_label_timer_current_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_current_stop_pump->Location = System::Drawing::Point(197, 137);
+			this->f_label_timer_current_stop_pump->Name = L"f_label_timer_current_stop_pump";
+			this->f_label_timer_current_stop_pump->Size = System::Drawing::Size(16, 23);
+			this->f_label_timer_current_stop_pump->TabIndex = 21;
+			this->f_label_timer_current_stop_pump->Text = L"-";
 			// 
-			// label36
+			// f_label_timer_start_stop_pump
 			// 
-			this->label36->AutoSize = true;
-			this->label36->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_start_stop_pump->AutoSize = true;
+			this->f_label_timer_start_stop_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label36->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label36->Location = System::Drawing::Point(150, 142);
-			this->label36->Name = L"label36";
-			this->label36->Size = System::Drawing::Size(16, 23);
-			this->label36->TabIndex = 20;
-			this->label36->Text = L"-";
+			this->f_label_timer_start_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_start_stop_pump->Location = System::Drawing::Point(145, 137);
+			this->f_label_timer_start_stop_pump->Name = L"f_label_timer_start_stop_pump";
+			this->f_label_timer_start_stop_pump->Size = System::Drawing::Size(16, 23);
+			this->f_label_timer_start_stop_pump->TabIndex = 20;
+			this->f_label_timer_start_stop_pump->Text = L"-";
+			this->f_label_timer_start_stop_pump->Click += gcnew System::EventHandler(this, &MainForm::label36_Click);
 			// 
-			// label35
+			// f_label_timer_time_TPlB
 			// 
-			this->label35->AutoSize = true;
-			this->label35->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_time_TPlB->AutoSize = true;
+			this->f_label_timer_time_TPlB->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label35->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label35->Location = System::Drawing::Point(246, 112);
-			this->label35->Name = L"label35";
-			this->label35->Size = System::Drawing::Size(55, 23);
-			this->label35->TabIndex = 19;
-			this->label35->Text = L"13:01";
+			this->f_label_timer_time_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_time_TPlB->Location = System::Drawing::Point(246, 110);
+			this->f_label_timer_time_TPlB->Name = L"f_label_timer_time_TPlB";
+			this->f_label_timer_time_TPlB->Size = System::Drawing::Size(55, 23);
+			this->f_label_timer_time_TPlB->TabIndex = 19;
+			this->f_label_timer_time_TPlB->Text = L"13:01";
 			// 
-			// label34
+			// f_label_timer_time_gases
 			// 
-			this->label34->AutoSize = true;
-			this->label34->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_time_gases->AutoSize = true;
+			this->f_label_timer_time_gases->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label34->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label34->Location = System::Drawing::Point(246, 83);
-			this->label34->Name = L"label34";
-			this->label34->Size = System::Drawing::Size(55, 23);
-			this->label34->TabIndex = 18;
-			this->label34->Text = L"13:00";
+			this->f_label_timer_time_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_time_gases->Location = System::Drawing::Point(246, 83);
+			this->f_label_timer_time_gases->Name = L"f_label_timer_time_gases";
+			this->f_label_timer_time_gases->Size = System::Drawing::Size(55, 23);
+			this->f_label_timer_time_gases->TabIndex = 18;
+			this->f_label_timer_time_gases->Text = L"13:00";
 			// 
 			// label33
 			// 
@@ -1132,29 +1300,29 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label33->TabIndex = 17;
 			this->label33->Text = L"Стоп откачки:";
 			// 
-			// label32
+			// f_label_timer_current_TPlB
 			// 
-			this->label32->AutoSize = true;
-			this->label32->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_current_TPlB->AutoSize = true;
+			this->f_label_timer_current_TPlB->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label32->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label32->Location = System::Drawing::Point(197, 112);
-			this->label32->Name = L"label32";
-			this->label32->Size = System::Drawing::Size(40, 23);
-			this->label32->TabIndex = 16;
-			this->label32->Text = L"274";
+			this->f_label_timer_current_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_current_TPlB->Location = System::Drawing::Point(197, 110);
+			this->f_label_timer_current_TPlB->Name = L"f_label_timer_current_TPlB";
+			this->f_label_timer_current_TPlB->Size = System::Drawing::Size(40, 23);
+			this->f_label_timer_current_TPlB->TabIndex = 16;
+			this->f_label_timer_current_TPlB->Text = L"274";
 			// 
-			// label31
+			// f_label_timer_start_TPlB
 			// 
-			this->label31->AutoSize = true;
-			this->label31->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_start_TPlB->AutoSize = true;
+			this->f_label_timer_start_TPlB->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label31->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label31->Location = System::Drawing::Point(145, 112);
-			this->label31->Name = L"label31";
-			this->label31->Size = System::Drawing::Size(40, 23);
-			this->label31->TabIndex = 15;
-			this->label31->Text = L"360";
+			this->f_label_timer_start_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_start_TPlB->Location = System::Drawing::Point(145, 110);
+			this->f_label_timer_start_TPlB->Name = L"f_label_timer_start_TPlB";
+			this->f_label_timer_start_TPlB->Size = System::Drawing::Size(40, 23);
+			this->f_label_timer_start_TPlB->TabIndex = 15;
+			this->f_label_timer_start_TPlB->Text = L"360";
 			// 
 			// label30
 			// 
@@ -1162,35 +1330,35 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label30->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label30->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label30->Location = System::Drawing::Point(2, 112);
+			this->label30->Location = System::Drawing::Point(2, 110);
 			this->label30->Name = L"label30";
 			this->label30->Size = System::Drawing::Size(129, 23);
 			this->label30->TabIndex = 14;
 			this->label30->Text = L"Источник тока:";
 			// 
-			// label29
+			// f_label_timer_current_gases
 			// 
-			this->label29->AutoSize = true;
-			this->label29->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_current_gases->AutoSize = true;
+			this->f_label_timer_current_gases->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label29->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label29->Location = System::Drawing::Point(197, 83);
-			this->label29->Name = L"label29";
-			this->label29->Size = System::Drawing::Size(40, 23);
-			this->label29->TabIndex = 13;
-			this->label29->Text = L"214";
+			this->f_label_timer_current_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_current_gases->Location = System::Drawing::Point(197, 83);
+			this->f_label_timer_current_gases->Name = L"f_label_timer_current_gases";
+			this->f_label_timer_current_gases->Size = System::Drawing::Size(40, 23);
+			this->f_label_timer_current_gases->TabIndex = 13;
+			this->f_label_timer_current_gases->Text = L"214";
 			// 
-			// label28
+			// f_label_timer_start_gases
 			// 
-			this->label28->AutoSize = true;
-			this->label28->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_start_gases->AutoSize = true;
+			this->f_label_timer_start_gases->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label28->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label28->Location = System::Drawing::Point(145, 83);
-			this->label28->Name = L"label28";
-			this->label28->Size = System::Drawing::Size(40, 23);
-			this->label28->TabIndex = 12;
-			this->label28->Text = L"320";
+			this->f_label_timer_start_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_start_gases->Location = System::Drawing::Point(145, 83);
+			this->f_label_timer_start_gases->Name = L"f_label_timer_start_gases";
+			this->f_label_timer_start_gases->Size = System::Drawing::Size(40, 23);
+			this->f_label_timer_start_gases->TabIndex = 12;
+			this->f_label_timer_start_gases->Text = L"320";
 			// 
 			// label27
 			// 
@@ -1204,53 +1372,53 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label27->TabIndex = 11;
 			this->label27->Text = L"Напуск газов:";
 			// 
-			// label26
+			// f_label_timer_current_pump
 			// 
-			this->label26->AutoSize = true;
-			this->label26->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_current_pump->AutoSize = true;
+			this->f_label_timer_current_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label26->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label26->Location = System::Drawing::Point(197, 55);
-			this->label26->Name = L"label26";
-			this->label26->Size = System::Drawing::Size(40, 23);
-			this->label26->TabIndex = 10;
-			this->label26->Text = L"234";
+			this->f_label_timer_current_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_current_pump->Location = System::Drawing::Point(197, 55);
+			this->f_label_timer_current_pump->Name = L"f_label_timer_current_pump";
+			this->f_label_timer_current_pump->Size = System::Drawing::Size(40, 23);
+			this->f_label_timer_current_pump->TabIndex = 10;
+			this->f_label_timer_current_pump->Text = L"234";
 			// 
-			// label25
+			// f_label_timer_current_start_pump
 			// 
-			this->label25->AutoSize = true;
-			this->label25->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_current_start_pump->AutoSize = true;
+			this->f_label_timer_current_start_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			this->f_label_timer_current_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_current_start_pump->Location = System::Drawing::Point(197, 27);
+			this->f_label_timer_current_start_pump->Name = L"f_label_timer_current_start_pump";
+			this->f_label_timer_current_start_pump->Size = System::Drawing::Size(20, 23);
+			this->f_label_timer_current_start_pump->TabIndex = 9;
+			this->f_label_timer_current_start_pump->Text = L"0";
+			// 
+			// f_label_timer_time_pump
+			// 
+			this->f_label_timer_time_pump->AutoSize = true;
+			this->f_label_timer_time_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label25->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label25->Location = System::Drawing::Point(197, 25);
-			this->label25->Name = L"label25";
-			this->label25->Size = System::Drawing::Size(40, 23);
-			this->label25->TabIndex = 9;
-			this->label25->Text = L"324";
+			this->f_label_timer_time_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_time_pump->Location = System::Drawing::Point(246, 55);
+			this->f_label_timer_time_pump->Name = L"f_label_timer_time_pump";
+			this->f_label_timer_time_pump->Size = System::Drawing::Size(55, 23);
+			this->f_label_timer_time_pump->TabIndex = 8;
+			this->f_label_timer_time_pump->Text = L"12:59";
 			// 
-			// label24
+			// f_label_timer_start_pump
 			// 
-			this->label24->AutoSize = true;
-			this->label24->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_start_pump->AutoSize = true;
+			this->f_label_timer_start_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label24->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label24->Location = System::Drawing::Point(246, 55);
-			this->label24->Name = L"label24";
-			this->label24->Size = System::Drawing::Size(55, 23);
-			this->label24->TabIndex = 8;
-			this->label24->Text = L"12:59";
-			// 
-			// label23
-			// 
-			this->label23->AutoSize = true;
-			this->label23->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label23->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label23->Location = System::Drawing::Point(145, 55);
-			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(40, 23);
-			this->label23->TabIndex = 7;
-			this->label23->Text = L"300";
+			this->f_label_timer_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_start_pump->Location = System::Drawing::Point(145, 55);
+			this->f_label_timer_start_pump->Name = L"f_label_timer_start_pump";
+			this->f_label_timer_start_pump->Size = System::Drawing::Size(40, 23);
+			this->f_label_timer_start_pump->TabIndex = 7;
+			this->f_label_timer_start_pump->Text = L"300";
 			// 
 			// label22
 			// 
@@ -1264,29 +1432,29 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label22->TabIndex = 6;
 			this->label22->Text = L"Откачка:";
 			// 
-			// label20
+			// f_label_timer_start_start_pump
 			// 
-			this->label20->AutoSize = true;
-			this->label20->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_start_start_pump->AutoSize = true;
+			this->f_label_timer_start_start_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label20->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label20->Location = System::Drawing::Point(145, 25);
-			this->label20->Name = L"label20";
-			this->label20->Size = System::Drawing::Size(40, 23);
-			this->label20->TabIndex = 5;
-			this->label20->Text = L"321";
+			this->f_label_timer_start_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_start_start_pump->Location = System::Drawing::Point(145, 27);
+			this->f_label_timer_start_start_pump->Name = L"f_label_timer_start_start_pump";
+			this->f_label_timer_start_start_pump->Size = System::Drawing::Size(20, 23);
+			this->f_label_timer_start_start_pump->TabIndex = 5;
+			this->f_label_timer_start_start_pump->Text = L"0";
 			// 
-			// label21
+			// f_label_timer_time_start_pump
 			// 
-			this->label21->AutoSize = true;
-			this->label21->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_timer_time_start_pump->AutoSize = true;
+			this->f_label_timer_time_start_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label21->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label21->Location = System::Drawing::Point(246, 25);
-			this->label21->Name = L"label21";
-			this->label21->Size = System::Drawing::Size(55, 23);
-			this->label21->TabIndex = 4;
-			this->label21->Text = L"12:52";
+			this->f_label_timer_time_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_timer_time_start_pump->Location = System::Drawing::Point(246, 27);
+			this->f_label_timer_time_start_pump->Name = L"f_label_timer_time_start_pump";
+			this->f_label_timer_time_start_pump->Size = System::Drawing::Size(55, 23);
+			this->f_label_timer_time_start_pump->TabIndex = 4;
+			this->f_label_timer_time_start_pump->Text = L"12:52";
 			// 
 			// label19
 			// 
@@ -1300,29 +1468,403 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label19->TabIndex = 3;
 			this->label19->Text = L"Старт откачки:";
 			// 
-			// panel2
+			// data_label
 			// 
-			this->panel2->BackColor = System::Drawing::Color::White;
-			this->panel2->Controls->Add(this->groupBox_flap);
-			this->panel2->Controls->Add(this->panel3);
-			this->panel2->Controls->Add(this->groupBox3);
-			this->panel2->Controls->Add(this->groupBox2);
-			this->panel2->Controls->Add(this->groupBox1);
-			this->panel2->Dock = System::Windows::Forms::DockStyle::Right;
-			this->panel2->Location = System::Drawing::Point(910, 24);
-			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(251, 867);
-			this->panel2->TabIndex = 8;
-			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::panel2_Paint);
+			this->data_label->AutoSize = true;
+			this->data_label->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->data_label->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->data_label->Location = System::Drawing::Point(982, 1);
+			this->data_label->Name = L"data_label";
+			this->data_label->Size = System::Drawing::Size(20, 23);
+			this->data_label->TabIndex = 23;
+			this->data_label->Text = L"0";
+			// 
+			// groupBox8
+			// 
+			this->groupBox8->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
+			this->groupBox8->Controls->Add(this->tabControl2);
+			this->groupBox8->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->groupBox8->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->groupBox8->Location = System::Drawing::Point(0, 0);
+			this->groupBox8->Name = L"groupBox8";
+			this->groupBox8->Size = System::Drawing::Size(436, 201);
+			this->groupBox8->TabIndex = 20;
+			this->groupBox8->TabStop = false;
+			this->groupBox8->Text = L"Источник тока";
+			// 
+			// tabControl2
+			// 
+			this->tabControl2->Controls->Add(this->tabPage3);
+			this->tabControl2->Controls->Add(this->tabPage4);
+			this->tabControl2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->tabControl2->Location = System::Drawing::Point(18, 29);
+			this->tabControl2->Name = L"tabControl2";
+			this->tabControl2->SelectedIndex = 0;
+			this->tabControl2->Size = System::Drawing::Size(406, 166);
+			this->tabControl2->TabIndex = 24;
+			this->tabControl2->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::tabControl2_SelectedIndexChanged);
+			// 
+			// tabPage3
+			// 
+			this->tabPage3->Controls->Add(this->label29);
+			this->tabPage3->Controls->Add(this->button8);
+			this->tabPage3->Controls->Add(this->button7);
+			this->tabPage3->Controls->Add(this->f_textbox_current_ma);
+			this->tabPage3->Controls->Add(this->label56);
+			this->tabPage3->Controls->Add(this->f_textbox_voltage_V);
+			this->tabPage3->Controls->Add(this->textBox3);
+			this->tabPage3->Controls->Add(this->label15);
+			this->tabPage3->Controls->Add(this->label54);
+			this->tabPage3->Controls->Add(this->label6);
+			this->tabPage3->Controls->Add(this->textBox6);
+			this->tabPage3->Location = System::Drawing::Point(4, 28);
+			this->tabPage3->Name = L"tabPage3";
+			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage3->Size = System::Drawing::Size(398, 134);
+			this->tabPage3->TabIndex = 0;
+			this->tabPage3->Text = L"Термическое испарение";
+			this->tabPage3->UseVisualStyleBackColor = true;
+			// 
+			// label29
+			// 
+			this->label29->AutoSize = true;
+			this->label29->BackColor = System::Drawing::Color::White;
+			this->label29->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label29->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label29->Location = System::Drawing::Point(276, 94);
+			this->label29->Name = L"label29";
+			this->label29->Size = System::Drawing::Size(107, 36);
+			this->label29->TabIndex = 35;
+			this->label29->Text = L"  Режим TPlB: \r\nНизковольтный";
+			this->label29->Click += gcnew System::EventHandler(this, &MainForm::label29_Click);
+			// 
+			// button8
+			// 
+			this->button8->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button8->Enabled = false;
+			this->button8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button8->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->button8->ForeColor = System::Drawing::Color::Crimson;
+			this->button8->Location = System::Drawing::Point(15, 94);
+			this->button8->Name = L"button8";
+			this->button8->Size = System::Drawing::Size(246, 29);
+			this->button8->TabIndex = 56;
+			this->button8->Text = L"Включить источник тока";
+			this->button8->UseVisualStyleBackColor = false;
+			// 
+			// button7
+			// 
+			this->button7->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button7->Enabled = false;
+			this->button7->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button7->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->button7->ForeColor = System::Drawing::Color::Crimson;
+			this->button7->Location = System::Drawing::Point(267, 20);
+			this->button7->Name = L"button7";
+			this->button7->Size = System::Drawing::Size(112, 65);
+			this->button7->TabIndex = 42;
+			this->button7->Text = L"Установить\r\n значение";
+			this->button7->UseVisualStyleBackColor = false;
+			this->button7->Click += gcnew System::EventHandler(this, &MainForm::button7_Click);
+			// 
+			// f_textbox_current_ma
+			// 
+			this->f_textbox_current_ma->AutoSize = true;
+			this->f_textbox_current_ma->Font = (gcnew System::Drawing::Font(L"Calibri", 13, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_current_ma->ForeColor = System::Drawing::Color::Crimson;
+			this->f_textbox_current_ma->Location = System::Drawing::Point(142, 59);
+			this->f_textbox_current_ma->Name = L"f_textbox_current_ma";
+			this->f_textbox_current_ma->Size = System::Drawing::Size(46, 22);
+			this->f_textbox_current_ma->TabIndex = 45;
+			this->f_textbox_current_ma->Text = L"9000";
+			this->f_textbox_current_ma->Click += gcnew System::EventHandler(this, &MainForm::f_textbox_current_ma_Click);
+			// 
+			// label56
+			// 
+			this->label56->AutoSize = true;
+			this->label56->Font = (gcnew System::Drawing::Font(L"Calibri", 13, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label56->ForeColor = System::Drawing::Color::MediumBlue;
+			this->label56->Location = System::Drawing::Point(11, 27);
+			this->label56->Name = L"label56";
+			this->label56->Size = System::Drawing::Size(125, 22);
+			this->label56->TabIndex = 11;
+			this->label56->Text = L"Напряжение, В";
+			this->label56->Click += gcnew System::EventHandler(this, &MainForm::label56_Click);
+			// 
+			// f_textbox_voltage_V
+			// 
+			this->f_textbox_voltage_V->AutoSize = true;
+			this->f_textbox_voltage_V->Font = (gcnew System::Drawing::Font(L"Calibri", 13, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_voltage_V->ForeColor = System::Drawing::Color::DarkBlue;
+			this->f_textbox_voltage_V->Location = System::Drawing::Point(142, 27);
+			this->f_textbox_voltage_V->Name = L"f_textbox_voltage_V";
+			this->f_textbox_voltage_V->Size = System::Drawing::Size(46, 22);
+			this->f_textbox_voltage_V->TabIndex = 42;
+			this->f_textbox_voltage_V->Text = L"1200";
+			this->f_textbox_voltage_V->Click += gcnew System::EventHandler(this, &MainForm::f_textbox_voltage_V_Click);
+			// 
+			// textBox3
+			// 
+			this->textBox3->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->textBox3->Location = System::Drawing::Point(198, 55);
+			this->textBox3->Name = L"textBox3";
+			this->textBox3->Size = System::Drawing::Size(63, 29);
+			this->textBox3->TabIndex = 17;
+			this->textBox3->Text = L"10000";
+			this->textBox3->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->textBox3->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox3_TextChanged);
+			// 
+			// label15
+			// 
+			this->label15->AutoSize = true;
+			this->label15->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label15->ForeColor = System::Drawing::Color::Black;
+			this->label15->Location = System::Drawing::Point(214, 4);
+			this->label15->Name = L"label15";
+			this->label15->Size = System::Drawing::Size(30, 15);
+			this->label15->TabIndex = 44;
+			this->label15->Text = L"Зад.";
+			this->label15->Click += gcnew System::EventHandler(this, &MainForm::label15_Click);
+			// 
+			// label54
+			// 
+			this->label54->AutoSize = true;
+			this->label54->Font = (gcnew System::Drawing::Font(L"Calibri", 12.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label54->ForeColor = System::Drawing::Color::Crimson;
+			this->label54->Location = System::Drawing::Point(11, 59);
+			this->label54->Name = L"label54";
+			this->label54->Size = System::Drawing::Size(111, 21);
+			this->label54->TabIndex = 22;
+			this->label54->Text = L"Сила тока, мА";
+			this->label54->Click += gcnew System::EventHandler(this, &MainForm::label54_Click);
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label6->ForeColor = System::Drawing::Color::Black;
+			this->label6->Location = System::Drawing::Point(147, 4);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(36, 15);
+			this->label6->TabIndex = 43;
+			this->label6->Text = L"Факт.";
+			this->label6->Click += gcnew System::EventHandler(this, &MainForm::label6_Click);
+			// 
+			// textBox6
+			// 
+			this->textBox6->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->textBox6->Location = System::Drawing::Point(198, 21);
+			this->textBox6->Name = L"textBox6";
+			this->textBox6->Size = System::Drawing::Size(63, 29);
+			this->textBox6->TabIndex = 28;
+			this->textBox6->Text = L"10000";
+			this->textBox6->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->textBox6->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox6_TextChanged);
+			// 
+			// tabPage4
+			// 
+			this->tabPage4->Controls->Add(this->label31);
+			this->tabPage4->Controls->Add(this->button3);
+			this->tabPage4->Controls->Add(this->button4);
+			this->tabPage4->Controls->Add(this->label21);
+			this->tabPage4->Controls->Add(this->label23);
+			this->tabPage4->Controls->Add(this->label24);
+			this->tabPage4->Controls->Add(this->textBox4);
+			this->tabPage4->Controls->Add(this->label25);
+			this->tabPage4->Controls->Add(this->label26);
+			this->tabPage4->Controls->Add(this->label28);
+			this->tabPage4->Controls->Add(this->textBox5);
+			this->tabPage4->Location = System::Drawing::Point(4, 28);
+			this->tabPage4->Name = L"tabPage4";
+			this->tabPage4->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage4->Size = System::Drawing::Size(398, 134);
+			this->tabPage4->TabIndex = 1;
+			this->tabPage4->Text = L"Магнетронное распыление";
+			this->tabPage4->UseVisualStyleBackColor = true;
+			// 
+			// label31
+			// 
+			this->label31->AutoSize = true;
+			this->label31->BackColor = System::Drawing::Color::White;
+			this->label31->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label31->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label31->Location = System::Drawing::Point(276, 94);
+			this->label31->Name = L"label31";
+			this->label31->Size = System::Drawing::Size(116, 36);
+			this->label31->TabIndex = 57;
+			this->label31->Text = L"  Режим TPlB: \r\nВысоковольтный";
+			this->label31->Visible = false;
+			// 
+			// button3
+			// 
+			this->button3->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button3->Enabled = false;
+			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button3->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->button3->ForeColor = System::Drawing::Color::Crimson;
+			this->button3->Location = System::Drawing::Point(267, 20);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(112, 64);
+			this->button3->TabIndex = 56;
+			this->button3->Text = L"Установить\r\n значение";
+			this->button3->UseVisualStyleBackColor = false;
+			// 
+			// button4
+			// 
+			this->button4->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->button4->Enabled = false;
+			this->button4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button4->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->button4->ForeColor = System::Drawing::Color::Crimson;
+			this->button4->Location = System::Drawing::Point(15, 94);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(246, 29);
+			this->button4->TabIndex = 55;
+			this->button4->Text = L"Включить источник тока";
+			this->button4->UseVisualStyleBackColor = false;
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Font = (gcnew System::Drawing::Font(L"Calibri", 13, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label21->ForeColor = System::Drawing::Color::Crimson;
+			this->label21->Location = System::Drawing::Point(142, 59);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(46, 22);
+			this->label21->TabIndex = 54;
+			this->label21->Text = L"9000";
+			this->label21->Click += gcnew System::EventHandler(this, &MainForm::label21_Click);
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Font = (gcnew System::Drawing::Font(L"Calibri", 13, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label23->ForeColor = System::Drawing::Color::MediumBlue;
+			this->label23->Location = System::Drawing::Point(11, 27);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(125, 22);
+			this->label23->TabIndex = 46;
+			this->label23->Text = L"Напряжение, В";
+			this->label23->Click += gcnew System::EventHandler(this, &MainForm::label23_Click);
+			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Font = (gcnew System::Drawing::Font(L"Calibri", 13, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label24->ForeColor = System::Drawing::Color::DarkBlue;
+			this->label24->Location = System::Drawing::Point(142, 27);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(46, 22);
+			this->label24->TabIndex = 51;
+			this->label24->Text = L"1200";
+			this->label24->Click += gcnew System::EventHandler(this, &MainForm::label24_Click);
+			// 
+			// textBox4
+			// 
+			this->textBox4->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->textBox4->Location = System::Drawing::Point(198, 55);
+			this->textBox4->Name = L"textBox4";
+			this->textBox4->Size = System::Drawing::Size(63, 29);
+			this->textBox4->TabIndex = 47;
+			this->textBox4->Text = L"10000";
+			this->textBox4->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->textBox4->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox4_TextChanged);
+			// 
+			// label25
+			// 
+			this->label25->AutoSize = true;
+			this->label25->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label25->ForeColor = System::Drawing::Color::Black;
+			this->label25->Location = System::Drawing::Point(214, 4);
+			this->label25->Name = L"label25";
+			this->label25->Size = System::Drawing::Size(30, 15);
+			this->label25->TabIndex = 53;
+			this->label25->Text = L"Зад.";
+			this->label25->Click += gcnew System::EventHandler(this, &MainForm::label25_Click);
+			// 
+			// label26
+			// 
+			this->label26->AutoSize = true;
+			this->label26->Font = (gcnew System::Drawing::Font(L"Calibri", 12.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label26->ForeColor = System::Drawing::Color::Crimson;
+			this->label26->Location = System::Drawing::Point(11, 59);
+			this->label26->Name = L"label26";
+			this->label26->Size = System::Drawing::Size(111, 21);
+			this->label26->TabIndex = 48;
+			this->label26->Text = L"Сила тока, мА";
+			this->label26->Click += gcnew System::EventHandler(this, &MainForm::label26_Click);
+			// 
+			// label28
+			// 
+			this->label28->AutoSize = true;
+			this->label28->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label28->ForeColor = System::Drawing::Color::Black;
+			this->label28->Location = System::Drawing::Point(147, 4);
+			this->label28->Name = L"label28";
+			this->label28->Size = System::Drawing::Size(36, 15);
+			this->label28->TabIndex = 52;
+			this->label28->Text = L"Факт.";
+			this->label28->Click += gcnew System::EventHandler(this, &MainForm::label28_Click);
+			// 
+			// textBox5
+			// 
+			this->textBox5->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->textBox5->Location = System::Drawing::Point(198, 21);
+			this->textBox5->Name = L"textBox5";
+			this->textBox5->Size = System::Drawing::Size(63, 29);
+			this->textBox5->TabIndex = 49;
+			this->textBox5->Text = L"10000";
+			this->textBox5->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->textBox5->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox5_TextChanged);
+			// 
+			// right_panel
+			// 
+			this->right_panel->BackColor = System::Drawing::Color::White;
+			this->right_panel->Controls->Add(this->groupBox_flap);
+			this->right_panel->Controls->Add(this->right_down_panel);
+			this->right_panel->Controls->Add(this->groupBox3);
+			this->right_panel->Controls->Add(this->groupBox2);
+			this->right_panel->Controls->Add(this->groupBox1);
+			this->right_panel->Dock = System::Windows::Forms::DockStyle::Right;
+			this->right_panel->Location = System::Drawing::Point(753, 24);
+			this->right_panel->Name = L"right_panel";
+			this->right_panel->Size = System::Drawing::Size(251, 705);
+			this->right_panel->TabIndex = 8;
+			this->right_panel->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::panel2_Paint);
 			// 
 			// groupBox_flap
 			// 
+			this->groupBox_flap->Controls->Add(this->label17);
+			this->groupBox_flap->Controls->Add(this->f_button_auto_start_flap);
 			this->groupBox_flap->Controls->Add(this->I_label_set_time_flap);
 			this->groupBox_flap->Controls->Add(this->f_textBox_set_time_flap);
 			this->groupBox_flap->Controls->Add(this->progressBar_flap);
-			this->groupBox_flap->Controls->Add(this->f_button_auto_mode_flap_stop);
 			this->groupBox_flap->Controls->Add(this->subgroupBox_mode);
-			this->groupBox_flap->Controls->Add(this->f_button_auto_mode_flap_start);
 			this->groupBox_flap->Controls->Add(this->f_button_manual_close_flap);
 			this->groupBox_flap->Controls->Add(this->f_button_manual_open_flap);
 			this->groupBox_flap->Controls->Add(this->i_label_flap_status);
@@ -1331,12 +1873,39 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->groupBox_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox_flap->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox_flap->Location = System::Drawing::Point(3, 472);
+			this->groupBox_flap->Location = System::Drawing::Point(11, 410);
 			this->groupBox_flap->Name = L"groupBox_flap";
-			this->groupBox_flap->Size = System::Drawing::Size(237, 180);
+			this->groupBox_flap->Size = System::Drawing::Size(230, 170);
 			this->groupBox_flap->TabIndex = 19;
 			this->groupBox_flap->TabStop = false;
 			this->groupBox_flap->Text = L"Управление заслонкой";
+			// 
+			// label17
+			// 
+			this->label17->AutoSize = true;
+			this->label17->BackColor = System::Drawing::Color::White;
+			this->label17->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label17->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label17->Location = System::Drawing::Point(97, 187);
+			this->label17->Name = L"label17";
+			this->label17->Size = System::Drawing::Size(130, 19);
+			this->label17->TabIndex = 24;
+			this->label17->Text = L"Ожидание старта";
+			// 
+			// f_button_auto_start_flap
+			// 
+			this->f_button_auto_start_flap->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_auto_start_flap->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_auto_start_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_auto_start_flap->ForeColor = System::Drawing::Color::Crimson;
+			this->f_button_auto_start_flap->Location = System::Drawing::Point(11, 182);
+			this->f_button_auto_start_flap->Name = L"f_button_auto_start_flap";
+			this->f_button_auto_start_flap->Size = System::Drawing::Size(83, 29);
+			this->f_button_auto_start_flap->TabIndex = 34;
+			this->f_button_auto_start_flap->Text = L"Начать";
+			this->f_button_auto_start_flap->UseVisualStyleBackColor = false;
 			// 
 			// I_label_set_time_flap
 			// 
@@ -1345,7 +1914,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->I_label_set_time_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->I_label_set_time_flap->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->I_label_set_time_flap->Location = System::Drawing::Point(11, 138);
+			this->I_label_set_time_flap->Location = System::Drawing::Point(11, 130);
 			this->I_label_set_time_flap->Name = L"I_label_set_time_flap";
 			this->I_label_set_time_flap->Size = System::Drawing::Size(132, 19);
 			this->I_label_set_time_flap->TabIndex = 33;
@@ -1356,9 +1925,9 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// 
 			this->f_textBox_set_time_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->f_textBox_set_time_flap->Location = System::Drawing::Point(156, 133);
+			this->f_textBox_set_time_flap->Location = System::Drawing::Point(156, 127);
 			this->f_textBox_set_time_flap->Name = L"f_textBox_set_time_flap";
-			this->f_textBox_set_time_flap->Size = System::Drawing::Size(48, 27);
+			this->f_textBox_set_time_flap->Size = System::Drawing::Size(71, 27);
 			this->f_textBox_set_time_flap->TabIndex = 19;
 			this->f_textBox_set_time_flap->Text = L"100";
 			this->f_textBox_set_time_flap->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -1366,26 +1935,11 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// 
 			// progressBar_flap
 			// 
-			this->progressBar_flap->Location = System::Drawing::Point(11, 163);
+			this->progressBar_flap->Location = System::Drawing::Point(11, 155);
 			this->progressBar_flap->Name = L"progressBar_flap";
-			this->progressBar_flap->Size = System::Drawing::Size(216, 23);
+			this->progressBar_flap->Size = System::Drawing::Size(216, 24);
 			this->progressBar_flap->TabIndex = 11;
 			this->progressBar_flap->Visible = false;
-			// 
-			// f_button_auto_mode_flap_stop
-			// 
-			this->f_button_auto_mode_flap_stop->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->f_button_auto_mode_flap_stop->Enabled = false;
-			this->f_button_auto_mode_flap_stop->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->f_button_auto_mode_flap_stop->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->f_button_auto_mode_flap_stop->Location = System::Drawing::Point(120, 192);
-			this->f_button_auto_mode_flap_stop->Name = L"f_button_auto_mode_flap_stop";
-			this->f_button_auto_mode_flap_stop->Size = System::Drawing::Size(107, 27);
-			this->f_button_auto_mode_flap_stop->TabIndex = 17;
-			this->f_button_auto_mode_flap_stop->Text = L"Стоп";
-			this->f_button_auto_mode_flap_stop->UseVisualStyleBackColor = false;
-			this->f_button_auto_mode_flap_stop->Visible = false;
 			// 
 			// subgroupBox_mode
 			// 
@@ -1393,9 +1947,10 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->subgroupBox_mode->Controls->Add(this->radioButton_flap_manual_mode);
 			this->subgroupBox_mode->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->subgroupBox_mode->Location = System::Drawing::Point(15, 65);
+			this->subgroupBox_mode->ForeColor = System::Drawing::Color::Black;
+			this->subgroupBox_mode->Location = System::Drawing::Point(6, 63);
 			this->subgroupBox_mode->Name = L"subgroupBox_mode";
-			this->subgroupBox_mode->Size = System::Drawing::Size(203, 65);
+			this->subgroupBox_mode->Size = System::Drawing::Size(212, 63);
 			this->subgroupBox_mode->TabIndex = 16;
 			this->subgroupBox_mode->TabStop = false;
 			this->subgroupBox_mode->Text = L"Режим работы";
@@ -1426,31 +1981,16 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->radioButton_flap_manual_mode->UseVisualStyleBackColor = true;
 			this->radioButton_flap_manual_mode->CheckedChanged += gcnew System::EventHandler(this, &MainForm::radioButton_flap_manual_mode_CheckedChanged);
 			// 
-			// f_button_auto_mode_flap_start
-			// 
-			this->f_button_auto_mode_flap_start->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->f_button_auto_mode_flap_start->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->f_button_auto_mode_flap_start->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->f_button_auto_mode_flap_start->ForeColor = System::Drawing::Color::Crimson;
-			this->f_button_auto_mode_flap_start->Location = System::Drawing::Point(11, 192);
-			this->f_button_auto_mode_flap_start->Name = L"f_button_auto_mode_flap_start";
-			this->f_button_auto_mode_flap_start->Size = System::Drawing::Size(104, 27);
-			this->f_button_auto_mode_flap_start->TabIndex = 17;
-			this->f_button_auto_mode_flap_start->Text = L"Старт";
-			this->f_button_auto_mode_flap_start->UseVisualStyleBackColor = false;
-			this->f_button_auto_mode_flap_start->Visible = false;
-			// 
 			// f_button_manual_close_flap
 			// 
 			this->f_button_manual_close_flap->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->f_button_manual_close_flap->Enabled = false;
-			this->f_button_manual_close_flap->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_manual_close_flap->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->f_button_manual_close_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_manual_close_flap->Location = System::Drawing::Point(119, 136);
 			this->f_button_manual_close_flap->Name = L"f_button_manual_close_flap";
-			this->f_button_manual_close_flap->Size = System::Drawing::Size(108, 31);
+			this->f_button_manual_close_flap->Size = System::Drawing::Size(108, 29);
 			this->f_button_manual_close_flap->TabIndex = 15;
 			this->f_button_manual_close_flap->Text = L"Закрыть";
 			this->f_button_manual_close_flap->UseVisualStyleBackColor = false;
@@ -1458,13 +1998,13 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// f_button_manual_open_flap
 			// 
 			this->f_button_manual_open_flap->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->f_button_manual_open_flap->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_manual_open_flap->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->f_button_manual_open_flap->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_manual_open_flap->ForeColor = System::Drawing::Color::Crimson;
 			this->f_button_manual_open_flap->Location = System::Drawing::Point(11, 136);
 			this->f_button_manual_open_flap->Name = L"f_button_manual_open_flap";
-			this->f_button_manual_open_flap->Size = System::Drawing::Size(104, 31);
+			this->f_button_manual_open_flap->Size = System::Drawing::Size(104, 29);
 			this->f_button_manual_open_flap->TabIndex = 11;
 			this->f_button_manual_open_flap->Text = L"Открыть";
 			this->f_button_manual_open_flap->UseVisualStyleBackColor = false;
@@ -1472,12 +2012,12 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// i_label_flap_status
 			// 
 			this->i_label_flap_status->AutoSize = true;
-			this->i_label_flap_status->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
+			this->i_label_flap_status->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->i_label_flap_status->ForeColor = System::Drawing::Color::Black;
-			this->i_label_flap_status->Location = System::Drawing::Point(74, 49);
+			this->i_label_flap_status->Location = System::Drawing::Point(74, 46);
 			this->i_label_flap_status->Name = L"i_label_flap_status";
-			this->i_label_flap_status->Size = System::Drawing::Size(87, 17);
+			this->i_label_flap_status->Size = System::Drawing::Size(78, 15);
 			this->i_label_flap_status->TabIndex = 13;
 			this->i_label_flap_status->Text = L"(положение)";
 			// 
@@ -1487,21 +2027,20 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->f_label_flap_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_flap_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_flap_status->Location = System::Drawing::Point(27, 23);
+			this->f_label_flap_status->Location = System::Drawing::Point(27, 20);
 			this->f_label_flap_status->Name = L"f_label_flap_status";
 			this->f_label_flap_status->Size = System::Drawing::Size(177, 26);
 			this->f_label_flap_status->TabIndex = 12;
 			this->f_label_flap_status->Text = L"Заслонка: открыта";
 			// 
-			// panel3
+			// right_down_panel
 			// 
-			this->panel3->Controls->Add(this->f_stop_button);
-			this->panel3->Controls->Add(this->groupBox4);
-			this->panel3->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel3->Location = System::Drawing::Point(0, 658);
-			this->panel3->Name = L"panel3";
-			this->panel3->Size = System::Drawing::Size(251, 209);
-			this->panel3->TabIndex = 12;
+			this->right_down_panel->Controls->Add(this->f_stop_button);
+			this->right_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
+			this->right_down_panel->Location = System::Drawing::Point(0, 496);
+			this->right_down_panel->Name = L"right_down_panel";
+			this->right_down_panel->Size = System::Drawing::Size(251, 209);
+			this->right_down_panel->TabIndex = 12;
 			// 
 			// f_stop_button
 			// 
@@ -1509,94 +2048,30 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->f_stop_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_stop_button->ForeColor = System::Drawing::Color::WhiteSmoke;
-			this->f_stop_button->Location = System::Drawing::Point(3, 150);
+			this->f_stop_button->Location = System::Drawing::Point(11, 149);
 			this->f_stop_button->Name = L"f_stop_button";
-			this->f_stop_button->Size = System::Drawing::Size(239, 56);
+			this->f_stop_button->Size = System::Drawing::Size(234, 42);
 			this->f_stop_button->TabIndex = 0;
 			this->f_stop_button->Text = L"STOP";
 			this->f_stop_button->UseVisualStyleBackColor = false;
 			this->f_stop_button->Click += gcnew System::EventHandler(this, &MainForm::f_stop_button_Click);
-			// 
-			// groupBox4
-			// 
-			this->groupBox4->Controls->Add(this->label17);
-			this->groupBox4->Controls->Add(this->label16);
-			this->groupBox4->Controls->Add(this->label15);
-			this->groupBox4->Controls->Add(this->pictureBox1);
-			this->groupBox4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->groupBox4->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->groupBox4->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox4->Location = System::Drawing::Point(3, 45);
-			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(237, 99);
-			this->groupBox4->TabIndex = 11;
-			this->groupBox4->TabStop = false;
-			this->groupBox4->Text = L"Запись  процесса";
-			// 
-			// label17
-			// 
-			this->label17->AutoSize = true;
-			this->label17->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label17->ForeColor = System::Drawing::Color::Black;
-			this->label17->Location = System::Drawing::Point(59, 70);
-			this->label17->Name = L"label17";
-			this->label17->Size = System::Drawing::Size(158, 19);
-			this->label17->TabIndex = 3;
-			this->label17->Text = L"20_04_2022_13_43.txt";
-			// 
-			// label16
-			// 
-			this->label16->AutoSize = true;
-			this->label16->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label16->ForeColor = System::Drawing::Color::Black;
-			this->label16->Location = System::Drawing::Point(11, 70);
-			this->label16->Name = L"label16";
-			this->label16->Size = System::Drawing::Size(42, 19);
-			this->label16->TabIndex = 2;
-			this->label16->Text = L"Имя:";
-			// 
-			// label15
-			// 
-			this->label15->AutoSize = true;
-			this->label15->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label15->ForeColor = System::Drawing::Color::Crimson;
-			this->label15->Location = System::Drawing::Point(69, 35);
-			this->label15->Name = L"label15";
-			this->label15->Size = System::Drawing::Size(115, 25);
-			this->label15->TabIndex = 1;
-			this->label15->Text = L"RECORDING";
-			// 
-			// pictureBox1
-			// 
-			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(41, 35);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(24, 27);
-			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->pictureBox1->TabIndex = 0;
-			this->pictureBox1->TabStop = false;
 			// 
 			// groupBox3
 			// 
 			this->groupBox3->Controls->Add(this->button5);
 			this->groupBox3->Controls->Add(this->textBox1);
 			this->groupBox3->Controls->Add(this->label14);
-			this->groupBox3->Controls->Add(this->button4);
-			this->groupBox3->Controls->Add(this->button3);
+			this->groupBox3->Controls->Add(this->f_button_on_off_heat);
 			this->groupBox3->Controls->Add(this->label13);
-			this->groupBox3->Controls->Add(this->label12);
+			this->groupBox3->Controls->Add(this->f_label_temp_status_deg);
 			this->groupBox3->Controls->Add(this->label11);
 			this->groupBox3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox3->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox3->Location = System::Drawing::Point(2, 277);
+			this->groupBox3->Location = System::Drawing::Point(11, 250);
 			this->groupBox3->Name = L"groupBox3";
-			this->groupBox3->Size = System::Drawing::Size(237, 194);
+			this->groupBox3->Size = System::Drawing::Size(230, 154);
 			this->groupBox3->TabIndex = 11;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Температура подложки";
@@ -1604,10 +2079,10 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// button5
 			// 
 			this->button5->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button5->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button5->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->button5->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button5->Location = System::Drawing::Point(81, 86);
+			this->button5->Location = System::Drawing::Point(81, 80);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(137, 29);
 			this->button5->TabIndex = 18;
@@ -1618,7 +2093,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// 
 			this->textBox1->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox1->Location = System::Drawing::Point(12, 86);
+			this->textBox1->Location = System::Drawing::Point(12, 80);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(63, 29);
 			this->textBox1->TabIndex = 17;
@@ -1629,67 +2104,53 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// 
 			this->label14->AutoSize = true;
 			this->label14->BackColor = System::Drawing::Color::White;
-			this->label14->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label14->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label14->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label14->Location = System::Drawing::Point(30, 62);
+			this->label14->Location = System::Drawing::Point(35, 58);
 			this->label14->Name = L"label14";
-			this->label14->Size = System::Drawing::Size(170, 23);
+			this->label14->Size = System::Drawing::Size(145, 19);
 			this->label14->TabIndex = 16;
 			this->label14->Text = L"Задать температуру";
 			// 
-			// button4
+			// f_button_on_off_heat
 			// 
-			this->button4->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button4->Enabled = false;
-			this->button4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button4->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_on_off_heat->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_on_off_heat->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_on_off_heat->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button4->Location = System::Drawing::Point(12, 158);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(206, 31);
-			this->button4->TabIndex = 15;
-			this->button4->Text = L"Отключить нагрев";
-			this->button4->UseVisualStyleBackColor = false;
-			// 
-			// button3
-			// 
-			this->button3->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button3->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button3->ForeColor = System::Drawing::Color::Crimson;
-			this->button3->Location = System::Drawing::Point(12, 121);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(206, 31);
-			this->button3->TabIndex = 11;
-			this->button3->Text = L"Включить нагрев";
-			this->button3->UseVisualStyleBackColor = false;
-			this->button3->Click += gcnew System::EventHandler(this, &MainForm::button3_Click);
+			this->f_button_on_off_heat->ForeColor = System::Drawing::Color::Crimson;
+			this->f_button_on_off_heat->Location = System::Drawing::Point(12, 115);
+			this->f_button_on_off_heat->Name = L"f_button_on_off_heat";
+			this->f_button_on_off_heat->Size = System::Drawing::Size(206, 29);
+			this->f_button_on_off_heat->TabIndex = 11;
+			this->f_button_on_off_heat->Text = L"Включить нагрев";
+			this->f_button_on_off_heat->UseVisualStyleBackColor = false;
+			this->f_button_on_off_heat->Click += gcnew System::EventHandler(this, &MainForm::button3_Click);
 			// 
 			// label13
 			// 
 			this->label13->AutoSize = true;
-			this->label13->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label13->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label13->ForeColor = System::Drawing::Color::Black;
-			this->label13->Location = System::Drawing::Point(67, 45);
+			this->label13->Location = System::Drawing::Point(63, 42);
 			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(101, 17);
+			this->label13->Size = System::Drawing::Size(92, 15);
 			this->label13->TabIndex = 13;
 			this->label13->Text = L"(показание ДТ)";
 			// 
-			// label12
+			// f_label_temp_status_deg
 			// 
-			this->label12->AutoSize = true;
-			this->label12->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_temp_status_deg->AutoSize = true;
+			this->f_label_temp_status_deg->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label12->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label12->Location = System::Drawing::Point(106, 24);
-			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(52, 26);
-			this->label12->TabIndex = 12;
-			this->label12->Text = L"720°";
+			this->f_label_temp_status_deg->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_temp_status_deg->Location = System::Drawing::Point(97, 20);
+			this->f_label_temp_status_deg->Name = L"f_label_temp_status_deg";
+			this->f_label_temp_status_deg->Size = System::Drawing::Size(52, 26);
+			this->f_label_temp_status_deg->TabIndex = 12;
+			this->f_label_temp_status_deg->Text = L"720°";
 			// 
 			// label11
 			// 
@@ -1697,7 +2158,7 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->label11->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label11->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label11->Location = System::Drawing::Point(79, 24);
+			this->label11->Location = System::Drawing::Point(70, 20);
 			this->label11->Name = L"label11";
 			this->label11->Size = System::Drawing::Size(32, 26);
 			this->label11->TabIndex = 11;
@@ -1706,324 +2167,377 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->label20);
 			this->groupBox2->Controls->Add(this->label18);
-			this->groupBox2->Controls->Add(this->button2);
-			this->groupBox2->Controls->Add(this->button1);
-			this->groupBox2->Controls->Add(this->label9);
+			this->groupBox2->Controls->Add(this->f_button_stop_pump);
+			this->groupBox2->Controls->Add(this->f_button_start_pump);
+			this->groupBox2->Controls->Add(this->f_label_trubo_percent);
 			this->groupBox2->Controls->Add(this->label10);
-			this->groupBox2->Controls->Add(this->progressBar1);
-			this->groupBox2->Controls->Add(this->label7);
-			this->groupBox2->Controls->Add(this->label5);
-			this->groupBox2->Controls->Add(this->label6);
-			this->groupBox2->Controls->Add(this->label8);
+			this->groupBox2->Controls->Add(this->progressBar_Turbopump);
+			this->groupBox2->Controls->Add(this->f_label_turbopump_status);
+			this->groupBox2->Controls->Add(this->f_label_backpump_status);
+			this->groupBox2->Controls->Add(this->i_label_turbopump_status);
+			this->groupBox2->Controls->Add(this->i_label_backpump_status);
 			this->groupBox2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox2->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox2->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox2->Location = System::Drawing::Point(2, 103);
+			this->groupBox2->Location = System::Drawing::Point(11, 88);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(237, 168);
+			this->groupBox2->Size = System::Drawing::Size(230, 159);
 			this->groupBox2->TabIndex = 4;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Откачка";
 			this->groupBox2->Enter += gcnew System::EventHandler(this, &MainForm::groupBox2_Enter);
 			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label20->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label20->Location = System::Drawing::Point(7, 70);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(47, 23);
+			this->label20->TabIndex = 20;
+			this->label20->Text = L"ТМН";
+			// 
 			// label18
 			// 
 			this->label18->AutoSize = true;
 			this->label18->BackColor = System::Drawing::Color::White;
-			this->label18->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label18->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label18->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label18->Location = System::Drawing::Point(22, 103);
+			this->label18->Location = System::Drawing::Point(35, 97);
 			this->label18->Name = L"label18";
-			this->label18->Size = System::Drawing::Size(184, 23);
+			this->label18->Size = System::Drawing::Size(159, 19);
 			this->label18->TabIndex = 19;
 			this->label18->Text = L"Управление системой";
 			// 
-			// button2
+			// f_button_stop_pump
 			// 
-			this->button2->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button2->Enabled = false;
-			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button2->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_stop_pump->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_stop_pump->Enabled = false;
+			this->f_button_stop_pump->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_stop_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button2->Location = System::Drawing::Point(118, 129);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(105, 31);
-			this->button2->TabIndex = 10;
-			this->button2->Text = L"Стоп";
-			this->button2->UseVisualStyleBackColor = false;
+			this->f_button_stop_pump->Location = System::Drawing::Point(118, 120);
+			this->f_button_stop_pump->Name = L"f_button_stop_pump";
+			this->f_button_stop_pump->Size = System::Drawing::Size(105, 31);
+			this->f_button_stop_pump->TabIndex = 10;
+			this->f_button_stop_pump->Text = L"Стоп";
+			this->f_button_stop_pump->UseVisualStyleBackColor = false;
+			this->f_button_stop_pump->Click += gcnew System::EventHandler(this, &MainForm::f_button_stop_pump_Click);
 			// 
-			// button1
+			// f_button_start_pump
 			// 
-			this->button1->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button1->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_start_pump->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_start_pump->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_start_pump->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button1->Location = System::Drawing::Point(6, 129);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(101, 31);
-			this->button1->TabIndex = 9;
-			this->button1->Text = L"Откачка";
-			this->button1->UseVisualStyleBackColor = false;
+			this->f_button_start_pump->Location = System::Drawing::Point(6, 120);
+			this->f_button_start_pump->Name = L"f_button_start_pump";
+			this->f_button_start_pump->Size = System::Drawing::Size(101, 31);
+			this->f_button_start_pump->TabIndex = 9;
+			this->f_button_start_pump->Text = L"Откачка";
+			this->f_button_start_pump->UseVisualStyleBackColor = false;
+			this->f_button_start_pump->Click += gcnew System::EventHandler(this, &MainForm::f_button_start_pump_Click);
 			// 
-			// label9
+			// f_label_trubo_percent
 			// 
-			this->label9->AutoSize = true;
-			this->label9->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_trubo_percent->AutoSize = true;
+			this->f_label_trubo_percent->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label9->ForeColor = System::Drawing::Color::Green;
-			this->label9->Location = System::Drawing::Point(162, 77);
-			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(37, 21);
-			this->label9->TabIndex = 8;
-			this->label9->Text = L"100";
+			this->f_label_trubo_percent->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->f_label_trubo_percent->Location = System::Drawing::Point(175, 73);
+			this->f_label_trubo_percent->Name = L"f_label_trubo_percent";
+			this->f_label_trubo_percent->Size = System::Drawing::Size(33, 19);
+			this->f_label_trubo_percent->TabIndex = 8;
+			this->f_label_trubo_percent->Text = L"100";
+			this->f_label_trubo_percent->Click += gcnew System::EventHandler(this, &MainForm::f_label_trubo_percent_Click);
 			// 
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label10->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label10->ForeColor = System::Drawing::Color::Green;
-			this->label10->Location = System::Drawing::Point(200, 77);
+			this->label10->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->label10->Location = System::Drawing::Point(205, 73);
 			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(23, 21);
+			this->label10->Size = System::Drawing::Size(20, 19);
 			this->label10->TabIndex = 7;
 			this->label10->Text = L"%";
+			this->label10->Click += gcnew System::EventHandler(this, &MainForm::label10_Click);
 			// 
-			// progressBar1
+			// progressBar_Turbopump
 			// 
-			this->progressBar1->Location = System::Drawing::Point(12, 77);
-			this->progressBar1->Name = L"progressBar1";
-			this->progressBar1->Size = System::Drawing::Size(144, 23);
-			this->progressBar1->Style = System::Windows::Forms::ProgressBarStyle::Continuous;
-			this->progressBar1->TabIndex = 5;
-			this->progressBar1->Value = 100;
+			this->progressBar_Turbopump->Location = System::Drawing::Point(58, 70);
+			this->progressBar_Turbopump->Name = L"progressBar_Turbopump";
+			this->progressBar_Turbopump->Size = System::Drawing::Size(113, 23);
+			this->progressBar_Turbopump->Style = System::Windows::Forms::ProgressBarStyle::Continuous;
+			this->progressBar_Turbopump->TabIndex = 5;
+			this->progressBar_Turbopump->Value = 100;
 			// 
-			// label7
+			// f_label_turbopump_status
 			// 
-			this->label7->AutoSize = true;
-			this->label7->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI Semibold", 14, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->f_label_turbopump_status->AutoSize = true;
+			this->f_label_turbopump_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label7->ForeColor = System::Drawing::Color::SeaGreen;
-			this->label7->Location = System::Drawing::Point(156, 49);
-			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(41, 25);
-			this->label7->TabIndex = 4;
-			this->label7->Text = L"ON";
+			this->f_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
+			this->f_label_turbopump_status->Location = System::Drawing::Point(156, 42);
+			this->f_label_turbopump_status->Name = L"f_label_turbopump_status";
+			this->f_label_turbopump_status->Size = System::Drawing::Size(36, 23);
+			this->f_label_turbopump_status->TabIndex = 4;
+			this->f_label_turbopump_status->Text = L"ON";
 			// 
-			// label5
+			// f_label_backpump_status
 			// 
-			this->label5->AutoSize = true;
-			this->label5->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI Semibold", 14, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->f_label_backpump_status->AutoSize = true;
+			this->f_label_backpump_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label5->ForeColor = System::Drawing::Color::SeaGreen;
-			this->label5->Location = System::Drawing::Point(156, 27);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(41, 25);
-			this->label5->TabIndex = 3;
-			this->label5->Text = L"ON";
+			this->f_label_backpump_status->ForeColor = System::Drawing::Color::SeaGreen;
+			this->f_label_backpump_status->Location = System::Drawing::Point(156, 22);
+			this->f_label_backpump_status->Name = L"f_label_backpump_status";
+			this->f_label_backpump_status->Size = System::Drawing::Size(36, 23);
+			this->f_label_backpump_status->TabIndex = 3;
+			this->f_label_backpump_status->Text = L"ON";
 			// 
-			// label6
+			// i_label_turbopump_status
 			// 
-			this->label6->AutoSize = true;
-			this->label6->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI Semibold", 14, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->i_label_turbopump_status->AutoSize = true;
+			this->i_label_turbopump_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label6->ForeColor = System::Drawing::Color::SeaGreen;
-			this->label6->Location = System::Drawing::Point(14, 49);
-			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(115, 25);
-			this->label6->TabIndex = 2;
-			this->label6->Text = L"Turbo pump";
+			this->i_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
+			this->i_label_turbopump_status->Location = System::Drawing::Point(14, 42);
+			this->i_label_turbopump_status->Name = L"i_label_turbopump_status";
+			this->i_label_turbopump_status->Size = System::Drawing::Size(104, 23);
+			this->i_label_turbopump_status->TabIndex = 2;
+			this->i_label_turbopump_status->Text = L"Turbo pump";
 			// 
-			// label8
+			// i_label_backpump_status
 			// 
-			this->label8->AutoSize = true;
-			this->label8->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI Semibold", 14, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->i_label_backpump_status->AutoSize = true;
+			this->i_label_backpump_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label8->ForeColor = System::Drawing::Color::SeaGreen;
-			this->label8->Location = System::Drawing::Point(14, 27);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(107, 25);
-			this->label8->TabIndex = 0;
-			this->label8->Text = L"Back pump";
-			this->label8->Click += gcnew System::EventHandler(this, &MainForm::label8_Click);
+			this->i_label_backpump_status->ForeColor = System::Drawing::Color::SeaGreen;
+			this->i_label_backpump_status->Location = System::Drawing::Point(14, 22);
+			this->i_label_backpump_status->Name = L"i_label_backpump_status";
+			this->i_label_backpump_status->Size = System::Drawing::Size(99, 23);
+			this->i_label_backpump_status->TabIndex = 0;
+			this->i_label_backpump_status->Text = L"Back  pump";
+			this->i_label_backpump_status->Click += gcnew System::EventHandler(this, &MainForm::label8_Click);
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add(this->label4);
+			this->groupBox1->Controls->Add(this->f_label_WRG_status);
 			this->groupBox1->Controls->Add(this->label3);
-			this->groupBox1->Controls->Add(this->label2);
+			this->groupBox1->Controls->Add(this->f_label_APG_status);
 			this->groupBox1->Controls->Add(this->label1);
 			this->groupBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox1->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox1->Location = System::Drawing::Point(3, 10);
+			this->groupBox1->Location = System::Drawing::Point(11, 3);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(237, 89);
+			this->groupBox1->Size = System::Drawing::Size(231, 78);
 			this->groupBox1->TabIndex = 1;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Давление системы";
 			// 
-			// label4
+			// f_label_WRG_status
 			// 
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_WRG_status->AutoSize = true;
+			this->f_label_WRG_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label4->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label4->Location = System::Drawing::Point(94, 53);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(123, 25);
-			this->label4->TabIndex = 3;
-			this->label4->Text = L"5x10+3 mbar";
+			this->f_label_WRG_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_WRG_status->Location = System::Drawing::Point(87, 45);
+			this->f_label_WRG_status->Name = L"f_label_WRG_status";
+			this->f_label_WRG_status->Size = System::Drawing::Size(112, 23);
+			this->f_label_WRG_status->TabIndex = 3;
+			this->f_label_WRG_status->Text = L"5x10+3 mbar";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label3->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label3->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label3->Location = System::Drawing::Point(19, 53);
+			this->label3->Location = System::Drawing::Point(18, 45);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(54, 25);
+			this->label3->Size = System::Drawing::Size(49, 23);
 			this->label3->TabIndex = 2;
 			this->label3->Text = L"WRG";
 			// 
-			// label2
+			// f_label_APG_status
 			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_APG_status->AutoSize = true;
+			this->f_label_APG_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label2->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label2->Location = System::Drawing::Point(94, 23);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(123, 25);
-			this->label2->TabIndex = 1;
-			this->label2->Text = L"5x10+3 mbar";
+			this->f_label_APG_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->f_label_APG_status->Location = System::Drawing::Point(87, 22);
+			this->f_label_APG_status->Name = L"f_label_APG_status";
+			this->f_label_APG_status->Size = System::Drawing::Size(112, 23);
+			this->f_label_APG_status->TabIndex = 1;
+			this->f_label_APG_status->Text = L"5x10+3 mbar";
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label1->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label1->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label1->Location = System::Drawing::Point(25, 25);
+			this->label1->Location = System::Drawing::Point(18, 22);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(48, 25);
+			this->label1->Size = System::Drawing::Size(43, 23);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"APG";
-			// 
-			// panel4
-			// 
-			this->panel4->BackColor = System::Drawing::Color::White;
-			this->panel4->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel4->Location = System::Drawing::Point(334, 832);
-			this->panel4->Name = L"panel4";
-			this->panel4->Size = System::Drawing::Size(576, 59);
-			this->panel4->TabIndex = 9;
 			// 
 			// panel6
 			// 
 			this->panel6->BackColor = System::Drawing::Color::White;
-			this->panel6->Controls->Add(this->pictureBox2);
-			this->panel6->Controls->Add(this->label60);
-			this->panel6->Controls->Add(this->f_button_connect_to_PLC);
+			this->panel6->Controls->Add(this->groupBox5);
 			this->panel6->Dock = System::Windows::Forms::DockStyle::Top;
-			this->panel6->Location = System::Drawing::Point(334, 24);
+			this->panel6->Location = System::Drawing::Point(317, 24);
 			this->panel6->Name = L"panel6";
-			this->panel6->Size = System::Drawing::Size(576, 67);
+			this->panel6->Size = System::Drawing::Size(436, 109);
 			this->panel6->TabIndex = 10;
 			// 
-			// pictureBox2
+			// groupBox5
 			// 
-			this->pictureBox2->Cursor = System::Windows::Forms::Cursors::Default;
-			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
-			this->pictureBox2->Location = System::Drawing::Point(239, 3);
-			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(44, 31);
-			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->pictureBox2->TabIndex = 2;
-			this->pictureBox2->TabStop = false;
-			// 
-			// label60
-			// 
-			this->label60->AutoSize = true;
-			this->label60->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->groupBox5->Controls->Add(this->picture_not_connection);
+			this->groupBox5->Controls->Add(this->f_button_connect_to_PLC);
+			this->groupBox5->Controls->Add(this->picture_connection);
+			this->groupBox5->Controls->Add(this->i_button_connect_to_PLC);
+			this->groupBox5->Font = (gcnew System::Drawing::Font(L"Calibri", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label60->ForeColor = System::Drawing::Color::SeaGreen;
-			this->label60->Location = System::Drawing::Point(6, 10);
-			this->label60->Name = L"label60";
-			this->label60->Size = System::Drawing::Size(224, 19);
-			this->label60->TabIndex = 1;
-			this->label60->Text = L"Cоединение с PLC установлено";
+			this->groupBox5->ForeColor = System::Drawing::Color::RoyalBlue;
+			this->groupBox5->Location = System::Drawing::Point(6, 3);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(424, 99);
+			this->groupBox5->TabIndex = 13;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"Статус соединения";
+			// 
+			// picture_not_connection
+			// 
+			this->picture_not_connection->Cursor = System::Windows::Forms::Cursors::Default;
+			this->picture_not_connection->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"picture_not_connection.Image")));
+			this->picture_not_connection->Location = System::Drawing::Point(12, 25);
+			this->picture_not_connection->Name = L"picture_not_connection";
+			this->picture_not_connection->Size = System::Drawing::Size(35, 23);
+			this->picture_not_connection->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->picture_not_connection->TabIndex = 3;
+			this->picture_not_connection->TabStop = false;
+			this->picture_not_connection->Visible = false;
 			// 
 			// f_button_connect_to_PLC
 			// 
-			this->f_button_connect_to_PLC->Enabled = false;
-			this->f_button_connect_to_PLC->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_connect_to_PLC->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_connect_to_PLC->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->f_button_connect_to_PLC->Location = System::Drawing::Point(6, 32);
+			this->f_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
+			this->f_button_connect_to_PLC->Location = System::Drawing::Point(6, 58);
 			this->f_button_connect_to_PLC->Name = L"f_button_connect_to_PLC";
-			this->f_button_connect_to_PLC->Size = System::Drawing::Size(189, 31);
+			this->f_button_connect_to_PLC->Size = System::Drawing::Size(265, 31);
 			this->f_button_connect_to_PLC->TabIndex = 0;
 			this->f_button_connect_to_PLC->Text = L"Соединение с PLC";
 			this->f_button_connect_to_PLC->UseVisualStyleBackColor = true;
+			this->f_button_connect_to_PLC->Click += gcnew System::EventHandler(this, &MainForm::f_button_connect_to_PLC_Click);
 			// 
-			// f_button_exit
+			// picture_connection
 			// 
-			this->f_button_exit->BackColor = System::Drawing::Color::Crimson;
-			this->f_button_exit->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->f_button_exit->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->picture_connection->Cursor = System::Windows::Forms::Cursors::Default;
+			this->picture_connection->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"picture_connection.Image")));
+			this->picture_connection->Location = System::Drawing::Point(12, 25);
+			this->picture_connection->Name = L"picture_connection";
+			this->picture_connection->Size = System::Drawing::Size(35, 23);
+			this->picture_connection->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->picture_connection->TabIndex = 2;
+			this->picture_connection->TabStop = false;
+			// 
+			// i_button_connect_to_PLC
+			// 
+			this->i_button_connect_to_PLC->AutoSize = true;
+			this->i_button_connect_to_PLC->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->f_button_exit->ForeColor = System::Drawing::Color::WhiteSmoke;
-			this->f_button_exit->Location = System::Drawing::Point(1120, 2);
-			this->f_button_exit->Name = L"f_button_exit";
-			this->f_button_exit->Size = System::Drawing::Size(30, 16);
-			this->f_button_exit->TabIndex = 12;
-			this->f_button_exit->UseVisualStyleBackColor = false;
-			this->f_button_exit->Click += gcnew System::EventHandler(this, &MainForm::f_button_exit_Click);
+			this->i_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
+			this->i_button_connect_to_PLC->Location = System::Drawing::Point(47, 27);
+			this->i_button_connect_to_PLC->Name = L"i_button_connect_to_PLC";
+			this->i_button_connect_to_PLC->Size = System::Drawing::Size(224, 19);
+			this->i_button_connect_to_PLC->TabIndex = 1;
+			this->i_button_connect_to_PLC->Text = L"Cоединение с PLC установлено";
+			// 
+			// Timer
+			// 
+			this->Timer->Tick += gcnew System::EventHandler(this, &MainForm::Timer_Tick);
+			// 
+			// panel4
+			// 
+			this->panel4->BackColor = System::Drawing::Color::White;
+			this->panel4->Controls->Add(this->down_panel);
+			this->panel4->Dock = System::Windows::Forms::DockStyle::Bottom;
+			this->panel4->Location = System::Drawing::Point(317, 489);
+			this->panel4->Name = L"panel4";
+			this->panel4->Size = System::Drawing::Size(436, 240);
+			this->panel4->TabIndex = 9;
+			// 
+			// down_panel
+			// 
+			this->down_panel->Controls->Add(this->groupBox8);
+			this->down_panel->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->down_panel->Location = System::Drawing::Point(0, 0);
+			this->down_panel->Name = L"down_panel";
+			this->down_panel->Size = System::Drawing::Size(436, 240);
+			this->down_panel->TabIndex = 0;
+			this->down_panel->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::down_panel_Paint);
 			// 
 			// MainForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
+			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::White;
-			this->ClientSize = System::Drawing::Size(1161, 891);
-			this->Controls->Add(this->f_button_exit);
+			this->ClientSize = System::Drawing::Size(1004, 729);
+			this->Controls->Add(this->data_label);
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->panel4);
-			this->Controls->Add(this->panel2);
-			this->Controls->Add(this->panel1);
+			this->Controls->Add(this->right_panel);
+			this->Controls->Add(this->left_panel);
 			this->Controls->Add(this->menuStrip1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+			this->ImeMode = System::Windows::Forms::ImeMode::Katakana;
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MainForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"UVN Control System 2.0 - Автоматическая система управления";
 			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &MainForm::MainForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
-			this->panel1->ResumeLayout(false);
-			this->panel5->ResumeLayout(false);
-			this->groupBox8->ResumeLayout(false);
-			this->groupBox8->PerformLayout();
-			this->groupBox7->ResumeLayout(false);
-			this->groupBox7->PerformLayout();
+			this->left_panel->ResumeLayout(false);
 			this->groupBox6->ResumeLayout(false);
-			this->groupBox6->PerformLayout();
-			this->groupBox5->ResumeLayout(false);
-			this->groupBox5->PerformLayout();
-			this->panel2->ResumeLayout(false);
+			this->tabControl1->ResumeLayout(false);
+			this->tabPage1->ResumeLayout(false);
+			this->tabPage1->PerformLayout();
+			this->left_down_panel->ResumeLayout(false);
+			this->left_down_panel->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_recording))->EndInit();
+			this->groupbox_butterfly->ResumeLayout(false);
+			this->groupbox_butterfly->PerformLayout();
+			this->groupBox_time->ResumeLayout(false);
+			this->groupBox_time->PerformLayout();
+			this->groupBox8->ResumeLayout(false);
+			this->tabControl2->ResumeLayout(false);
+			this->tabPage3->ResumeLayout(false);
+			this->tabPage3->PerformLayout();
+			this->tabPage4->ResumeLayout(false);
+			this->tabPage4->PerformLayout();
+			this->right_panel->ResumeLayout(false);
 			this->groupBox_flap->ResumeLayout(false);
 			this->groupBox_flap->PerformLayout();
 			this->subgroupBox_mode->ResumeLayout(false);
 			this->subgroupBox_mode->PerformLayout();
-			this->panel3->ResumeLayout(false);
-			this->groupBox4->ResumeLayout(false);
-			this->groupBox4->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
+			this->right_down_panel->ResumeLayout(false);
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox3->PerformLayout();
 			this->groupBox2->ResumeLayout(false);
@@ -2031,8 +2545,12 @@ private: System::Windows::Forms::Button^ f_button_exit;
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
 			this->panel6->ResumeLayout(false);
-			this->panel6->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
+			this->groupBox5->ResumeLayout(false);
+			this->groupBox5->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_not_connection))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_connection))->EndInit();
+			this->panel4->ResumeLayout(false);
+			this->down_panel->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -2055,11 +2573,11 @@ private: System::Void f_stop_button_Click(System::Object^ sender, System::EventA
 private: System::Void radioButton_flap_auto_mode_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
 	
-		groupBox_flap->Height = 230;
+		groupBox_flap->Height = 217;
 		f_button_manual_close_flap->Visible = false;
 		f_button_manual_open_flap->Visible = false;
-		f_button_auto_mode_flap_start->Visible = true;
-		f_button_auto_mode_flap_stop->Visible = true;
+		//f_button_auto_mode_flap_start->Visible = true;
+		//f_button_auto_mode_flap_stop->Visible = true;
 		I_label_set_time_flap->Visible = true;
 		progressBar_flap->Visible = true;
 		f_textBox_set_time_flap->Visible = true;
@@ -2070,8 +2588,8 @@ private: System::Void radioButton_flap_manual_mode_CheckedChanged(System::Object
 	groupBox_flap->Height = 180;
 	f_button_manual_close_flap->Visible = true;
 	f_button_manual_open_flap->Visible = true;
-	f_button_auto_mode_flap_start->Visible = false;
-	f_button_auto_mode_flap_stop->Visible = false;
+	//f_button_auto_mode_flap_start->Visible = false;
+	//f_button_auto_mode_flap_stop->Visible = false;
 	I_label_set_time_flap->Visible = false;
 	progressBar_flap->Visible = false;
 	f_textBox_set_time_flap->Visible = false;
@@ -2087,6 +2605,200 @@ private: System::Void MainForm_FormClosed(System::Object^ sender, System::Window
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 
+	if (f_button_on_off_heat->Text == "Отключить нагрев") {
+
+		f_button_on_off_heat->Text = "Включить нагрев";
+		f_button_on_off_heat->ForeColor = System::Drawing::Color::Crimson;
+	}
+	
+	else if (f_button_on_off_heat->Text == "Включить нагрев") {
+
+		f_button_on_off_heat->Text = "Отключить нагрев";
+		f_button_on_off_heat->ForeColor = System::Drawing::Color::Navy;
+	}
+
+	
+	
+
+}
+private: System::Void f_button_connect_to_PLC_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	f_button_connect_to_PLC->Enabled = false;
+	picture_connection->Visible = true;
+	picture_not_connection->Visible = false;
+	f_button_connect_to_PLC->Enabled = false;
+	i_button_connect_to_PLC->Text = "Соединение с PLC установлено";
+	i_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
+	MainForm_unblock();
+	start_timer();
+}
+private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
+
+	data_label->Text = work_time.ToString();
+	work_time++;
+
+}
+private: System::Void label36_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void splitContainer1_Panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
+private: System::Void splitContainer1_Panel1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
+private: System::Void f_label_recording_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void pictureBox_recording_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void f_label_trubo_percent_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void tabControl2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label56_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void f_textbox_voltage_V_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label15_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox6_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox3_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void f_textbox_current_ma_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label54_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label23_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label24_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox5_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label28_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label25_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button3_Click_1(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox4_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label21_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label26_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label29_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void down_panel_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
+private: System::Void f_button_start_stop_PSV1_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	if (f_button_start_stop_PSV1->Text=="Включить PSV1") {
+	
+		
+
+		f_button_start_stop_PSV1->Text = "Выключить PSV1";
+		f_button_start_stop_PSV1->ForeColor = System::Drawing::Color::Crimson;
+		f_label_PSV1_status_mV->ForeColor = System::Drawing::Color::Crimson;
+
+		f_button_PSV1_p30mv->Enabled = true;
+		f_button_PSV1_m30mv->Enabled = true;
+
+		//добавить функцию включения дискретного управ на ПЛК
+		currentData->set_PSV1 = 1800;
+		f_label_PSV1_status_mV->Text = currentData->set_PSV1.ToString();
+
+	
+	}
+
+	else if (f_button_start_stop_PSV1->Text == "Выключить PSV1") {
+
+		f_button_start_stop_PSV1->Text = "Включить PSV1";
+		f_button_start_stop_PSV1->ForeColor = System::Drawing::Color::RoyalBlue;
+
+		f_button_PSV1_p30mv->Enabled = false;
+		f_button_PSV1_m30mv->Enabled = false;
+
+		//добавить функцию включения дискретного управ на ПЛК
+		currentData->set_PSV1 = 0;
+		f_label_PSV1_status_mV->Text = currentData->set_PSV1.ToString();
+
+	}
+
+
+	
+	
+
+}
+private: System::Void f_button_PSV1_p30mv_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_PSV1 += 30;
+	f_label_PSV1_status_mV->Text = currentData->set_PSV1.ToString();
+}	
+private: System::Void f_button_PSV1_m30mv_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_PSV1 -= 30;
+	f_label_PSV1_status_mV->Text = currentData->set_PSV1.ToString();
+}
+private: System::Void f_button_start_stop_PSV2_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	if (f_button_start_stop_PSV2->Text == "Включить PSV2") {
+
+
+
+		f_button_start_stop_PSV2->Text = "Выключить PSV2";
+		f_button_start_stop_PSV2->ForeColor = System::Drawing::Color::Crimson;
+		f_label_PSV2_status_mV->ForeColor = System::Drawing::Color::Crimson;
+
+		f_button_PSV2_p30mv->Enabled = true;
+		f_button_PSV2_m30mv->Enabled = true;
+
+		//добавить функцию включения дискретного управ на ПЛК
+		currentData->set_PSV2 = 1800;
+		f_label_PSV2_status_mV->Text = currentData->set_PSV2.ToString();
+
+
+	}
+
+	else if (f_button_start_stop_PSV2->Text == "Выключить PSV2") {
+
+		f_button_start_stop_PSV2->Text = "Включить PSV2";
+		f_button_start_stop_PSV2->ForeColor = System::Drawing::Color::RoyalBlue;
+
+		f_button_PSV2_p30mv->Enabled = false;
+		f_button_PSV2_m30mv->Enabled = false;
+
+		//добавить функцию включения дискретного управ на ПЛК
+		currentData->set_PSV2 = 0;
+		f_label_PSV2_status_mV->Text = currentData->set_PSV2.ToString();
+
+	}
+
+}
+private: System::Void f_button_PSV2_p30mv_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_PSV2 += 30;
+	f_label_PSV2_status_mV->Text = currentData->set_PSV2.ToString();
+}
+private: System::Void f_button_PSV2_m30mv_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_PSV2 -= 30;
+	f_label_PSV2_status_mV->Text = currentData->set_PSV2.ToString();
+}
+private: System::Void f_button_start_pump_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	f_button_stop_pump->Enabled = true;
+	f_button_start_pump->Enabled = false;
+}
+private: System::Void f_button_stop_pump_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	f_button_start_pump->Enabled = true;
+	f_button_stop_pump->Enabled = false;
 
 }
 };

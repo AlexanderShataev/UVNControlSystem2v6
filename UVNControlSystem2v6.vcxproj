@@ -121,11 +121,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="accounts.cpp" />
+    <ClCompile Include="dataPLC.cpp" />
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="MainForm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="accounts.h" />
+    <ClInclude Include="dataPLC.h" />
     <ClInclude Include="LoginForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
