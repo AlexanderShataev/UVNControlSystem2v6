@@ -7,6 +7,7 @@ public:
 	int set_WRG;
 	int set_PSV1;
 	int set_PSV2;
+	int set_BV;
 
 	
 	void r_data() {
