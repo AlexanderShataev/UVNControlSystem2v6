@@ -13,8 +13,9 @@ public:
 	void r_data() {
 
 		int data[11];
+
 		data[0] = 20;					
-		data[1] = 0;	 // cmd_word
+		data[1] = 0;	// cmd_word
 		data[2] = 0;  			
 		data[3] = 0;	//au_PSV1 в дискретах
 		data[4] = 0;	//au_PSV2 в дискретах

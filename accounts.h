@@ -1,7 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include "MainForm.h"
-
+//#include "MainForm.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -10,72 +9,59 @@ namespace UVNControlSystem2v6 {
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
-	using namespace System::Drawing;
-	                     
+	using namespace System::Drawing;                     
 	using namespace std;
 
-	private ref class accounts 
+	
+	public ref class accounts 
 	{ 
 
 	public: String^ ID;
+		    String^ Password;
+			bool currentID; 
 
-		  MainForm^ form = gcnew MainForm();
+	//MainForm^ form = gcnew MainForm();
 
-	
-	
 	// Функция проверки логина/пароля
 
-	private: bool login_pass (String^ login, String^ password) {
+	public: bool login_pass (String^ login, String^ password) {
 
 
 		if (login == "admin" && password == "1234") {
 
-			//ID = login;
-			return true;
+			ID = login;
+			Password = password;
+			currentID = true;
+			return currentID;
 
 		}
 
 		else if (login == "student" && password == "1234") {
 
-			//ID = login;
-			return true;
-
+			ID = login;
+			Password = password;
+			currentID = true;
+			return currentID;
 		}
 
 		else if (login == "" && password == "") {  // заменить потом
  
-			//ID = login;
-			return true;
+			ID = login;
+			Password = password;
+			currentID = true;
+			return currentID;
 
 		}
 
 	}
-	 // Функция открытия MainForm и доступа прав
 
-	public: void access_account (String^ login, String^ password) {
+		  String ^get_login(String^ login, String^ password) {
 
-		ID = login;
-		
-		
-			if (login_pass(login, password) && login == "admin") {
+			  login_pass(login, password);
 
-				form->access_admin();
-				form->Show();
+			  return login;
+		  }
 
-			}
-
-			if (login_pass(login, password) && login == "demo") {
-
-				form->access_demo();
-				form->Show();
-
-			}
-		
-		
-
-		
-
-	}
 
 
 	};

@@ -1,6 +1,7 @@
 #pragma once
 #include "dataPLC.h"
 #include "windows.h"
+#include "accounts.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -14,9 +15,16 @@ namespace UVNControlSystem2v6 {
 	/// <summary>
 	/// —‚Ó‰Í‡ ‰Îˇ MainForm
 	/// </summary>
+	
+
 	public ref class MainForm : public System::Windows::Forms::Form
 	{
 	public:
+
+		//users
+		accounts^ user = gcnew accounts();
+
+		bool status_block_form=0; // 1 -- Á‡·ÎÓÍËÓ‚‡Ì‡, 0-- ÌÂÁ‡·ÎÓÍËÓ‚‡Ì‡
 
 		dataPLC^ currentData = gcnew dataPLC();
 
@@ -27,6 +35,7 @@ namespace UVNControlSystem2v6 {
 		int flap_auto_time = 0; // Ú‡Í Ú‡ÈÏÂ‡ ‡‚ÚÓÏ‡ÚË˜ÂÒÍÓ„Ó ÂÊËÏ‡ ÓÚÍ˚ÚËˇ/Á‡Í˚ÚËˇ Á‡ÒÎÓÌÍË
 		int set_flap_auto_time;
 		double flap_progress = 0;
+
 
 	private: System::Windows::Forms::TabControl^ tabControl1;
 	private: System::Windows::Forms::TabPage^ tabPage1;
@@ -44,8 +53,6 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Label^ label8;
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::Button^ f_button_start_stop_PSV2;
-
-
 
 
 	private: System::Windows::Forms::Label^ label9;
@@ -74,7 +81,9 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Label^ label42;
 	private: System::Windows::Forms::Label^ label15;
 	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::Button^ button7;
+	private: System::Windows::Forms::Button^ f_button_set_TPlB_t;
+
+
 	private: System::Windows::Forms::Panel^ panel4;
 	private: System::Windows::Forms::Panel^ down_panel;
 	private: System::Windows::Forms::Label^ f_textbox_termo_current_ma;
@@ -89,15 +98,17 @@ namespace UVNControlSystem2v6 {
 
 
 
-
-
-
-
-
 	private: System::Windows::Forms::Label^ label20;
-	private: System::Windows::Forms::TabControl^ tabControl2;
-	private: System::Windows::Forms::TabPage^ tabPage3;
-	private: System::Windows::Forms::TabPage^ tabPage4;
+	private: System::Windows::Forms::TabControl^ tabpage_TPlB;
+
+
+	private: System::Windows::Forms::TabPage^ tabpage_TPlB_Termo;
+	private: System::Windows::Forms::TabPage^ tabpage_TPlB_Magnetron;
+
+
+
+
+
 	private: System::Windows::Forms::Label^ f_textbox_magnetron_current_ma;
 
 
@@ -112,10 +123,17 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Label^ label28;
 	private: System::Windows::Forms::TextBox^ textBox5;
 	private: System::Windows::Forms::Label^ i_label_low_voltage;
+private: System::Windows::Forms::Button^ f_button_set_TPlB_m;
 
-	private: System::Windows::Forms::Button^ button8;
-	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::Button^ button4;
+
+
+
+
+
+
+
+
+
 	private: System::Windows::Forms::Label^ i_label_high_voltage;
 
 	private: System::Windows::Forms::ToolStripMenuItem^ ‡‚ÚÓÏ‡ÚËÁËÓ‚‡ÌÌ˚È–ÂÊËÏToolStripMenuItem;
@@ -129,13 +147,114 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Timer^ Flap_auto_timer;
 private: System::Windows::Forms::Label^ test_b;
 private: System::Windows::Forms::Label^ data_label;
-private: System::Windows::Forms::Label^ label17;
+private: System::Windows::Forms::Label^ f_label_system_status;
+
 private: System::Windows::Forms::Button^ f_button_block_form;
+private: System::Windows::Forms::Panel^ panel_unblock;
+private: System::Windows::Forms::Button^ f_button_unblock;
+
+public: System::Windows::Forms::TextBox^ f_textbox_pas;
+private:
+public: System::Windows::Forms::TextBox^ f_textbox_log;
+private: System::Windows::Forms::Label^ label21;
+public:
+private: System::Windows::Forms::Label^ label24;
+private: System::Windows::Forms::Button^ f_button_TPLB_on_T;
+private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
+
+
 
 	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_mV;
 
 
 	public:
+
+		//______________________________________
+		//1._Œ·‡·‡Ú˚‚‡ÂÏ ‚ıÓ‰ ‚ Û˜ÂÚÌÛ˛ Á‡ÔËÒ¸_
+
+		void access_user() {
+
+		
+			if (user->ID == "admin") {
+
+				acces_admin();
+			}
+
+			else if (user->ID == "student") {
+
+				access_student();
+			}
+
+			else if (user->ID == "demo") {
+
+
+				access_demo();
+			}
+
+		}
+
+		 void acces_admin() {
+
+			f_label_system_status->Text = "user: admin"; 
+
+			if (!status_block_form) { // ÂÒÎË ÙÓÏ‡ ÌÂ Á‡·ÎÓÍËÓ‚‡Ì‡
+
+				start_show_user();
+
+			}
+
+			else { // ÂÒÎË ÙÓÏ‡ Á‡·ÎÓÍËÓ‚‡Ì‡
+
+				f_label_system_status->Text = "user: admin";
+				MainForm_unblock();
+				hide_log_form();
+			}
+
+		}
+
+		 void access_student() {
+
+			heat_toolset->Enabled = false;
+			network_toolset->Enabled = false;
+
+			if (!status_block_form) {
+
+				start_show_user();
+
+			}
+			else {
+
+				f_label_system_status->Text = "user: student";
+				MainForm_unblock();
+				hide_log_form();
+
+			}
+
+		}
+
+		 void access_demo() {
+
+				f_label_system_status->Text = "user: demo";
+				start_show_user();
+		}
+
+
+		 void hide_log_form() {
+
+			 panel_unblock->Visible = false;
+			 panel_unblock->Enabled = false;
+			 f_textbox_pas->Text = "";
+			 f_textbox_log->Text = " ";
+			 status_block_form = false;
+			 f_textbox_pas->Enabled = true;
+		}
+
+		 // ŒÕ≈÷ Œ¡–¿¡Œ“ » ”◊ «¿œ»—»
+
+
+
+
+
 
 		//DateTime^ date1 = gcnew DateTime(0);
 
@@ -238,7 +357,8 @@ private: System::Windows::Forms::Button^ f_button_block_form;
 		}
 
 		void start_show_user() { // Ó˜ËÒÚÍ‡ ‰‡ÌÌ˚ı ‰Îˇ admin Ë student
-			
+
+			this->Show();
 			MainForm_block();
 			MainFormClear();
 			picture_connection->Visible = false;
@@ -249,16 +369,6 @@ private: System::Windows::Forms::Button^ f_button_block_form;
 		}
 
 
-		void access_admin() {
-			
-			start_show_user();
-		}
-
-		void access_demo() {
-			
-			this->Show();
-	
-		}
 
 
 
@@ -291,12 +401,17 @@ private: System::Windows::Forms::Button^ f_button_block_form;
 
 	private: System::Windows::Forms::MenuStrip^ menuStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^ ÛÔ‡‚ÎÂÌËÂœÓˆÂÒÒÓÏToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ heat_toolset;
+
 	private: System::Windows::Forms::ToolStripMenuItem^ ‚˚·Ó–Â„ÛÎˇÚÓ‡ToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ Ì‡ÒÚÓÈÍ‡œ»ƒToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ Ì‡ÒÚÓÈÍ‡ÿ»ÃToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ network_and_accs;
+private: System::Windows::Forms::ToolStripMenuItem^ network_toolset;
+
+
+
+
 	private: System::Windows::Forms::ToolStripMenuItem^ Û˜ÂÚÌ‡ˇ«‡ÔËÒ¸ToolStripMenuItem;
 	private: System::Windows::Forms::Panel^ left_panel;
 	private: System::Windows::Forms::Panel^ right_panel;
@@ -509,12 +624,12 @@ private: System::ComponentModel::IContainer^ components;
 			this->ÛÔ‡‚ÎÂÌËÂœÓˆÂÒÒÓÏToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->‡‚ÚÓÏ‡ÚËÁËÓ‚‡ÌÌ˚È–ÂÊËÏToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->‡‚ÚÓÏ‡ÚË˜ÂÒÍËÈ–ÂÊËÏToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->heat_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->‚˚·Ó–Â„ÛÎˇÚÓ‡ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Ì‡ÒÚÓÈÍ‡œ»ƒToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Ì‡ÒÚÓÈÍ‡ÿ»ÃToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->network_and_accs = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->network_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Û˜ÂÚÌ‡ˇ«‡ÔËÒ¸ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->adminToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->studentToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -578,11 +693,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_label_timer_time_start_pump = (gcnew System::Windows::Forms::Label());
 			this->label19 = (gcnew System::Windows::Forms::Label());
 			this->groupBox8 = (gcnew System::Windows::Forms::GroupBox());
-			this->tabControl2 = (gcnew System::Windows::Forms::TabControl());
-			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->tabpage_TPlB = (gcnew System::Windows::Forms::TabControl());
+			this->tabpage_TPlB_Termo = (gcnew System::Windows::Forms::TabPage());
+			this->f_button_TPLB_on_T = (gcnew System::Windows::Forms::Button());
 			this->i_label_low_voltage = (gcnew System::Windows::Forms::Label());
-			this->button8 = (gcnew System::Windows::Forms::Button());
-			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->f_button_set_TPlB_t = (gcnew System::Windows::Forms::Button());
 			this->f_textbox_termo_current_ma = (gcnew System::Windows::Forms::Label());
 			this->label56 = (gcnew System::Windows::Forms::Label());
 			this->f_textbox_termo_voltage_V = (gcnew System::Windows::Forms::Label());
@@ -591,10 +706,10 @@ private: System::ComponentModel::IContainer^ components;
 			this->label54 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
-			this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
+			this->tabpage_TPlB_Magnetron = (gcnew System::Windows::Forms::TabPage());
+			this->f_button_TPLB_on_M = (gcnew System::Windows::Forms::Button());
 			this->i_label_high_voltage = (gcnew System::Windows::Forms::Label());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->f_button_set_TPlB_m = (gcnew System::Windows::Forms::Button());
 			this->f_textbox_magnetron_current_ma = (gcnew System::Windows::Forms::Label());
 			this->label23 = (gcnew System::Windows::Forms::Label());
 			this->f_textbox_magnetron_voltage_V = (gcnew System::Windows::Forms::Label());
@@ -647,7 +762,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
 			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
-			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->f_label_system_status = (gcnew System::Windows::Forms::Label());
 			this->f_button_block_form = (gcnew System::Windows::Forms::Button());
 			this->data_label = (gcnew System::Windows::Forms::Label());
 			this->picture_not_connection = (gcnew System::Windows::Forms::PictureBox());
@@ -658,6 +773,12 @@ private: System::ComponentModel::IContainer^ components;
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
 			this->down_panel = (gcnew System::Windows::Forms::Panel());
 			this->Flap_auto_timer = (gcnew System::Windows::Forms::Timer(this->components));
+			this->panel_unblock = (gcnew System::Windows::Forms::Panel());
+			this->f_button_unblock = (gcnew System::Windows::Forms::Button());
+			this->f_textbox_pas = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_log = (gcnew System::Windows::Forms::TextBox());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->label24 = (gcnew System::Windows::Forms::Label());
 			this->menuStrip1->SuspendLayout();
 			this->left_panel->SuspendLayout();
 			this->left_down_panel->SuspendLayout();
@@ -668,9 +789,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupbox_butterfly->SuspendLayout();
 			this->groupBox_time->SuspendLayout();
 			this->groupBox8->SuspendLayout();
-			this->tabControl2->SuspendLayout();
-			this->tabPage3->SuspendLayout();
-			this->tabPage4->SuspendLayout();
+			this->tabpage_TPlB->SuspendLayout();
+			this->tabpage_TPlB_Termo->SuspendLayout();
+			this->tabpage_TPlB_Magnetron->SuspendLayout();
 			this->right_panel->SuspendLayout();
 			this->groupBox_flap->SuspendLayout();
 			this->subgroupBox_mode->SuspendLayout();
@@ -684,6 +805,7 @@ private: System::ComponentModel::IContainer^ components;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_connection))->BeginInit();
 			this->panel4->SuspendLayout();
 			this->down_panel->SuspendLayout();
+			this->panel_unblock->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip1
@@ -691,7 +813,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->menuStrip1->BackColor = System::Drawing::Color::White;
 			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
 				this->ÛÔ‡‚ÎÂÌËÂœÓˆÂÒÒÓÏToolStripMenuItem,
-					this->Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem, this->Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem, this->Ì‡ÒÚÓÈÍËŒÚÓ·‡ÊÂÌËˇToolStripMenuItem
+					this->heat_toolset, this->network_and_accs, this->Ì‡ÒÚÓÈÍËŒÚÓ·‡ÊÂÌËˇToolStripMenuItem
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
@@ -722,15 +844,15 @@ private: System::ComponentModel::IContainer^ components;
 			this->‡‚ÚÓÏ‡ÚË˜ÂÒÍËÈ–ÂÊËÏToolStripMenuItem->Size = System::Drawing::Size(236, 22);
 			this->‡‚ÚÓÏ‡ÚË˜ÂÒÍËÈ–ÂÊËÏToolStripMenuItem->Text = L"¿‚ÚÓÏ‡ÚË˜ÂÒÍËÈ ÂÊËÏ";
 			// 
-			// Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem
+			// heat_toolset
 			// 
-			this->Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+			this->heat_toolset->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->‚˚·Ó–Â„ÛÎˇÚÓ‡ToolStripMenuItem,
 					this->Ì‡ÒÚÓÈÍ‡œ»ƒToolStripMenuItem, this->Ì‡ÒÚÓÈÍ‡ÿ»ÃToolStripMenuItem
 			});
-			this->Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem->Name = L"Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem";
-			this->Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem->Size = System::Drawing::Size(124, 20);
-			this->Ì‡ÒÚÓÈÍ‡Õ‡„Â‚‡ToolStripMenuItem->Text = L"Õ‡ÒÚÓÈÍ‡ Ì‡„Â‚‡";
+			this->heat_toolset->Name = L"heat_toolset";
+			this->heat_toolset->Size = System::Drawing::Size(124, 20);
+			this->heat_toolset->Text = L"Õ‡ÒÚÓÈÍ‡ Ì‡„Â‚‡";
 			// 
 			// ‚˚·Ó–Â„ÛÎˇÚÓ‡ToolStripMenuItem
 			// 
@@ -750,21 +872,21 @@ private: System::ComponentModel::IContainer^ components;
 			this->Ì‡ÒÚÓÈÍ‡ÿ»ÃToolStripMenuItem->Size = System::Drawing::Size(176, 22);
 			this->Ì‡ÒÚÓÈÍ‡ÿ»ÃToolStripMenuItem->Text = L"Õ‡ÒÚÓÈÍ‡ ÿ»Ã";
 			// 
-			// Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem
+			// network_and_accs
 			// 
-			this->Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem,
+			this->network_and_accs->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->network_toolset,
 					this->Û˜ÂÚÌ‡ˇ«‡ÔËÒ¸ToolStripMenuItem
 			});
-			this->Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem->Name = L"Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem";
-			this->Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem->Size = System::Drawing::Size(58, 20);
-			this->Ì‡ÒÚÓÈÍ‡ƒÓÒÚÛÔ‡ToolStripMenuItem->Text = L"ƒÓÒÚÛÔ";
+			this->network_and_accs->Name = L"network_and_accs";
+			this->network_and_accs->Size = System::Drawing::Size(58, 20);
+			this->network_and_accs->Text = L"ƒÓÒÚÛÔ";
 			// 
-			// ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem
+			// network_toolset
 			// 
-			this->ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem->Name = L"ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem";
-			this->ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem->Size = System::Drawing::Size(159, 22);
-			this->ÒÂÚÂ‚ÓÈƒÓÒÚÛÔToolStripMenuItem->Text = L"—ÂÚÂ‚ÓÈ ‰ÓÒÚÛÔ";
+			this->network_toolset->Name = L"network_toolset";
+			this->network_toolset->Size = System::Drawing::Size(159, 22);
+			this->network_toolset->Text = L"—ÂÚÂ‚ÓÈ ‰ÓÒÚÛÔ";
 			// 
 			// Û˜ÂÚÌ‡ˇ«‡ÔËÒ¸ToolStripMenuItem
 			// 
@@ -788,6 +910,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->studentToolStripMenuItem->Name = L"studentToolStripMenuItem";
 			this->studentToolStripMenuItem->Size = System::Drawing::Size(147, 22);
 			this->studentToolStripMenuItem->Text = L"Student";
+			this->studentToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::studentToolStripMenuItem_Click);
 			// 
 			// ‰ÂÏÓ‚ÂÒËˇToolStripMenuItem
 			// 
@@ -1552,7 +1675,7 @@ private: System::ComponentModel::IContainer^ components;
 			// groupBox8
 			// 
 			this->groupBox8->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom));
-			this->groupBox8->Controls->Add(this->tabControl2);
+			this->groupBox8->Controls->Add(this->tabpage_TPlB);
 			this->groupBox8->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox8->ForeColor = System::Drawing::Color::RoyalBlue;
@@ -1563,39 +1686,54 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox8->TabStop = false;
 			this->groupBox8->Text = L"»ÒÚÓ˜ÌËÍ ÚÓÍ‡ TPlB";
 			// 
-			// tabControl2
+			// tabpage_TPlB
 			// 
-			this->tabControl2->Controls->Add(this->tabPage3);
-			this->tabControl2->Controls->Add(this->tabPage4);
-			this->tabControl2->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->tabpage_TPlB->Controls->Add(this->tabpage_TPlB_Termo);
+			this->tabpage_TPlB->Controls->Add(this->tabpage_TPlB_Magnetron);
+			this->tabpage_TPlB->Font = (gcnew System::Drawing::Font(L"Calibri", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->tabControl2->Location = System::Drawing::Point(6, 26);
-			this->tabControl2->Name = L"tabControl2";
-			this->tabControl2->SelectedIndex = 0;
-			this->tabControl2->Size = System::Drawing::Size(412, 168);
-			this->tabControl2->TabIndex = 24;
-			this->tabControl2->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::tabControl2_SelectedIndexChanged);
+			this->tabpage_TPlB->Location = System::Drawing::Point(6, 26);
+			this->tabpage_TPlB->Name = L"tabpage_TPlB";
+			this->tabpage_TPlB->SelectedIndex = 0;
+			this->tabpage_TPlB->Size = System::Drawing::Size(412, 168);
+			this->tabpage_TPlB->TabIndex = 24;
+			this->tabpage_TPlB->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::tabControl2_SelectedIndexChanged);
 			// 
-			// tabPage3
+			// tabpage_TPlB_Termo
 			// 
-			this->tabPage3->Controls->Add(this->i_label_low_voltage);
-			this->tabPage3->Controls->Add(this->button8);
-			this->tabPage3->Controls->Add(this->button7);
-			this->tabPage3->Controls->Add(this->f_textbox_termo_current_ma);
-			this->tabPage3->Controls->Add(this->label56);
-			this->tabPage3->Controls->Add(this->f_textbox_termo_voltage_V);
-			this->tabPage3->Controls->Add(this->textBox3);
-			this->tabPage3->Controls->Add(this->label15);
-			this->tabPage3->Controls->Add(this->label54);
-			this->tabPage3->Controls->Add(this->label6);
-			this->tabPage3->Controls->Add(this->textBox6);
-			this->tabPage3->Location = System::Drawing::Point(4, 24);
-			this->tabPage3->Name = L"tabPage3";
-			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage3->Size = System::Drawing::Size(404, 140);
-			this->tabPage3->TabIndex = 0;
-			this->tabPage3->Text = L"“ÂÏË˜ÂÒÍÓÂ ËÒÔ‡ÂÌËÂ";
-			this->tabPage3->UseVisualStyleBackColor = true;
+			this->tabpage_TPlB_Termo->Controls->Add(this->f_button_TPLB_on_T);
+			this->tabpage_TPlB_Termo->Controls->Add(this->i_label_low_voltage);
+			this->tabpage_TPlB_Termo->Controls->Add(this->f_button_set_TPlB_t);
+			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_termo_current_ma);
+			this->tabpage_TPlB_Termo->Controls->Add(this->label56);
+			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_termo_voltage_V);
+			this->tabpage_TPlB_Termo->Controls->Add(this->textBox3);
+			this->tabpage_TPlB_Termo->Controls->Add(this->label15);
+			this->tabpage_TPlB_Termo->Controls->Add(this->label54);
+			this->tabpage_TPlB_Termo->Controls->Add(this->label6);
+			this->tabpage_TPlB_Termo->Controls->Add(this->textBox6);
+			this->tabpage_TPlB_Termo->Location = System::Drawing::Point(4, 24);
+			this->tabpage_TPlB_Termo->Name = L"tabpage_TPlB_Termo";
+			this->tabpage_TPlB_Termo->Padding = System::Windows::Forms::Padding(3);
+			this->tabpage_TPlB_Termo->Size = System::Drawing::Size(404, 140);
+			this->tabpage_TPlB_Termo->TabIndex = 0;
+			this->tabpage_TPlB_Termo->Text = L"“ÂÏË˜ÂÒÍÓÂ ËÒÔ‡ÂÌËÂ";
+			this->tabpage_TPlB_Termo->UseVisualStyleBackColor = true;
+			// 
+			// f_button_TPLB_on_T
+			// 
+			this->f_button_TPLB_on_T->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_TPLB_on_T->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_TPLB_on_T->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_TPLB_on_T->ForeColor = System::Drawing::Color::Navy;
+			this->f_button_TPLB_on_T->Location = System::Drawing::Point(15, 99);
+			this->f_button_TPLB_on_T->Name = L"f_button_TPLB_on_T";
+			this->f_button_TPLB_on_T->Size = System::Drawing::Size(246, 29);
+			this->f_button_TPLB_on_T->TabIndex = 57;
+			this->f_button_TPLB_on_T->Text = L"¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
+			this->f_button_TPLB_on_T->UseVisualStyleBackColor = false;
+			this->f_button_TPLB_on_T->Click += gcnew System::EventHandler(this, &MainForm::f_button_TPLB_on_T_Click);
 			// 
 			// i_label_low_voltage
 			// 
@@ -1611,36 +1749,21 @@ private: System::ComponentModel::IContainer^ components;
 			this->i_label_low_voltage->Text = L"  –ÂÊËÏ TPlB: \r\nÕËÁÍÓ‚ÓÎ¸ÚÌ˚È";
 			this->i_label_low_voltage->Click += gcnew System::EventHandler(this, &MainForm::label29_Click);
 			// 
-			// button8
+			// f_button_set_TPlB_t
 			// 
-			this->button8->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button8->Enabled = false;
-			this->button8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button8->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_set_TPlB_t->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_set_TPlB_t->Enabled = false;
+			this->f_button_set_TPlB_t->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_set_TPlB_t->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button8->ForeColor = System::Drawing::Color::Crimson;
-			this->button8->Location = System::Drawing::Point(15, 94);
-			this->button8->Name = L"button8";
-			this->button8->Size = System::Drawing::Size(246, 29);
-			this->button8->TabIndex = 56;
-			this->button8->Text = L"¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
-			this->button8->UseVisualStyleBackColor = false;
-			// 
-			// button7
-			// 
-			this->button7->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button7->Enabled = false;
-			this->button7->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button7->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button7->ForeColor = System::Drawing::Color::Crimson;
-			this->button7->Location = System::Drawing::Point(286, 20);
-			this->button7->Name = L"button7";
-			this->button7->Size = System::Drawing::Size(112, 65);
-			this->button7->TabIndex = 42;
-			this->button7->Text = L"”ÒÚ‡ÌÓ‚ËÚ¸\r\n ÁÌ‡˜ÂÌËÂ";
-			this->button7->UseVisualStyleBackColor = false;
-			this->button7->Click += gcnew System::EventHandler(this, &MainForm::button7_Click);
+			this->f_button_set_TPlB_t->ForeColor = System::Drawing::Color::Crimson;
+			this->f_button_set_TPlB_t->Location = System::Drawing::Point(286, 20);
+			this->f_button_set_TPlB_t->Name = L"f_button_set_TPlB_t";
+			this->f_button_set_TPlB_t->Size = System::Drawing::Size(112, 65);
+			this->f_button_set_TPlB_t->TabIndex = 42;
+			this->f_button_set_TPlB_t->Text = L"”ÒÚ‡ÌÓ‚ËÚ¸\r\n ÁÌ‡˜ÂÌËÂ";
+			this->f_button_set_TPlB_t->UseVisualStyleBackColor = false;
+			this->f_button_set_TPlB_t->Click += gcnew System::EventHandler(this, &MainForm::button7_Click);
 			// 
 			// f_textbox_termo_current_ma
 			// 
@@ -1744,26 +1867,41 @@ private: System::ComponentModel::IContainer^ components;
 			this->textBox6->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			this->textBox6->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox6_TextChanged);
 			// 
-			// tabPage4
+			// tabpage_TPlB_Magnetron
 			// 
-			this->tabPage4->Controls->Add(this->i_label_high_voltage);
-			this->tabPage4->Controls->Add(this->button3);
-			this->tabPage4->Controls->Add(this->button4);
-			this->tabPage4->Controls->Add(this->f_textbox_magnetron_current_ma);
-			this->tabPage4->Controls->Add(this->label23);
-			this->tabPage4->Controls->Add(this->f_textbox_magnetron_voltage_V);
-			this->tabPage4->Controls->Add(this->textBox4);
-			this->tabPage4->Controls->Add(this->label25);
-			this->tabPage4->Controls->Add(this->label26);
-			this->tabPage4->Controls->Add(this->label28);
-			this->tabPage4->Controls->Add(this->textBox5);
-			this->tabPage4->Location = System::Drawing::Point(4, 24);
-			this->tabPage4->Name = L"tabPage4";
-			this->tabPage4->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage4->Size = System::Drawing::Size(404, 140);
-			this->tabPage4->TabIndex = 1;
-			this->tabPage4->Text = L"Ã‡„ÌÂÚÓÌÌÓÂ ‡ÒÔ˚ÎÂÌËÂ";
-			this->tabPage4->UseVisualStyleBackColor = true;
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_button_TPLB_on_M);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->i_label_high_voltage);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_button_set_TPlB_m);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_magnetron_current_ma);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->label23);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_magnetron_voltage_V);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->textBox4);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->label25);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->label26);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->label28);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->textBox5);
+			this->tabpage_TPlB_Magnetron->Location = System::Drawing::Point(4, 24);
+			this->tabpage_TPlB_Magnetron->Name = L"tabpage_TPlB_Magnetron";
+			this->tabpage_TPlB_Magnetron->Padding = System::Windows::Forms::Padding(3);
+			this->tabpage_TPlB_Magnetron->Size = System::Drawing::Size(404, 140);
+			this->tabpage_TPlB_Magnetron->TabIndex = 1;
+			this->tabpage_TPlB_Magnetron->Text = L"Ã‡„ÌÂÚÓÌÌÓÂ ‡ÒÔ˚ÎÂÌËÂ";
+			this->tabpage_TPlB_Magnetron->UseVisualStyleBackColor = true;
+			// 
+			// f_button_TPLB_on_M
+			// 
+			this->f_button_TPLB_on_M->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_TPLB_on_M->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_TPLB_on_M->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_TPLB_on_M->ForeColor = System::Drawing::Color::Navy;
+			this->f_button_TPLB_on_M->Location = System::Drawing::Point(15, 99);
+			this->f_button_TPLB_on_M->Name = L"f_button_TPLB_on_M";
+			this->f_button_TPLB_on_M->Size = System::Drawing::Size(246, 29);
+			this->f_button_TPLB_on_M->TabIndex = 58;
+			this->f_button_TPLB_on_M->Text = L"¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
+			this->f_button_TPLB_on_M->UseVisualStyleBackColor = false;
+			this->f_button_TPLB_on_M->Click += gcnew System::EventHandler(this, &MainForm::f_button_TPLB_on_M_Click);
 			// 
 			// i_label_high_voltage
 			// 
@@ -1778,35 +1916,20 @@ private: System::ComponentModel::IContainer^ components;
 			this->i_label_high_voltage->TabIndex = 57;
 			this->i_label_high_voltage->Text = L"  –ÂÊËÏ TPlB: \r\n¬˚ÒÓÍÓ‚ÓÎ¸ÚÌ˚È";
 			// 
-			// button3
+			// f_button_set_TPlB_m
 			// 
-			this->button3->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button3->Enabled = false;
-			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button3->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_set_TPlB_m->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_set_TPlB_m->Enabled = false;
+			this->f_button_set_TPlB_m->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->f_button_set_TPlB_m->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button3->ForeColor = System::Drawing::Color::Crimson;
-			this->button3->Location = System::Drawing::Point(286, 20);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(112, 64);
-			this->button3->TabIndex = 56;
-			this->button3->Text = L"”ÒÚ‡ÌÓ‚ËÚ¸\r\n ÁÌ‡˜ÂÌËÂ";
-			this->button3->UseVisualStyleBackColor = false;
-			// 
-			// button4
-			// 
-			this->button4->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button4->Enabled = false;
-			this->button4->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button4->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->button4->ForeColor = System::Drawing::Color::Crimson;
-			this->button4->Location = System::Drawing::Point(15, 94);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(246, 29);
-			this->button4->TabIndex = 55;
-			this->button4->Text = L"¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
-			this->button4->UseVisualStyleBackColor = false;
+			this->f_button_set_TPlB_m->ForeColor = System::Drawing::Color::Crimson;
+			this->f_button_set_TPlB_m->Location = System::Drawing::Point(286, 20);
+			this->f_button_set_TPlB_m->Name = L"f_button_set_TPlB_m";
+			this->f_button_set_TPlB_m->Size = System::Drawing::Size(112, 64);
+			this->f_button_set_TPlB_m->TabIndex = 56;
+			this->f_button_set_TPlB_m->Text = L"”ÒÚ‡ÌÓ‚ËÚ¸\r\n ÁÌ‡˜ÂÌËÂ";
+			this->f_button_set_TPlB_m->UseVisualStyleBackColor = false;
 			// 
 			// f_textbox_magnetron_current_ma
 			// 
@@ -2491,7 +2614,7 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			// groupBox5
 			// 
-			this->groupBox5->Controls->Add(this->label17);
+			this->groupBox5->Controls->Add(this->f_label_system_status);
 			this->groupBox5->Controls->Add(this->f_button_block_form);
 			this->groupBox5->Controls->Add(this->data_label);
 			this->groupBox5->Controls->Add(this->picture_not_connection);
@@ -2508,18 +2631,18 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"—Ú‡ÚÛÒ ÒÓÂ‰ËÌÂÌËˇ";
 			// 
-			// label17
+			// f_label_system_status
 			// 
-			this->label17->AutoSize = true;
-			this->label17->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->f_label_system_status->AutoSize = true;
+			this->f_label_system_status->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label17->ForeColor = System::Drawing::Color::DarkGreen;
-			this->label17->Location = System::Drawing::Point(348, 17);
-			this->label17->Name = L"label17";
-			this->label17->Size = System::Drawing::Size(52, 19);
-			this->label17->TabIndex = 13;
-			this->label17->Text = L"—Ú‡ÚÛÒ";
-			this->label17->TextAlign = System::Drawing::ContentAlignment::TopRight;
+			this->f_label_system_status->ForeColor = System::Drawing::Color::DarkGreen;
+			this->f_label_system_status->Location = System::Drawing::Point(320, 17);
+			this->f_label_system_status->Name = L"f_label_system_status";
+			this->f_label_system_status->Size = System::Drawing::Size(52, 19);
+			this->f_label_system_status->TabIndex = 13;
+			this->f_label_system_status->Text = L"—Ú‡ÚÛÒ";
+			this->f_label_system_status->TextAlign = System::Drawing::ContentAlignment::TopRight;
 			// 
 			// f_button_block_form
 			// 
@@ -2541,7 +2664,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->data_label->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->data_label->ForeColor = System::Drawing::Color::Crimson;
-			this->data_label->Location = System::Drawing::Point(331, 36);
+			this->data_label->Location = System::Drawing::Point(320, 36);
 			this->data_label->Name = L"data_label";
 			this->data_label->Size = System::Drawing::Size(87, 19);
 			this->data_label->TabIndex = 11;
@@ -2591,7 +2714,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->i_button_connect_to_PLC->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->i_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
-			this->i_button_connect_to_PLC->Location = System::Drawing::Point(41, 27);
+			this->i_button_connect_to_PLC->Location = System::Drawing::Point(45, 27);
 			this->i_button_connect_to_PLC->Name = L"i_button_connect_to_PLC";
 			this->i_button_connect_to_PLC->Size = System::Drawing::Size(224, 19);
 			this->i_button_connect_to_PLC->TabIndex = 1;
@@ -2625,12 +2748,83 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			this->Flap_auto_timer->Tick += gcnew System::EventHandler(this, &MainForm::Flap_auto_timer_Tick);
 			// 
+			// panel_unblock
+			// 
+			this->panel_unblock->BackColor = System::Drawing::Color::LightGray;
+			this->panel_unblock->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->panel_unblock->Controls->Add(this->f_button_unblock);
+			this->panel_unblock->Controls->Add(this->f_textbox_pas);
+			this->panel_unblock->Controls->Add(this->f_textbox_log);
+			this->panel_unblock->Controls->Add(this->label21);
+			this->panel_unblock->Controls->Add(this->label24);
+			this->panel_unblock->Location = System::Drawing::Point(404, 251);
+			this->panel_unblock->Name = L"panel_unblock";
+			this->panel_unblock->Size = System::Drawing::Size(276, 144);
+			this->panel_unblock->TabIndex = 11;
+			this->panel_unblock->Visible = false;
+			// 
+			// f_button_unblock
+			// 
+			this->f_button_unblock->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_unblock->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_unblock->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_button_unblock->ForeColor = System::Drawing::Color::SeaGreen;
+			this->f_button_unblock->Location = System::Drawing::Point(18, 103);
+			this->f_button_unblock->Name = L"f_button_unblock";
+			this->f_button_unblock->Size = System::Drawing::Size(237, 29);
+			this->f_button_unblock->TabIndex = 19;
+			this->f_button_unblock->Text = L"–‡Á·ÎÓÍËÓ‚‡Ú¸";
+			this->f_button_unblock->UseVisualStyleBackColor = false;
+			this->f_button_unblock->Click += gcnew System::EventHandler(this, &MainForm::f_button_unblock_Click);
+			// 
+			// f_textbox_pas
+			// 
+			this->f_textbox_pas->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_pas->Location = System::Drawing::Point(79, 63);
+			this->f_textbox_pas->Name = L"f_textbox_pas";
+			this->f_textbox_pas->Size = System::Drawing::Size(176, 27);
+			this->f_textbox_pas->TabIndex = 9;
+			// 
+			// f_textbox_log
+			// 
+			this->f_textbox_log->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_log->Location = System::Drawing::Point(79, 23);
+			this->f_textbox_log->Name = L"f_textbox_log";
+			this->f_textbox_log->Size = System::Drawing::Size(176, 27);
+			this->f_textbox_log->TabIndex = 8;
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label21->Location = System::Drawing::Point(14, 67);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(59, 19);
+			this->label21->TabIndex = 7;
+			this->label21->Text = L"œ‡ÓÎ¸";
+			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label24->Location = System::Drawing::Point(14, 27);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(51, 19);
+			this->label24->TabIndex = 6;
+			this->label24->Text = L"ÀÓ„ËÌ";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(1004, 729);
+			this->Controls->Add(this->panel_unblock);
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->panel4);
 			this->Controls->Add(this->right_panel);
@@ -2659,11 +2853,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox_time->ResumeLayout(false);
 			this->groupBox_time->PerformLayout();
 			this->groupBox8->ResumeLayout(false);
-			this->tabControl2->ResumeLayout(false);
-			this->tabPage3->ResumeLayout(false);
-			this->tabPage3->PerformLayout();
-			this->tabPage4->ResumeLayout(false);
-			this->tabPage4->PerformLayout();
+			this->tabpage_TPlB->ResumeLayout(false);
+			this->tabpage_TPlB_Termo->ResumeLayout(false);
+			this->tabpage_TPlB_Termo->PerformLayout();
+			this->tabpage_TPlB_Magnetron->ResumeLayout(false);
+			this->tabpage_TPlB_Magnetron->PerformLayout();
 			this->right_panel->ResumeLayout(false);
 			this->groupBox_flap->ResumeLayout(false);
 			this->groupBox_flap->PerformLayout();
@@ -2683,6 +2877,8 @@ private: System::ComponentModel::IContainer^ components;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_connection))->EndInit();
 			this->panel4->ResumeLayout(false);
 			this->down_panel->ResumeLayout(false);
+			this->panel_unblock->ResumeLayout(false);
+			this->panel_unblock->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -3092,7 +3288,76 @@ private: System::Void test_b_Click(System::Object^ sender, System::EventArgs^ e)
 }
 private: System::Void f_button_block_form_Click(System::Object^ sender, System::EventArgs^ e) {
 
+		MainForm_block();
+		panel_unblock->Visible = true;
+		panel_unblock->Enabled = true;
+		f_textbox_log->Text = user->ID;
+		f_textbox_log->Enabled = false;
+		f_label_system_status->Text = "ŒÊË‰‡ÌËÂ";
 	
+}
+private: System::Void f_button_unblock_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	if (user->get_login(f_textbox_log->Text, f_textbox_pas->Text)) {
+		
+		status_block_form = true;
+		access_user();
+	}
+
+	
+}
+private: System::Void studentToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	panel_unblock->Visible = true;
+	panel_unblock->Enabled = true;
+	f_textbox_log->Text = "student";
+	f_textbox_log->Enabled = false;
+}
+
+
+private: System::Void f_button_TPLB_on_T_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	if (f_button_TPLB_on_T->Text == "¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡") {
+
+		f_button_TPLB_on_T->Text = "¬˚ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
+		f_button_TPLB_on_T->ForeColor = System::Drawing::Color::Crimson;
+		f_button_set_TPlB_t->Enabled = true;
+		tabpage_TPlB_Magnetron->Enabled = false;
+
+	}
+
+	else if (f_button_TPLB_on_T->Text == "¬˚ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡") {
+
+		f_button_TPLB_on_T->Text = "¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
+		f_button_TPLB_on_T->ForeColor = System::Drawing::Color::Navy;
+		f_button_set_TPlB_t->Enabled = false;
+		tabpage_TPlB_Magnetron->Enabled = true;
+
+
+	}
+}
+private: System::Void f_button_TPLB_on_M_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	if (f_button_TPLB_on_M->Text == "¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡") {
+
+		f_button_TPLB_on_M->Text = "¬˚ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
+		f_button_TPLB_on_M->ForeColor = System::Drawing::Color::Crimson;
+		f_button_set_TPlB_m->Enabled = true;
+		tabpage_TPlB_Termo->Enabled = false;
+
+	}
+
+	else if (f_button_TPLB_on_M->Text == "¬˚ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡") {
+
+		f_button_TPLB_on_M->Text = "¬ÍÎ˛˜ËÚ¸ ËÒÚÓ˜ÌËÍ ÚÓÍ‡";
+		f_button_TPLB_on_M->ForeColor = System::Drawing::Color::Navy;
+		f_button_set_TPlB_m->Enabled = false;
+		tabpage_TPlB_Termo->Enabled = true;
+
+	}
+
+
 }
 };
 }
