@@ -2,6 +2,7 @@
 #include "dataPLC.h"
 #include "windows.h"
 #include "accounts.h"
+#include "ModbusForm.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -11,6 +12,8 @@ namespace UVNControlSystem2v6 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace EasyModbus;
+
 
 	/// <summary>
 	/// Сводка для MainForm
@@ -24,13 +27,22 @@ namespace UVNControlSystem2v6 {
 		//users
 		accounts^ user = gcnew accounts();
 
+		ModbusClient^ ModbusPLC = gcnew ModbusClient();
+
 		bool status_block_form=0; // 1 -- заблокирована, 0-- незаблокирована
 
-		dataPLC^ currentData = gcnew dataPLC();
 
 		String^ ID;
-		int work_time = 0;// рабочее время
+		//int work_time = 0;// рабочее время
 		
+
+		// Обмен с ПЛК 
+		dataPLC^ currentData = gcnew dataPLC();
+
+
+
+
+
 		// auto mode flap
 		int flap_auto_time = 0; // так таймера автоматического режима открытия/закрытия заслонки
 		int set_flap_auto_time;
@@ -114,14 +126,16 @@ namespace UVNControlSystem2v6 {
 
 	private: System::Windows::Forms::Label^ label23;
 	private: System::Windows::Forms::Label^ f_textbox_magnetron_voltage_V;
+	private: System::Windows::Forms::TextBox^ f_textbox_set_I_M;
 
 
 
-	private: System::Windows::Forms::TextBox^ textBox4;
+
 	private: System::Windows::Forms::Label^ label25;
 	private: System::Windows::Forms::Label^ label26;
 	private: System::Windows::Forms::Label^ label28;
-	private: System::Windows::Forms::TextBox^ textBox5;
+private: System::Windows::Forms::TextBox^ f_textbox_set_U_M;
+
 	private: System::Windows::Forms::Label^ i_label_low_voltage;
 private: System::Windows::Forms::Button^ f_button_set_TPlB_m;
 
@@ -164,10 +178,15 @@ private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
 
 
 
+
 	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_mV;
 
 
 	public:
+
+
+
+
 
 		//______________________________________
 		//1._Обрабатываем вход в учетную запись_
@@ -256,15 +275,142 @@ private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
 
 
 
+		 //_____________________________________
+		 //2. Обрабатываем соединение с ПЛК
+
+		 void Write_PLC_data() {
+
+
+			 try {
+
+				 for (int i = 0; i <= 11; i++) {
+
+					 ModbusPLC->WriteSingleRegister(i, currentData->data[i]);
+
+				 }
+			 }
+			 
+			 catch (System::Exception^) {
+
+				 MessageBox::Show("Не удалось записать данные на PLC", "UVN Control System 2.0 - Error connecting", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				 PLC_disconnect();
+			 }
+
+
+		 }
+
+
+
+
+
+		 void PLC_connecting_status() {
+
+			 if (ModbusPLC->Connected) {
+
+				 f_button_connect_to_PLC->Enabled = false;
+				 picture_connection->Visible = true;
+				 picture_not_connection->Visible = false;
+				 f_button_connect_to_PLC->Enabled = false;
+
+				 i_button_connect_to_PLC->Text = "Соединение с PLC установлено";
+				 i_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
+				 currentData->main_connecting_status = true;
+			 }
+
+			 else if (!ModbusPLC->Connected) {
+
+				 i_button_connect_to_PLC->Text = "Нет соединения с PLC";
+				 i_button_connect_to_PLC->ForeColor = System::Drawing::Color::Crimson;
+				 f_button_connect_to_PLC->Enabled = true;
+				 picture_connection->Visible = false;
+				 picture_not_connection->Visible = true;
+				// f_label_status->Text = "Not connected";
+				// groupbox_holding_registers->Enabled = false;
+				 		
+				 currentData->main_connecting_status = false;
+
+			 }
+		 }
+
+
+
+
+		 void PLC_connect() {
+
+			 try {
+
+				 ModbusPLC->IPAddress = "127.0.0.1";
+				 ModbusPLC->Port = 502;
+				 ModbusPLC->Connect();
+
+				 if (ModbusPLC->Connected) {
+
+					 MainForm_unblock();
+					 start_timer();
+				 }
+			 }
+			 
+			 catch (System::Exception^) {
+
+				 PLC_disconnect();
+				 MessageBox::Show("Не удалось установить соединение с PLC", "UVN Control System 2.0 - Error connecting", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				 
+			 }
+		 }
+
+
+
+		 void PLC_disconnect() {
+
+			 ModbusPLC->Disconnect();
+			 stop_timer();
+			 
+		 }
+
+		 void Read_PLC_data () {
+
+
+			 int startAddress = 0;
+			 int quantity = 30;
+
+			 try {
+
+
+				 currentData->share_mem = ModbusPLC->ReadHoldingRegisters(startAddress, quantity);
+
+				 //currentData->recieve_data(currentData->share_mem);
+
+			 }
+
+			 catch (System::Exception^) {
+				
+				 PLC_disconnect();
+				 MessageBox::Show("Ошибка чтения", "Закрытие");
+
+			 }
+
+		 }
+
+
 		//DateTime^ date1 = gcnew DateTime(0);
 
 		void start_timer() {
+
+			currentData->work_time = 0;
 
 			Work_Timer->Enabled = true;
 			Work_Timer->Interval = 1000;
 
 		}
+
+		void stop_timer() {
+
+			Work_Timer->Enabled = false;
+		}
 		
+
+
+
 
 		// ФУНКЦИИ РАБОТА С ФОРМОЙ 
 
@@ -448,8 +594,10 @@ private: System::Windows::Forms::Label^ i_label_backpump_status;
 private: System::Windows::Forms::Label^ f_label_temp_status_deg;
 
 	private: System::Windows::Forms::Label^ label11;
-	private: System::Windows::Forms::Button^ button5;
-	private: System::Windows::Forms::TextBox^ textBox1;
+private: System::Windows::Forms::Button^ f_button_set_temp;
+private: System::Windows::Forms::TextBox^ f_textbox_set_temp;
+
+
 	private: System::Windows::Forms::Label^ label14;
 
 private: System::Windows::Forms::Button^ f_button_on_off_heat;
@@ -523,9 +671,11 @@ private: System::Windows::Forms::Label^ f_label_timer_time_start_pump;
 
 
 private: System::Windows::Forms::GroupBox^ groupBox8;
+private: System::Windows::Forms::TextBox^ f_textbox_set_U_T;
 
 
-private: System::Windows::Forms::TextBox^ textBox6;
+
+
 
 
 
@@ -533,12 +683,15 @@ private: System::Windows::Forms::TextBox^ textBox6;
 
 
 private: System::Windows::Forms::Label^ label54;
+private: System::Windows::Forms::TextBox^ f_textbox_set_I_T;
 
 
 
 
 
-private: System::Windows::Forms::TextBox^ textBox3;
+
+
+
 private: System::Windows::Forms::Label^ label56;
 
 
@@ -701,11 +854,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_termo_current_ma = (gcnew System::Windows::Forms::Label());
 			this->label56 = (gcnew System::Windows::Forms::Label());
 			this->f_textbox_termo_voltage_V = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_set_I_T = (gcnew System::Windows::Forms::TextBox());
 			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->label54 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_set_U_T = (gcnew System::Windows::Forms::TextBox());
 			this->tabpage_TPlB_Magnetron = (gcnew System::Windows::Forms::TabPage());
 			this->f_button_TPLB_on_M = (gcnew System::Windows::Forms::Button());
 			this->i_label_high_voltage = (gcnew System::Windows::Forms::Label());
@@ -713,11 +866,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_magnetron_current_ma = (gcnew System::Windows::Forms::Label());
 			this->label23 = (gcnew System::Windows::Forms::Label());
 			this->f_textbox_magnetron_voltage_V = (gcnew System::Windows::Forms::Label());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_set_I_M = (gcnew System::Windows::Forms::TextBox());
 			this->label25 = (gcnew System::Windows::Forms::Label());
 			this->label26 = (gcnew System::Windows::Forms::Label());
 			this->label28 = (gcnew System::Windows::Forms::Label());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_set_U_M = (gcnew System::Windows::Forms::TextBox());
 			this->right_panel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox_flap = (gcnew System::Windows::Forms::GroupBox());
 			this->test_b = (gcnew System::Windows::Forms::Label());
@@ -736,8 +889,8 @@ private: System::ComponentModel::IContainer^ components;
 			this->right_down_panel = (gcnew System::Windows::Forms::Panel());
 			this->f_stop_button = (gcnew System::Windows::Forms::Button());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
-			this->button5 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->f_button_set_temp = (gcnew System::Windows::Forms::Button());
+			this->f_textbox_set_temp = (gcnew System::Windows::Forms::TextBox());
 			this->label14 = (gcnew System::Windows::Forms::Label());
 			this->f_button_on_off_heat = (gcnew System::Windows::Forms::Button());
 			this->label13 = (gcnew System::Windows::Forms::Label());
@@ -887,6 +1040,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->network_toolset->Name = L"network_toolset";
 			this->network_toolset->Size = System::Drawing::Size(159, 22);
 			this->network_toolset->Text = L"Сетевой доступ";
+			this->network_toolset->Click += gcnew System::EventHandler(this, &MainForm::network_toolset_Click);
 			// 
 			// учетнаяЗаписьToolStripMenuItem
 			// 
@@ -1707,11 +1861,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_termo_current_ma);
 			this->tabpage_TPlB_Termo->Controls->Add(this->label56);
 			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_termo_voltage_V);
-			this->tabpage_TPlB_Termo->Controls->Add(this->textBox3);
+			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_set_I_T);
 			this->tabpage_TPlB_Termo->Controls->Add(this->label15);
 			this->tabpage_TPlB_Termo->Controls->Add(this->label54);
 			this->tabpage_TPlB_Termo->Controls->Add(this->label6);
-			this->tabpage_TPlB_Termo->Controls->Add(this->textBox6);
+			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_set_U_T);
 			this->tabpage_TPlB_Termo->Location = System::Drawing::Point(4, 24);
 			this->tabpage_TPlB_Termo->Name = L"tabpage_TPlB_Termo";
 			this->tabpage_TPlB_Termo->Padding = System::Windows::Forms::Padding(3);
@@ -1763,7 +1917,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_button_set_TPlB_t->TabIndex = 42;
 			this->f_button_set_TPlB_t->Text = L"Установить\r\n значение";
 			this->f_button_set_TPlB_t->UseVisualStyleBackColor = false;
-			this->f_button_set_TPlB_t->Click += gcnew System::EventHandler(this, &MainForm::button7_Click);
+			this->f_button_set_TPlB_t->Click += gcnew System::EventHandler(this, &MainForm::f_button_set_TPlB_t_Click);
 			// 
 			// f_textbox_termo_current_ma
 			// 
@@ -1804,17 +1958,17 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_termo_voltage_V->Text = L"24";
 			this->f_textbox_termo_voltage_V->Click += gcnew System::EventHandler(this, &MainForm::f_textbox_voltage_V_Click);
 			// 
-			// textBox3
+			// f_textbox_set_I_T
 			// 
-			this->textBox3->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_textbox_set_I_T->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox3->Location = System::Drawing::Point(198, 55);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(63, 29);
-			this->textBox3->TabIndex = 17;
-			this->textBox3->Text = L"9000";
-			this->textBox3->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->textBox3->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox3_TextChanged);
+			this->f_textbox_set_I_T->Location = System::Drawing::Point(198, 55);
+			this->f_textbox_set_I_T->Name = L"f_textbox_set_I_T";
+			this->f_textbox_set_I_T->Size = System::Drawing::Size(63, 29);
+			this->f_textbox_set_I_T->TabIndex = 17;
+			this->f_textbox_set_I_T->Text = L"9000";
+			this->f_textbox_set_I_T->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->f_textbox_set_I_T->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox3_TextChanged);
 			// 
 			// label15
 			// 
@@ -1855,17 +2009,17 @@ private: System::ComponentModel::IContainer^ components;
 			this->label6->Text = L"Факт.";
 			this->label6->Click += gcnew System::EventHandler(this, &MainForm::label6_Click);
 			// 
-			// textBox6
+			// f_textbox_set_U_T
 			// 
-			this->textBox6->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_textbox_set_U_T->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox6->Location = System::Drawing::Point(198, 21);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(63, 29);
-			this->textBox6->TabIndex = 28;
-			this->textBox6->Text = L"24";
-			this->textBox6->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->textBox6->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox6_TextChanged);
+			this->f_textbox_set_U_T->Location = System::Drawing::Point(198, 21);
+			this->f_textbox_set_U_T->Name = L"f_textbox_set_U_T";
+			this->f_textbox_set_U_T->Size = System::Drawing::Size(63, 29);
+			this->f_textbox_set_U_T->TabIndex = 28;
+			this->f_textbox_set_U_T->Text = L"24";
+			this->f_textbox_set_U_T->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->f_textbox_set_U_T->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox6_TextChanged);
 			// 
 			// tabpage_TPlB_Magnetron
 			// 
@@ -1875,11 +2029,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_magnetron_current_ma);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->label23);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_magnetron_voltage_V);
-			this->tabpage_TPlB_Magnetron->Controls->Add(this->textBox4);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_set_I_M);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->label25);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->label26);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->label28);
-			this->tabpage_TPlB_Magnetron->Controls->Add(this->textBox5);
+			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_set_U_M);
 			this->tabpage_TPlB_Magnetron->Location = System::Drawing::Point(4, 24);
 			this->tabpage_TPlB_Magnetron->Name = L"tabpage_TPlB_Magnetron";
 			this->tabpage_TPlB_Magnetron->Padding = System::Windows::Forms::Padding(3);
@@ -1930,6 +2084,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_button_set_TPlB_m->TabIndex = 56;
 			this->f_button_set_TPlB_m->Text = L"Установить\r\n значение";
 			this->f_button_set_TPlB_m->UseVisualStyleBackColor = false;
+			this->f_button_set_TPlB_m->Click += gcnew System::EventHandler(this, &MainForm::f_button_set_TPlB_m_Click);
 			// 
 			// f_textbox_magnetron_current_ma
 			// 
@@ -1970,17 +2125,17 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_magnetron_voltage_V->Text = L"400";
 			this->f_textbox_magnetron_voltage_V->Click += gcnew System::EventHandler(this, &MainForm::label24_Click);
 			// 
-			// textBox4
+			// f_textbox_set_I_M
 			// 
-			this->textBox4->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_textbox_set_I_M->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox4->Location = System::Drawing::Point(198, 55);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(63, 29);
-			this->textBox4->TabIndex = 47;
-			this->textBox4->Text = L"0";
-			this->textBox4->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->textBox4->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox4_TextChanged);
+			this->f_textbox_set_I_M->Location = System::Drawing::Point(198, 55);
+			this->f_textbox_set_I_M->Name = L"f_textbox_set_I_M";
+			this->f_textbox_set_I_M->Size = System::Drawing::Size(63, 29);
+			this->f_textbox_set_I_M->TabIndex = 47;
+			this->f_textbox_set_I_M->Text = L"0";
+			this->f_textbox_set_I_M->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->f_textbox_set_I_M->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox4_TextChanged);
 			// 
 			// label25
 			// 
@@ -2021,17 +2176,17 @@ private: System::ComponentModel::IContainer^ components;
 			this->label28->Text = L"Факт.";
 			this->label28->Click += gcnew System::EventHandler(this, &MainForm::label28_Click);
 			// 
-			// textBox5
+			// f_textbox_set_U_M
 			// 
-			this->textBox5->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_textbox_set_U_M->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox5->Location = System::Drawing::Point(198, 21);
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(63, 29);
-			this->textBox5->TabIndex = 49;
-			this->textBox5->Text = L"0";
-			this->textBox5->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->textBox5->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox5_TextChanged);
+			this->f_textbox_set_U_M->Location = System::Drawing::Point(198, 21);
+			this->f_textbox_set_U_M->Name = L"f_textbox_set_U_M";
+			this->f_textbox_set_U_M->Size = System::Drawing::Size(63, 29);
+			this->f_textbox_set_U_M->TabIndex = 49;
+			this->f_textbox_set_U_M->Text = L"0";
+			this->f_textbox_set_U_M->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->f_textbox_set_U_M->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox5_TextChanged);
 			// 
 			// right_panel
 			// 
@@ -2267,8 +2422,8 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			// groupBox3
 			// 
-			this->groupBox3->Controls->Add(this->button5);
-			this->groupBox3->Controls->Add(this->textBox1);
+			this->groupBox3->Controls->Add(this->f_button_set_temp);
+			this->groupBox3->Controls->Add(this->f_textbox_set_temp);
 			this->groupBox3->Controls->Add(this->label14);
 			this->groupBox3->Controls->Add(this->f_button_on_off_heat);
 			this->groupBox3->Controls->Add(this->label13);
@@ -2285,29 +2440,30 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Температура подложки";
 			// 
-			// button5
+			// f_button_set_temp
 			// 
-			this->button5->BackColor = System::Drawing::SystemColors::ControlLight;
-			this->button5->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
-			this->button5->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_button_set_temp->BackColor = System::Drawing::SystemColors::ControlLight;
+			this->f_button_set_temp->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->f_button_set_temp->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button5->Location = System::Drawing::Point(81, 80);
-			this->button5->Name = L"button5";
-			this->button5->Size = System::Drawing::Size(137, 29);
-			this->button5->TabIndex = 18;
-			this->button5->Text = L"Установить";
-			this->button5->UseVisualStyleBackColor = false;
+			this->f_button_set_temp->Location = System::Drawing::Point(81, 80);
+			this->f_button_set_temp->Name = L"f_button_set_temp";
+			this->f_button_set_temp->Size = System::Drawing::Size(137, 29);
+			this->f_button_set_temp->TabIndex = 18;
+			this->f_button_set_temp->Text = L"Установить";
+			this->f_button_set_temp->UseVisualStyleBackColor = false;
+			this->f_button_set_temp->Click += gcnew System::EventHandler(this, &MainForm::f_button_set_temp_Click);
 			// 
-			// textBox1
+			// f_textbox_set_temp
 			// 
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_textbox_set_temp->Font = (gcnew System::Drawing::Font(L"Yu Gothic UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->textBox1->Location = System::Drawing::Point(12, 80);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(63, 29);
-			this->textBox1->TabIndex = 17;
-			this->textBox1->Text = L"100";
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->f_textbox_set_temp->Location = System::Drawing::Point(12, 80);
+			this->f_textbox_set_temp->Name = L"f_textbox_set_temp";
+			this->f_textbox_set_temp->Size = System::Drawing::Size(63, 29);
+			this->f_textbox_set_temp->TabIndex = 17;
+			this->f_textbox_set_temp->Text = L"100";
+			this->f_textbox_set_temp->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label14
 			// 
@@ -2650,9 +2806,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_button_block_form->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_button_block_form->ForeColor = System::Drawing::Color::Crimson;
-			this->f_button_block_form->Location = System::Drawing::Point(244, 58);
+			this->f_button_block_form->Location = System::Drawing::Point(227, 58);
 			this->f_button_block_form->Name = L"f_button_block_form";
-			this->f_button_block_form->Size = System::Drawing::Size(174, 31);
+			this->f_button_block_form->Size = System::Drawing::Size(191, 31);
 			this->f_button_block_form->TabIndex = 12;
 			this->f_button_block_form->Text = L"Заблокировать экран";
 			this->f_button_block_form->UseVisualStyleBackColor = true;
@@ -2691,7 +2847,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
 			this->f_button_connect_to_PLC->Location = System::Drawing::Point(6, 58);
 			this->f_button_connect_to_PLC->Name = L"f_button_connect_to_PLC";
-			this->f_button_connect_to_PLC->Size = System::Drawing::Size(174, 31);
+			this->f_button_connect_to_PLC->Size = System::Drawing::Size(201, 31);
 			this->f_button_connect_to_PLC->TabIndex = 0;
 			this->f_button_connect_to_PLC->Text = L"Соединение с PLC";
 			this->f_button_connect_to_PLC->UseVisualStyleBackColor = true;
@@ -2951,8 +3107,9 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 
 }
 private: System::Void f_button_connect_to_PLC_Click(System::Object^ sender, System::EventArgs^ e) {
-
-	f_button_connect_to_PLC->Enabled = false;
+	
+	PLC_connect();
+/*f_button_connect_to_PLC->Enabled = false;
 	picture_connection->Visible = true;
 	picture_not_connection->Visible = false;
 	f_button_connect_to_PLC->Enabled = false;
@@ -2964,16 +3121,29 @@ private: System::Void f_button_connect_to_PLC_Click(System::Object^ sender, Syst
 	i_label_name_recording->Visible = true;
 	f_label_name_recording->Visible = true;
 	pictureBox_recording->Visible = true;
+*/
 
-	MainForm_unblock();
-	start_timer();
 
 }
 private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
+
 	data_label->ForeColor = System::Drawing::Color::SeaGreen;
 
-	data_label->Text = "Старт "+work_time.ToString()+" с.";
-	work_time++;
+	data_label->Text = "Старт "+ currentData->work_time.ToString()+" с.";
+
+	currentData->work_time++;
+
+	currentData->date_to_array();
+
+	Write_PLC_data();
+
+	Read_PLC_data();
+
+	PLC_connecting_status();
+
+
+
+
 
 }
 private: System::Void label36_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -2990,8 +3160,7 @@ private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e
 }
 private: System::Void f_label_trubo_percent_Click(System::Object^ sender, System::EventArgs^ e) {
 }
-private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
-}
+
 private: System::Void tabControl2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void label56_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -3325,6 +3494,9 @@ private: System::Void f_button_TPLB_on_T_Click(System::Object^ sender, System::E
 		f_button_set_TPlB_t->Enabled = true;
 		tabpage_TPlB_Magnetron->Enabled = false;
 
+
+
+
 	}
 
 	else if (f_button_TPLB_on_T->Text == "Выключить источник тока") {
@@ -3357,6 +3529,29 @@ private: System::Void f_button_TPLB_on_M_Click(System::Object^ sender, System::E
 
 	}
 
+
+}
+private: System::Void network_toolset_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	ModbusForm^ modbusform = gcnew ModbusForm();
+	modbusform->ShowFromMainForm (currentData->main_connecting_status,currentData->share_mem);
+}
+private: System::Void f_button_set_temp_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_temp=Convert::ToInt32(f_textbox_set_temp->Text);
+
+
+}
+private: System::Void f_button_set_TPlB_t_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_TPlB_U = Convert::ToInt32(f_textbox_set_U_T->Text);
+	currentData->set_TPlB_I = Convert::ToInt32(f_textbox_set_I_T->Text);
+
+}
+private: System::Void f_button_set_TPlB_m_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	currentData->set_TPlB_U = Convert::ToInt32(f_textbox_set_U_M->Text);
+	currentData->set_TPlB_I = Convert::ToInt32(f_textbox_set_I_M->Text);
 
 }
 };
