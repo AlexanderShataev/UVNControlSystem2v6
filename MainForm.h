@@ -3,6 +3,7 @@
 #include "windows.h"
 #include "accounts.h"
 #include "ModbusForm.h"
+#include "PIDForm.h"
 
 namespace UVNControlSystem2v6 {
 
@@ -10,7 +11,6 @@ namespace UVNControlSystem2v6 {
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
-	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace EasyModbus;
 
@@ -29,24 +29,28 @@ namespace UVNControlSystem2v6 {
 
 		ModbusClient^ ModbusPLC = gcnew ModbusClient();
 
-		bool status_block_form=0; // 1 -- çàáëîêèðîâàíà, 0-- íåçàáëîêèðîâàíà
+		bool status_block_form=false; //ëîã.ïåðåìåííàÿ  1 -- îêíî çàáëîêèðîâàíî, 0-- íåçàáëîêèðîâàíî//
 
-
-		String^ ID;
-		//int work_time = 0;// ðàáî÷åå âðåìÿ
-		
 
 		// Îáìåí ñ ÏËÊ 
 		dataPLC^ currentData = gcnew dataPLC();
 
+		ModbusForm^ modbusform = gcnew ModbusForm();
 
+		bool modbusform_open_status = false; // ëîã. ïåðåìåííàÿ false -- modbusform çàêðûòà, true -- modbus form îòêðûòà//
 
+		bool modbus_connecting_status = false; // ëîã. ïåðåìåííàÿ false -- ñîåäèíåíèå íåò, true --ñîåäèíåíèå åñòü//
+
+		//ÏÈÄ-çàêîí
+
+		PIDForm^ pidform = gcnew PIDForm();
 
 
 		// auto mode flap
 		int flap_auto_time = 0; // òàê òàéìåðà àâòîìàòè÷åñêîãî ðåæèìà îòêðûòèÿ/çàêðûòèÿ çàñëîíêè
 		int set_flap_auto_time;
 		double flap_progress = 0;
+		bool flap_open = false;
 
 
 	private: System::Windows::Forms::TabControl^ tabControl1;
@@ -175,6 +179,16 @@ public:
 private: System::Windows::Forms::Label^ label24;
 private: System::Windows::Forms::Button^ f_button_TPLB_on_T;
 private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
+private: System::Windows::Forms::Panel^ panel1;
+
+
+
+private: System::Windows::Forms::FontDialog^ fontDialog1;
+private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
+private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
+
+
+
 
 
 
@@ -315,6 +329,7 @@ private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
 				 i_button_connect_to_PLC->Text = "Ñîåäèíåíèå ñ PLC óñòàíîâëåíî";
 				 i_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
 				 currentData->main_connecting_status = true;
+
 			 }
 
 			 else if (!ModbusPLC->Connected) {
@@ -326,8 +341,8 @@ private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
 				 picture_not_connection->Visible = true;
 				// f_label_status->Text = "Not connected";
 				// groupbox_holding_registers->Enabled = false;
-				 		
 				 currentData->main_connecting_status = false;
+
 
 			 }
 		 }
@@ -364,6 +379,11 @@ private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
 
 			 ModbusPLC->Disconnect();
 			 stop_timer();
+			 
+			 if (!ModbusPLC->Connected) {
+
+				 currentData->main_connecting_status = false;
+			 }
 			 
 		 }
 
@@ -550,7 +570,8 @@ private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
 private: System::Windows::Forms::ToolStripMenuItem^ heat_toolset;
 
 	private: System::Windows::Forms::ToolStripMenuItem^ âûáîðÐåãóëÿòîðàToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêàÏÈÄToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ pid_toolset;
+
 	private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêàØÈÌToolStripMenuItem;
 private: System::Windows::Forms::ToolStripMenuItem^ network_and_accs;
 private: System::Windows::Forms::ToolStripMenuItem^ network_toolset;
@@ -779,7 +800,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->heat_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->âûáîðÐåãóëÿòîðàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->íàñòðîéêàÏÈÄToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->pid_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->íàñòðîéêàØÈÌToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->network_and_accs = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->network_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -932,6 +953,10 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_log = (gcnew System::Windows::Forms::TextBox());
 			this->label21 = (gcnew System::Windows::Forms::Label());
 			this->label24 = (gcnew System::Windows::Forms::Label());
+			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->fontDialog1 = (gcnew System::Windows::Forms::FontDialog());
+			this->UVN_picturebox_close = (gcnew System::Windows::Forms::PictureBox());
+			this->UVN_picturebox_open = (gcnew System::Windows::Forms::PictureBox());
 			this->menuStrip1->SuspendLayout();
 			this->left_panel->SuspendLayout();
 			this->left_down_panel->SuspendLayout();
@@ -959,6 +984,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->panel4->SuspendLayout();
 			this->down_panel->SuspendLayout();
 			this->panel_unblock->SuspendLayout();
+			this->panel1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_open))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip1
@@ -1001,7 +1029,7 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			this->heat_toolset->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->âûáîðÐåãóëÿòîðàToolStripMenuItem,
-					this->íàñòðîéêàÏÈÄToolStripMenuItem, this->íàñòðîéêàØÈÌToolStripMenuItem
+					this->pid_toolset, this->íàñòðîéêàØÈÌToolStripMenuItem
 			});
 			this->heat_toolset->Name = L"heat_toolset";
 			this->heat_toolset->Size = System::Drawing::Size(124, 20);
@@ -1013,11 +1041,12 @@ private: System::ComponentModel::IContainer^ components;
 			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Size = System::Drawing::Size(176, 22);
 			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Text = L"Âûáîð ðåãóëÿòîðà";
 			// 
-			// íàñòðîéêàÏÈÄToolStripMenuItem
+			// pid_toolset
 			// 
-			this->íàñòðîéêàÏÈÄToolStripMenuItem->Name = L"íàñòðîéêàÏÈÄToolStripMenuItem";
-			this->íàñòðîéêàÏÈÄToolStripMenuItem->Size = System::Drawing::Size(176, 22);
-			this->íàñòðîéêàÏÈÄToolStripMenuItem->Text = L"Íàñòðîéêà ÏÈÄ";
+			this->pid_toolset->Name = L"pid_toolset";
+			this->pid_toolset->Size = System::Drawing::Size(176, 22);
+			this->pid_toolset->Text = L"Íàñòðîéêà ÏÈÄ";
+			this->pid_toolset->Click += gcnew System::EventHandler(this, &MainForm::pid_toolset_Click);
 			// 
 			// íàñòðîéêàØÈÌToolStripMenuItem
 			// 
@@ -1124,9 +1153,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->left_down_panel->Controls->Add(this->pictureBox_recording);
 			this->left_down_panel->Controls->Add(this->f_label_name_recording);
 			this->left_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->left_down_panel->Location = System::Drawing::Point(0, 321);
+			this->left_down_panel->Location = System::Drawing::Point(0, 318);
 			this->left_down_panel->Name = L"left_down_panel";
-			this->left_down_panel->Size = System::Drawing::Size(317, 384);
+			this->left_down_panel->Size = System::Drawing::Size(317, 387);
 			this->left_down_panel->TabIndex = 21;
 			// 
 			// groupBox6
@@ -1136,9 +1165,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox6->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox6->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox6->Location = System::Drawing::Point(6, 0);
+			this->groupBox6->Location = System::Drawing::Point(9, 2);
 			this->groupBox6->Name = L"groupBox6";
-			this->groupBox6->Size = System::Drawing::Size(304, 346);
+			this->groupBox6->Size = System::Drawing::Size(304, 348);
 			this->groupBox6->TabIndex = 33;
 			this->groupBox6->TabStop = false;
 			this->groupBox6->Text = L"Íàïóñê ãàçîâ";
@@ -1472,7 +1501,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupbox_butterfly->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->groupbox_butterfly->Location = System::Drawing::Point(9, 173);
 			this->groupbox_butterfly->Name = L"groupbox_butterfly";
-			this->groupbox_butterfly->Size = System::Drawing::Size(305, 142);
+			this->groupbox_butterfly->Size = System::Drawing::Size(305, 141);
 			this->groupbox_butterfly->TabIndex = 19;
 			this->groupbox_butterfly->TabStop = false;
 			this->groupbox_butterfly->Text = L"Êëàïàí áàáî÷êà";
@@ -1484,7 +1513,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->i_label_set_butterfly->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->i_label_set_butterfly->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->i_label_set_butterfly->Location = System::Drawing::Point(58, 74);
+			this->i_label_set_butterfly->Location = System::Drawing::Point(58, 71);
 			this->i_label_set_butterfly->Name = L"i_label_set_butterfly";
 			this->i_label_set_butterfly->Size = System::Drawing::Size(189, 19);
 			this->i_label_set_butterfly->TabIndex = 19;
@@ -1496,7 +1525,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_button_set_butterfly->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->f_button_set_butterfly->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->f_button_set_butterfly->Location = System::Drawing::Point(77, 102);
+			this->f_button_set_butterfly->Location = System::Drawing::Point(77, 99);
 			this->f_button_set_butterfly->Name = L"f_button_set_butterfly";
 			this->f_button_set_butterfly->Size = System::Drawing::Size(208, 27);
 			this->f_button_set_butterfly->TabIndex = 18;
@@ -1509,7 +1538,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_butterfly_pos->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_textbox_butterfly_pos->HideSelection = false;
-			this->f_textbox_butterfly_pos->Location = System::Drawing::Point(11, 102);
+			this->f_textbox_butterfly_pos->Location = System::Drawing::Point(11, 99);
 			this->f_textbox_butterfly_pos->Name = L"f_textbox_butterfly_pos";
 			this->f_textbox_butterfly_pos->Size = System::Drawing::Size(57, 27);
 			this->f_textbox_butterfly_pos->TabIndex = 17;
@@ -1522,7 +1551,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->label40->Font = (gcnew System::Drawing::Font(L"Calibri", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label40->ForeColor = System::Drawing::Color::Black;
-			this->label40->Location = System::Drawing::Point(86, 54);
+			this->label40->Location = System::Drawing::Point(86, 51);
 			this->label40->Name = L"label40";
 			this->label40->Size = System::Drawing::Size(123, 17);
 			this->label40->TabIndex = 13;
@@ -1534,7 +1563,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_label_batterfly_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_batterfly_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_batterfly_status->Location = System::Drawing::Point(177, 28);
+			this->f_label_batterfly_status->Location = System::Drawing::Point(177, 25);
 			this->f_label_batterfly_status->Name = L"f_label_batterfly_status";
 			this->f_label_batterfly_status->Size = System::Drawing::Size(60, 26);
 			this->f_label_batterfly_status->TabIndex = 12;
@@ -1546,7 +1575,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->label42->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label42->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label42->Location = System::Drawing::Point(65, 28);
+			this->label42->Location = System::Drawing::Point(65, 25);
 			this->label42->Name = L"label42";
 			this->label42->Size = System::Drawing::Size(114, 26);
 			this->label42->TabIndex = 11;
@@ -1835,7 +1864,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox8->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->groupBox8->Location = System::Drawing::Point(6, 12);
 			this->groupBox8->Name = L"groupBox8";
-			this->groupBox8->Size = System::Drawing::Size(424, 200);
+			this->groupBox8->Size = System::Drawing::Size(424, 202);
 			this->groupBox8->TabIndex = 20;
 			this->groupBox8->TabStop = false;
 			this->groupBox8->Text = L"Èñòî÷íèê òîêà TPlB";
@@ -2906,6 +2935,7 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			// panel_unblock
 			// 
+			this->panel_unblock->Anchor = System::Windows::Forms::AnchorStyles::Top;
 			this->panel_unblock->BackColor = System::Drawing::Color::LightGray;
 			this->panel_unblock->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->panel_unblock->Controls->Add(this->f_button_unblock);
@@ -2913,7 +2943,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->panel_unblock->Controls->Add(this->f_textbox_log);
 			this->panel_unblock->Controls->Add(this->label21);
 			this->panel_unblock->Controls->Add(this->label24);
-			this->panel_unblock->Location = System::Drawing::Point(404, 251);
+			this->panel_unblock->Location = System::Drawing::Point(84, 99);
 			this->panel_unblock->Name = L"panel_unblock";
 			this->panel_unblock->Size = System::Drawing::Size(276, 144);
 			this->panel_unblock->TabIndex = 11;
@@ -2942,6 +2972,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_textbox_pas->Name = L"f_textbox_pas";
 			this->f_textbox_pas->Size = System::Drawing::Size(176, 27);
 			this->f_textbox_pas->TabIndex = 9;
+			this->f_textbox_pas->UseSystemPasswordChar = true;
 			// 
 			// f_textbox_log
 			// 
@@ -2974,13 +3005,48 @@ private: System::ComponentModel::IContainer^ components;
 			this->label24->TabIndex = 6;
 			this->label24->Text = L"Ëîãèí";
 			// 
+			// panel1
+			// 
+			this->panel1->Controls->Add(this->UVN_picturebox_open);
+			this->panel1->Controls->Add(this->UVN_picturebox_close);
+			this->panel1->Controls->Add(this->panel_unblock);
+			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panel1->Location = System::Drawing::Point(317, 133);
+			this->panel1->Name = L"panel1";
+			this->panel1->Size = System::Drawing::Size(436, 336);
+			this->panel1->TabIndex = 11;
+			// 
+			// UVN_picturebox_close
+			// 
+			this->UVN_picturebox_close->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->UVN_picturebox_close->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_close.Image")));
+			this->UVN_picturebox_close->InitialImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_close.InitialImage")));
+			this->UVN_picturebox_close->Location = System::Drawing::Point(0, 0);
+			this->UVN_picturebox_close->Name = L"UVN_picturebox_close";
+			this->UVN_picturebox_close->Size = System::Drawing::Size(436, 336);
+			this->UVN_picturebox_close->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->UVN_picturebox_close->TabIndex = 12;
+			this->UVN_picturebox_close->TabStop = false;
+			// 
+			// UVN_picturebox_open
+			// 
+			this->UVN_picturebox_open->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->UVN_picturebox_open->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_open.Image")));
+			this->UVN_picturebox_open->Location = System::Drawing::Point(0, 0);
+			this->UVN_picturebox_open->Name = L"UVN_picturebox_open";
+			this->UVN_picturebox_open->Size = System::Drawing::Size(436, 336);
+			this->UVN_picturebox_open->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->UVN_picturebox_open->TabIndex = 13;
+			this->UVN_picturebox_open->TabStop = false;
+			this->UVN_picturebox_open->Visible = false;
+			// 
 			// MainForm
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
 			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(1004, 729);
-			this->Controls->Add(this->panel_unblock);
+			this->Controls->Add(this->panel1);
 			this->Controls->Add(this->panel6);
 			this->Controls->Add(this->panel4);
 			this->Controls->Add(this->right_panel);
@@ -3035,6 +3101,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->down_panel->ResumeLayout(false);
 			this->panel_unblock->ResumeLayout(false);
 			this->panel_unblock->PerformLayout();
+			this->panel1->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_open))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -3141,11 +3210,14 @@ private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
 	PLC_connecting_status();
 
+	if (modbusform->form_open) {
 
-
-
+		modbusform->modbusform_open (currentData->main_connecting_status, currentData->share_mem);
+	}
 
 }
+
+
 private: System::Void label36_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void splitContainer1_Panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
@@ -3375,13 +3447,19 @@ private: System::Void f_button_manual_open_flap_Click(System::Object^ sender, Sy
 
 	f_button_manual_open_flap->Enabled = false;
 	f_button_manual_close_flap->Enabled = true;
-
+	UVN_picturebox_open->Visible = true;
+	//UVN_picturebox_close->Visible = false;
 	f_label_flap_status->Text = "Îòêðûòà";
+	flap_open = true;
+
 }
 private: System::Void f_button_manual_close_flap_Click(System::Object^ sender, System::EventArgs^ e) {
 
 	f_button_manual_open_flap->Enabled = true;
 	f_button_manual_close_flap->Enabled = false;
+	UVN_picturebox_open->Visible = false;
+	//UVN_picturebox_close->Visible = true;
+	flap_open = false;
 
 	f_label_flap_status->Text = "Çàêðûòà";
 
@@ -3393,11 +3471,14 @@ private: System::Void f_button_auto_start_flap_Click(System::Object^ sender, Sys
 
 		set_flap_auto_time = Convert::ToInt32(f_textBox_set_time_flap->Text);
 		flap_progress = 100/set_flap_auto_time;
-
+		flap_open = true;
 		Flap_auto_timer->Enabled = true;
 		Flap_auto_timer->Interval = 1000;
 		test_b->Visible = true;
 		f_button_auto_start_flap->Text = "Ñòîï";
+
+		UVN_picturebox_open->Visible = true;
+		UVN_picturebox_close->Visible = false;
 	} 
 
 	else if  (f_button_auto_start_flap->Text == "Ñòîï") {
@@ -3410,6 +3491,7 @@ private: System::Void f_button_auto_start_flap_Click(System::Object^ sender, Sys
 
 		flap_auto_time = 0;
 
+
 		}
 	
 
@@ -3419,6 +3501,10 @@ private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::Event
 	if (flap_auto_time != set_flap_auto_time) {
 
 		f_label_flap_status->Text = "Îòêðûòà";
+
+		flap_open = true;
+
+	
 
 		flap_auto_time++;
 
@@ -3435,6 +3521,8 @@ private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::Event
 
 		f_label_flap_status->Text = "Çàêðûòà";
 
+		flap_open = false;
+
 		progressBar_flap->Value = 100;
 
 		Flap_auto_timer->Enabled = false;
@@ -3450,6 +3538,20 @@ private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::Event
 		f_label_flap_auto_info->ForeColor = System::Drawing::Color::RoyalBlue;
 		f_label_flap_auto_info->Text = "Ïðîöåññ îêîí÷åí";
 
+		f_button_manual_open_flap->Enabled = true;
+		f_button_manual_close_flap->Enabled = false;
+		UVN_picturebox_open->Visible = false;
+		//UVN_picturebox_close->Visible = true;
+
+		f_label_flap_status->Text = "Çàêðûòà";
+
+		if (status_block_form) {
+
+			UVN_picturebox_open->Visible = true;
+			UVN_picturebox_close->Visible = true;
+
+		}
+
 	}
 
 }
@@ -3458,6 +3560,10 @@ private: System::Void test_b_Click(System::Object^ sender, System::EventArgs^ e)
 private: System::Void f_button_block_form_Click(System::Object^ sender, System::EventArgs^ e) {
 
 		MainForm_block();
+
+		UVN_picturebox_close->Visible = false;
+		UVN_picturebox_open->Visible = false;
+	
 		panel_unblock->Visible = true;
 		panel_unblock->Enabled = true;
 		f_textbox_log->Text = user->ID;
@@ -3472,6 +3578,17 @@ private: System::Void f_button_unblock_Click(System::Object^ sender, System::Eve
 		
 		status_block_form = true;
 		access_user();
+		if (flap_open) {
+
+			UVN_picturebox_close->Visible = true;
+			UVN_picturebox_open->Visible= true;
+		}
+
+		else if (!flap_open) {
+
+			UVN_picturebox_close->Visible = true;
+			UVN_picturebox_open->Visible = false;
+		}
 	}
 
 	
@@ -3528,13 +3645,13 @@ private: System::Void f_button_TPLB_on_M_Click(System::Object^ sender, System::E
 		tabpage_TPlB_Termo->Enabled = true;
 
 	}
-
-
 }
 private: System::Void network_toolset_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	ModbusForm^ modbusform = gcnew ModbusForm();
-	modbusform->ShowFromMainForm (currentData->main_connecting_status,currentData->share_mem);
+	//modbusform_open_status=true;
+	modbusform->form_open = true;
+	modbusform->Show();
+
 }
 private: System::Void f_button_set_temp_Click(System::Object^ sender, System::EventArgs^ e) {
 
@@ -3553,6 +3670,10 @@ private: System::Void f_button_set_TPlB_m_Click(System::Object^ sender, System::
 	currentData->set_TPlB_U = Convert::ToInt32(f_textbox_set_U_M->Text);
 	currentData->set_TPlB_I = Convert::ToInt32(f_textbox_set_I_M->Text);
 
+}
+private: System::Void pid_toolset_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	pidform->Show();
 }
 };
 }

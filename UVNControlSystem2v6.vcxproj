@@ -135,6 +135,7 @@
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="ModbusForm.cpp" />
+    <ClCompile Include="PIDForm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="accounts.h" />
@@ -148,6 +149,10 @@
     <ClInclude Include="ModbusForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="PIDForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LoginForm.resx">
@@ -159,9 +164,18 @@
     <EmbeddedResource Include="ModbusForm.resx">
       <DependentUpon>ModbusForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PIDForm.resx">
+      <DependentUpon>PIDForm.h</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UVNControlSystem2v6.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\Desktop\Masters Graduating Project\Интерфейс\favicon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

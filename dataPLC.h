@@ -2,17 +2,29 @@
 namespace UVNControlSystem2v6 {
 
 	using namespace System;
-	using namespace System::ComponentModel;
-	using namespace System::Collections;
-	using namespace System::Windows::Forms;
-	using namespace System::Data;
-	using namespace System::Drawing;
-	using namespace EasyModbus;
+
+	
 
 	ref class dataPLC
 	{
 	public:
 
+		//Константы
+		//
+		//ТЕМПЕРАТУРА
+		//
+		//ПЕРЕВОД ДИСКРЕТ В ГРАДУСЫ t_podl=DtoT_A*D^2+DtoT_B*D+DtoT_C
+
+		const double DtoT_A = 0.00000683;
+		const double DtoT_B = 0.179277;
+		const double DtoT_C = -112.2168;
+		
+		//
+		//ПЕРЕВОД ГРАДУСЫ В ДИСКРЕТЫ D=TtoD_A*t_podl^2 + TtoD_B*t_podl + TtoD_C
+
+		const double TtoD_A = -0.000837733;	
+		const double TtoD_B = 5.302;		
+		const double TtoD_C = 612.3;		
 
 		//СТАТУС СОЕДИНЕНИЯ
 		bool main_connecting_status;
@@ -22,6 +34,8 @@ namespace UVNControlSystem2v6 {
 
 		//Массив с ПЛК
 		array<int>^ share_mem = gcnew array<int>(30);
+
+		
 
 
 		//Переменные на ПЛК
@@ -35,6 +49,12 @@ namespace UVNControlSystem2v6 {
 		int set_TPlB_U;
 		int work_time = 0; 
 
+
+		int TempToDiscrete(int temp) {
+
+			return TtoD_A * temp * temp + TtoD_B * temp + TtoD_C;
+
+		}
 
 		//Обнуление массива
 
@@ -69,7 +89,7 @@ namespace UVNControlSystem2v6 {
 			  data[5] = set_BV;	//позиция BV (клапан-бабочка)
 			  data[6] = set_TPlB_I;	//au_TPlB_Iset
 			  data[7] = set_TPlB_U;	//au_TPlB_Uset
-			  data[8] = set_temp;	//Заданная температура в дискретах, требуется функция пересчета
+			  data[8] = TempToDiscrete(set_temp);	//Заданная температура в дискретах, требуется функция пересчета
 			  data[9] = 0;
 			  data[10] = 0;	//p_заданное давление BV
 			  data[11] = work_time;	//PID
