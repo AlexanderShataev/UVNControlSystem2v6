@@ -58,6 +58,7 @@ namespace UVNControlSystem2v6 {
 
 
 
+
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.

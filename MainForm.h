@@ -29,7 +29,7 @@ namespace UVNControlSystem2v6 {
 
 		ModbusClient^ ModbusPLC = gcnew ModbusClient();
 
-		bool status_block_form=false; //ëîã.ïåðåìåííàÿ  1 -- îêíî çàáëîêèðîâàíî, 0-- íåçàáëîêèðîâàíî//
+		bool status_block_form=false; //ëîã.ïåðåìåííàÿ  1 -- îêíî çàáëîêèðîâàíî, 0 -- íåçàáëîêèðîâàíî//
 
 
 		// Îáìåí ñ ÏËÊ 
@@ -56,104 +56,54 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::TabControl^ tabControl1;
 	private: System::Windows::Forms::TabPage^ tabPage1;
 	private: System::Windows::Forms::Button^ f_button_PSV2_m30mv;
-
 	private: System::Windows::Forms::Button^ f_button_PSV1_m30mv;
 	private: System::Windows::Forms::Button^ f_button_PSV2_p30mv;
-
-
 	private: System::Windows::Forms::Label^ f_label_PSV1_status_mV;
 	private: System::Windows::Forms::Button^ f_button_PSV1_p30mv;
-
-
-
 	private: System::Windows::Forms::Label^ label8;
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::Button^ f_button_start_stop_PSV2;
-
-
 	private: System::Windows::Forms::Label^ label9;
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label12;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ f_label_PSV2_status_mV;
-
 	private: System::Windows::Forms::Label^ label16;
 	private: System::Windows::Forms::Button^ f_button_start_stop_PSV1;
-
-
-
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::TabPage^ tabPage2;
 	private: System::Windows::Forms::GroupBox^ groupBox6;
 	private: System::Windows::Forms::GroupBox^ groupbox_butterfly;
 	private: System::Windows::Forms::Label^ i_label_set_butterfly;
-
 	private: System::Windows::Forms::Button^ f_button_set_butterfly;
 	private: System::Windows::Forms::TextBox^ f_textbox_butterfly_pos;
-
-
 	private: System::Windows::Forms::Label^ label40;
 	private: System::Windows::Forms::Label^ f_label_batterfly_status;
 	private: System::Windows::Forms::Label^ label42;
 	private: System::Windows::Forms::Label^ label15;
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Button^ f_button_set_TPlB_t;
-
-
 	private: System::Windows::Forms::Panel^ panel4;
 	private: System::Windows::Forms::Panel^ down_panel;
 	private: System::Windows::Forms::Label^ f_textbox_termo_current_ma;
-
-
-
-
 	private: System::Windows::Forms::Label^ f_textbox_termo_voltage_V;
-
 	private: System::Windows::Forms::Button^ f_button_auto_start_flap;
 	private: System::Windows::Forms::Label^ f_label_flap_auto_info;
-
-
-
 	private: System::Windows::Forms::Label^ label20;
 	private: System::Windows::Forms::TabControl^ tabpage_TPlB;
-
-
 	private: System::Windows::Forms::TabPage^ tabpage_TPlB_Termo;
 	private: System::Windows::Forms::TabPage^ tabpage_TPlB_Magnetron;
-
-
-
-
-
 	private: System::Windows::Forms::Label^ f_textbox_magnetron_current_ma;
-
-
 	private: System::Windows::Forms::Label^ label23;
 	private: System::Windows::Forms::Label^ f_textbox_magnetron_voltage_V;
 	private: System::Windows::Forms::TextBox^ f_textbox_set_I_M;
-
-
-
-
 	private: System::Windows::Forms::Label^ label25;
 	private: System::Windows::Forms::Label^ label26;
 	private: System::Windows::Forms::Label^ label28;
-private: System::Windows::Forms::TextBox^ f_textbox_set_U_M;
-
+	private: System::Windows::Forms::TextBox^ f_textbox_set_U_M;
 	private: System::Windows::Forms::Label^ i_label_low_voltage;
-private: System::Windows::Forms::Button^ f_button_set_TPlB_m;
-
-
-
-
-
-
-
-
-
-
+	private: System::Windows::Forms::Button^ f_button_set_TPlB_m;
 	private: System::Windows::Forms::Label^ i_label_high_voltage;
-
 	private: System::Windows::Forms::ToolStripMenuItem^ àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ adminToolStripMenuItem;
@@ -163,42 +113,30 @@ private: System::Windows::Forms::Button^ f_button_set_TPlB_m;
 	private: System::Windows::Forms::ToolStripMenuItem^ êëàïàíÁàáî÷êàToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_percent;
 	private: System::Windows::Forms::Timer^ Flap_auto_timer;
-private: System::Windows::Forms::Label^ test_b;
-private: System::Windows::Forms::Label^ data_label;
-private: System::Windows::Forms::Label^ f_label_system_status;
-
-private: System::Windows::Forms::Button^ f_button_block_form;
-private: System::Windows::Forms::Panel^ panel_unblock;
-private: System::Windows::Forms::Button^ f_button_unblock;
-
-public: System::Windows::Forms::TextBox^ f_textbox_pas;
-private:
-public: System::Windows::Forms::TextBox^ f_textbox_log;
-private: System::Windows::Forms::Label^ label21;
-public:
-private: System::Windows::Forms::Label^ label24;
-private: System::Windows::Forms::Button^ f_button_TPLB_on_T;
-private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
-private: System::Windows::Forms::Panel^ panel1;
+	private: System::Windows::Forms::Label^ test_b;
+	private: System::Windows::Forms::Label^ data_label;
+	private: System::Windows::Forms::Label^ f_label_system_status;
+	private: System::Windows::Forms::Button^ f_button_block_form;
+	private: System::Windows::Forms::Panel^ panel_unblock;
+	private: System::Windows::Forms::Button^ f_button_unblock;
+	public: System::Windows::Forms::TextBox^ f_textbox_pas;
+	private:
+	public: System::Windows::Forms::TextBox^ f_textbox_log;
+	private: System::Windows::Forms::Label^ label21;
+	public:
+	private: System::Windows::Forms::Label^ label24;
+	private: System::Windows::Forms::Button^ f_button_TPLB_on_T;
+	private: System::Windows::Forms::Button^ f_button_TPLB_on_M;
+	private: System::Windows::Forms::Panel^ panel1;
 
 
-
-private: System::Windows::Forms::FontDialog^ fontDialog1;
+	private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
+private: System::Windows::Forms::ProgressBar^ progressBar_Turbopump;
+private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
 private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
-private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
-
-
-
-
-
-
 
 	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_mV;
-
-
 	public:
-
-
 
 
 
@@ -278,7 +216,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
 			 panel_unblock->Enabled = false;
 			 f_textbox_pas->Text = "";
 			 f_textbox_log->Text = " ";
-			 status_block_form = false;
+			 status_block_form = true;
 			 f_textbox_pas->Enabled = true;
 		}
 
@@ -299,7 +237,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
 
 				 for (int i = 0; i <= 11; i++) {
 
-					 ModbusPLC->WriteSingleRegister(i, currentData->data[i]);
+					 ModbusPLC->WriteSingleRegister(i+20, currentData->data[i]);
 
 				 }
 			 }
@@ -440,6 +378,8 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
 			left_panel->Enabled = false;
 			right_panel->Enabled = false;
 			right_down_panel->Enabled = false;
+			status_block_form = true;
+			down_panel->Enabled = false;
 
 		}
 
@@ -449,6 +389,14 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
 			left_panel->Enabled = true;
 			right_panel->Enabled = true;
 			right_down_panel->Enabled = true;
+			status_block_form = false;
+			down_panel->Enabled = true;
+			f_label_recording->Visible = true;
+			i_label_name_recording->Visible = true;
+			f_label_name_recording->Visible = true;
+			pictureBox_recording->Visible = true;
+
+
 		}
 
 		void MainFormClear() {
@@ -567,215 +515,91 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
 
 	private: System::Windows::Forms::MenuStrip^ menuStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^ óïðàâëåíèåÏðîöåññîìToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^ heat_toolset;
-
+	private: System::Windows::Forms::ToolStripMenuItem^ heat_toolset;
 	private: System::Windows::Forms::ToolStripMenuItem^ âûáîðÐåãóëÿòîðàToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^ pid_toolset;
-
+	private: System::Windows::Forms::ToolStripMenuItem^ pid_toolset;
 	private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêàØÈÌToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^ network_and_accs;
-private: System::Windows::Forms::ToolStripMenuItem^ network_toolset;
-
-
-
-
+	private: System::Windows::Forms::ToolStripMenuItem^ network_and_accs;
+	private: System::Windows::Forms::ToolStripMenuItem^ network_toolset;
 	private: System::Windows::Forms::ToolStripMenuItem^ ó÷åòíàÿÇàïèñüToolStripMenuItem;
 	private: System::Windows::Forms::Panel^ left_panel;
 	private: System::Windows::Forms::Panel^ right_panel;
-
-
 	private: System::Windows::Forms::Button^ f_stop_button;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
-private: System::Windows::Forms::Label^ f_label_WRG_status;
-
+	private: System::Windows::Forms::Label^ f_label_WRG_status;
 	private: System::Windows::Forms::Label^ label3;
-private: System::Windows::Forms::Label^ f_label_APG_status;
-
-
+	private: System::Windows::Forms::Label^ f_label_APG_status;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::GroupBox^ groupBox2;
-private: System::Windows::Forms::Button^ f_button_stop_pump;
-
-private: System::Windows::Forms::Button^ f_button_start_pump;
-
-private: System::Windows::Forms::Label^ f_label_trubo_percent;
-
+	private: System::Windows::Forms::Button^ f_button_stop_pump;
+	private: System::Windows::Forms::Button^ f_button_start_pump;
+	private: System::Windows::Forms::Label^ f_label_trubo_percent;
 	private: System::Windows::Forms::Label^ label10;
-private: System::Windows::Forms::ProgressBar^ progressBar_Turbopump;
 
-private: System::Windows::Forms::Label^ f_label_turbopump_status;
-
-private: System::Windows::Forms::Label^ f_label_backpump_status;
-private: System::Windows::Forms::Label^ i_label_turbopump_status;
-
-
-private: System::Windows::Forms::Label^ i_label_backpump_status;
-
+	private: System::Windows::Forms::Label^ f_label_turbopump_status;
+	private: System::Windows::Forms::Label^ f_label_backpump_status;
+	private: System::Windows::Forms::Label^ i_label_turbopump_status;
+	private: System::Windows::Forms::Label^ i_label_backpump_status;
 	private: System::Windows::Forms::GroupBox^ groupBox3;
-private: System::Windows::Forms::Label^ f_label_temp_status_deg;
-
+	private: System::Windows::Forms::Label^ f_label_temp_status_deg;
 	private: System::Windows::Forms::Label^ label11;
-private: System::Windows::Forms::Button^ f_button_set_temp;
-private: System::Windows::Forms::TextBox^ f_textbox_set_temp;
-
-
+	private: System::Windows::Forms::Button^ f_button_set_temp;
+	private: System::Windows::Forms::TextBox^ f_textbox_set_temp;
 	private: System::Windows::Forms::Label^ label14;
-
-private: System::Windows::Forms::Button^ f_button_on_off_heat;
-
+	private: System::Windows::Forms::Button^ f_button_on_off_heat;
 	private: System::Windows::Forms::Label^ label13;
-
-
-private: System::Windows::Forms::Label^ f_label_name_recording;
-private: System::Windows::Forms::Label^ i_label_name_recording;
-
-
-private: System::Windows::Forms::Label^ f_label_recording;
-private: System::Windows::Forms::PictureBox^ pictureBox_recording;
-
-
-
-
-
+	private: System::Windows::Forms::Label^ f_label_name_recording;
+	private: System::Windows::Forms::Label^ i_label_name_recording;
+	private: System::Windows::Forms::Label^ f_label_recording;
+	private: System::Windows::Forms::PictureBox^ pictureBox_recording;
 	private: System::Windows::Forms::Panel^ right_down_panel;
-
 	private: System::Windows::Forms::Label^ label18;
 	private: System::Windows::Forms::GroupBox^ groupBox_time;
-private: System::Windows::Forms::Label^ f_label_timer_time_stop_pump;
-
-
-private: System::Windows::Forms::Label^ f_label_timer_current_stop_pump;
-
-private: System::Windows::Forms::Label^ f_label_timer_start_stop_pump;
-
-private: System::Windows::Forms::Label^ f_label_timer_time_TPlB;
-
-private: System::Windows::Forms::Label^ f_label_timer_time_gases;
-
+	private: System::Windows::Forms::Label^ f_label_timer_time_stop_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_current_stop_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_start_stop_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_time_TPlB;
+	private: System::Windows::Forms::Label^ f_label_timer_time_gases;
 	private: System::Windows::Forms::Label^ label33;
-private: System::Windows::Forms::Label^ f_label_timer_current_TPlB;
-private: System::Windows::Forms::Label^ f_label_timer_start_TPlB;
-
-
-
-
+	private: System::Windows::Forms::Label^ f_label_timer_current_TPlB;
+	private: System::Windows::Forms::Label^ f_label_timer_start_TPlB;
 	private: System::Windows::Forms::Label^ label30;
-private: System::Windows::Forms::Label^ f_label_timer_current_gases;
-
-private: System::Windows::Forms::Label^ f_label_timer_start_gases;
-
+	private: System::Windows::Forms::Label^ f_label_timer_current_gases;
+	private: System::Windows::Forms::Label^ f_label_timer_start_gases;
 	private: System::Windows::Forms::Label^ label27;
-private: System::Windows::Forms::Label^ f_label_timer_current_pump;
-
-private: System::Windows::Forms::Label^ f_label_timer_current_start_pump;
-private: System::Windows::Forms::Label^ f_label_timer_time_pump;
-
-
-private: System::Windows::Forms::Label^ f_label_timer_start_pump;
-
+	private: System::Windows::Forms::Label^ f_label_timer_current_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_current_start_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_time_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_start_pump;
 	private: System::Windows::Forms::Label^ label22;
-private: System::Windows::Forms::Label^ f_label_timer_start_start_pump;
-private: System::Windows::Forms::Label^ f_label_timer_time_start_pump;
-
-
-
+	private: System::Windows::Forms::Label^ f_label_timer_start_start_pump;
+	private: System::Windows::Forms::Label^ f_label_timer_time_start_pump;
 	private: System::Windows::Forms::Label^ label19;
-
-
-
-
-
-
-
-
-
-
-
-private: System::Windows::Forms::GroupBox^ groupBox8;
-private: System::Windows::Forms::TextBox^ f_textbox_set_U_T;
-
-
-
-
-
-
-
-
-
-
-private: System::Windows::Forms::Label^ label54;
-private: System::Windows::Forms::TextBox^ f_textbox_set_I_T;
-
-
-
-
-
-
-
-
-private: System::Windows::Forms::Label^ label56;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-private: System::Windows::Forms::Panel^ left_down_panel;
-
-private: System::Windows::Forms::Panel^ panel6;
-private: System::Windows::Forms::PictureBox^ picture_connection;
-
-private: System::Windows::Forms::Label^ i_button_connect_to_PLC;
-
-private: System::Windows::Forms::Button^ f_button_connect_to_PLC;
-
-private: System::Windows::Forms::GroupBox^ groupBox_flap;
-private: System::Windows::Forms::GroupBox^ subgroupBox_mode;
-private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
-private: System::Windows::Forms::RadioButton^ radioButton_flap_manual_mode;
-private: System::Windows::Forms::Button^ f_button_manual_close_flap;
-
-
-private: System::Windows::Forms::Button^ f_button_manual_open_flap;
-private: System::Windows::Forms::Label^ i_label_flap_status;
-private: System::Windows::Forms::Label^ f_label_flap_status;
-private: System::Windows::Forms::Label^ I_label_set_time_flap;
-private: System::Windows::Forms::TextBox^ f_textBox_set_time_flap;
-
-
-
-
-
-
-
-
-private: System::Windows::Forms::ProgressBar^ progressBar_flap;
-
-private: System::Windows::Forms::GroupBox^ groupBox5;
-private: System::Windows::Forms::PictureBox^ picture_not_connection;
-private: System::Windows::Forms::Timer^ Work_Timer;
-
-
-
-
-private: System::ComponentModel::IContainer^ components;
+	private: System::Windows::Forms::GroupBox^ groupBox8;
+	private: System::Windows::Forms::TextBox^ f_textbox_set_U_T;
+	private: System::Windows::Forms::Label^ label54;
+	private: System::Windows::Forms::TextBox^ f_textbox_set_I_T;
+	private: System::Windows::Forms::Label^ label56;
+	private: System::Windows::Forms::Panel^ left_down_panel;
+	private: System::Windows::Forms::Panel^ panel6;
+	private: System::Windows::Forms::PictureBox^ picture_connection;
+	private: System::Windows::Forms::Label^ i_button_connect_to_PLC;
+	private: System::Windows::Forms::Button^ f_button_connect_to_PLC;
+	private: System::Windows::Forms::GroupBox^ groupBox_flap;
+	private: System::Windows::Forms::GroupBox^ subgroupBox_mode;
+
+	private: System::Windows::Forms::RadioButton^ radioButton_flap_manual_mode;
+	private: System::Windows::Forms::Button^ f_button_manual_close_flap;
+	private: System::Windows::Forms::Button^ f_button_manual_open_flap;
+	private: System::Windows::Forms::Label^ i_label_flap_status;
+	private: System::Windows::Forms::Label^ f_label_flap_status;
+	private: System::Windows::Forms::Label^ I_label_set_time_flap;
+	private: System::Windows::Forms::TextBox^ f_textBox_set_time_flap;
+	private: System::Windows::Forms::ProgressBar^ progressBar_flap;
+	private: System::Windows::Forms::GroupBox^ groupBox5;
+	private: System::Windows::Forms::PictureBox^ picture_not_connection;
+	private: System::Windows::Forms::Timer^ Work_Timer;
+	private: System::ComponentModel::IContainer^ components;
 
 
 
@@ -813,7 +637,6 @@ private: System::ComponentModel::IContainer^ components;
 			this->menu_strip_butterfly_percent = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menu_strip_butterfly_mV = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->left_panel = (gcnew System::Windows::Forms::Panel());
-			this->left_down_panel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
@@ -834,10 +657,11 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_button_start_stop_PSV1 = (gcnew System::Windows::Forms::Button());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->left_down_panel = (gcnew System::Windows::Forms::Panel());
 			this->f_label_recording = (gcnew System::Windows::Forms::Label());
-			this->i_label_name_recording = (gcnew System::Windows::Forms::Label());
-			this->pictureBox_recording = (gcnew System::Windows::Forms::PictureBox());
 			this->f_label_name_recording = (gcnew System::Windows::Forms::Label());
+			this->pictureBox_recording = (gcnew System::Windows::Forms::PictureBox());
+			this->i_label_name_recording = (gcnew System::Windows::Forms::Label());
 			this->groupbox_butterfly = (gcnew System::Windows::Forms::GroupBox());
 			this->i_label_set_butterfly = (gcnew System::Windows::Forms::Label());
 			this->f_button_set_butterfly = (gcnew System::Windows::Forms::Button());
@@ -954,15 +778,14 @@ private: System::ComponentModel::IContainer^ components;
 			this->label21 = (gcnew System::Windows::Forms::Label());
 			this->label24 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->fontDialog1 = (gcnew System::Windows::Forms::FontDialog());
-			this->UVN_picturebox_close = (gcnew System::Windows::Forms::PictureBox());
 			this->UVN_picturebox_open = (gcnew System::Windows::Forms::PictureBox());
+			this->UVN_picturebox_close = (gcnew System::Windows::Forms::PictureBox());
 			this->menuStrip1->SuspendLayout();
 			this->left_panel->SuspendLayout();
-			this->left_down_panel->SuspendLayout();
 			this->groupBox6->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->tabPage1->SuspendLayout();
+			this->left_down_panel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_recording))->BeginInit();
 			this->groupbox_butterfly->SuspendLayout();
 			this->groupBox_time->SuspendLayout();
@@ -985,8 +808,8 @@ private: System::ComponentModel::IContainer^ components;
 			this->down_panel->SuspendLayout();
 			this->panel_unblock->SuspendLayout();
 			this->panel1->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_open))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStrip1
@@ -1136,6 +959,7 @@ private: System::ComponentModel::IContainer^ components;
 			// left_panel
 			// 
 			this->left_panel->BackColor = System::Drawing::Color::White;
+			this->left_panel->Controls->Add(this->groupBox6);
 			this->left_panel->Controls->Add(this->left_down_panel);
 			this->left_panel->Controls->Add(this->groupbox_butterfly);
 			this->left_panel->Controls->Add(this->groupBox_time);
@@ -1145,19 +969,6 @@ private: System::ComponentModel::IContainer^ components;
 			this->left_panel->Size = System::Drawing::Size(317, 705);
 			this->left_panel->TabIndex = 7;
 			// 
-			// left_down_panel
-			// 
-			this->left_down_panel->Controls->Add(this->groupBox6);
-			this->left_down_panel->Controls->Add(this->f_label_recording);
-			this->left_down_panel->Controls->Add(this->i_label_name_recording);
-			this->left_down_panel->Controls->Add(this->pictureBox_recording);
-			this->left_down_panel->Controls->Add(this->f_label_name_recording);
-			this->left_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->left_down_panel->Location = System::Drawing::Point(0, 318);
-			this->left_down_panel->Name = L"left_down_panel";
-			this->left_down_panel->Size = System::Drawing::Size(317, 387);
-			this->left_down_panel->TabIndex = 21;
-			// 
 			// groupBox6
 			// 
 			this->groupBox6->Controls->Add(this->tabControl1);
@@ -1165,7 +976,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->groupBox6->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->groupBox6->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->groupBox6->Location = System::Drawing::Point(9, 2);
+			this->groupBox6->Location = System::Drawing::Point(9, 321);
 			this->groupBox6->Name = L"groupBox6";
 			this->groupBox6->Size = System::Drawing::Size(304, 348);
 			this->groupBox6->TabIndex = 33;
@@ -1439,41 +1250,30 @@ private: System::ComponentModel::IContainer^ components;
 			this->tabPage2->Text = L"Àâòîìàòè÷åñêèé ðåæèì";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
+			// left_down_panel
+			// 
+			this->left_down_panel->Controls->Add(this->f_label_recording);
+			this->left_down_panel->Controls->Add(this->f_label_name_recording);
+			this->left_down_panel->Controls->Add(this->pictureBox_recording);
+			this->left_down_panel->Controls->Add(this->i_label_name_recording);
+			this->left_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
+			this->left_down_panel->Location = System::Drawing::Point(0, 675);
+			this->left_down_panel->Name = L"left_down_panel";
+			this->left_down_panel->Size = System::Drawing::Size(317, 30);
+			this->left_down_panel->TabIndex = 21;
+			// 
 			// f_label_recording
 			// 
 			this->f_label_recording->AutoSize = true;
 			this->f_label_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_recording->ForeColor = System::Drawing::Color::Crimson;
-			this->f_label_recording->Location = System::Drawing::Point(32, 358);
+			this->f_label_recording->Location = System::Drawing::Point(35, 5);
 			this->f_label_recording->Name = L"f_label_recording";
 			this->f_label_recording->Size = System::Drawing::Size(81, 18);
 			this->f_label_recording->TabIndex = 1;
 			this->f_label_recording->Text = L"RECORDING";
 			this->f_label_recording->Click += gcnew System::EventHandler(this, &MainForm::f_label_recording_Click);
-			// 
-			// i_label_name_recording
-			// 
-			this->i_label_name_recording->AutoSize = true;
-			this->i_label_name_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->i_label_name_recording->ForeColor = System::Drawing::Color::Black;
-			this->i_label_name_recording->Location = System::Drawing::Point(184, 358);
-			this->i_label_name_recording->Name = L"i_label_name_recording";
-			this->i_label_name_recording->Size = System::Drawing::Size(42, 19);
-			this->i_label_name_recording->TabIndex = 2;
-			this->i_label_name_recording->Text = L"Èìÿ:";
-			// 
-			// pictureBox_recording
-			// 
-			this->pictureBox_recording->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox_recording.Image")));
-			this->pictureBox_recording->Location = System::Drawing::Point(6, 356);
-			this->pictureBox_recording->Name = L"pictureBox_recording";
-			this->pictureBox_recording->Size = System::Drawing::Size(20, 25);
-			this->pictureBox_recording->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->pictureBox_recording->TabIndex = 0;
-			this->pictureBox_recording->TabStop = false;
-			this->pictureBox_recording->Click += gcnew System::EventHandler(this, &MainForm::pictureBox_recording_Click);
 			// 
 			// f_label_name_recording
 			// 
@@ -1481,11 +1281,34 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_label_name_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_name_recording->ForeColor = System::Drawing::Color::Black;
-			this->f_label_name_recording->Location = System::Drawing::Point(228, 358);
+			this->f_label_name_recording->Location = System::Drawing::Point(231, 4);
 			this->f_label_name_recording->Name = L"f_label_name_recording";
 			this->f_label_name_recording->Size = System::Drawing::Size(76, 19);
 			this->f_label_name_recording->TabIndex = 3;
 			this->f_label_name_recording->Text = L"Hst121.txt";
+			// 
+			// pictureBox_recording
+			// 
+			this->pictureBox_recording->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox_recording.Image")));
+			this->pictureBox_recording->Location = System::Drawing::Point(9, 3);
+			this->pictureBox_recording->Name = L"pictureBox_recording";
+			this->pictureBox_recording->Size = System::Drawing::Size(20, 25);
+			this->pictureBox_recording->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->pictureBox_recording->TabIndex = 0;
+			this->pictureBox_recording->TabStop = false;
+			this->pictureBox_recording->Click += gcnew System::EventHandler(this, &MainForm::pictureBox_recording_Click);
+			// 
+			// i_label_name_recording
+			// 
+			this->i_label_name_recording->AutoSize = true;
+			this->i_label_name_recording->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->i_label_name_recording->ForeColor = System::Drawing::Color::Black;
+			this->i_label_name_recording->Location = System::Drawing::Point(187, 4);
+			this->i_label_name_recording->Name = L"i_label_name_recording";
+			this->i_label_name_recording->Size = System::Drawing::Size(42, 19);
+			this->i_label_name_recording->TabIndex = 2;
+			this->i_label_name_recording->Text = L"Èìÿ:";
 			// 
 			// groupbox_butterfly
 			// 
@@ -2339,9 +2162,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->subgroupBox_mode->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->subgroupBox_mode->ForeColor = System::Drawing::Color::Black;
-			this->subgroupBox_mode->Location = System::Drawing::Point(6, 60);
+			this->subgroupBox_mode->Location = System::Drawing::Point(16, 60);
 			this->subgroupBox_mode->Name = L"subgroupBox_mode";
-			this->subgroupBox_mode->Size = System::Drawing::Size(202, 63);
+			this->subgroupBox_mode->Size = System::Drawing::Size(202, 66);
 			this->subgroupBox_mode->TabIndex = 16;
 			this->subgroupBox_mode->TabStop = false;
 			this->subgroupBox_mode->Text = L"Ðåæèì ðàáîòû";
@@ -2350,13 +2173,13 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			this->radioButton_flap_auto_mode->AutoSize = true;
 			this->radioButton_flap_auto_mode->ForeColor = System::Drawing::Color::Black;
-			this->radioButton_flap_auto_mode->Location = System::Drawing::Point(10, 37);
+			this->radioButton_flap_auto_mode->Location = System::Drawing::Point(10, 38);
 			this->radioButton_flap_auto_mode->Name = L"radioButton_flap_auto_mode";
 			this->radioButton_flap_auto_mode->Size = System::Drawing::Size(140, 23);
 			this->radioButton_flap_auto_mode->TabIndex = 1;
 			this->radioButton_flap_auto_mode->Text = L"Àâòîìàòè÷åñêèé";
 			this->radioButton_flap_auto_mode->UseVisualStyleBackColor = true;
-			this->radioButton_flap_auto_mode->CheckedChanged += gcnew System::EventHandler(this, &MainForm::radioButton_flap_auto_mode_CheckedChanged);
+			this->radioButton_flap_auto_mode->Click += gcnew System::EventHandler(this, &MainForm::radioButton_flap_auto_mode_CheckedChanged);
 			// 
 			// radioButton_flap_manual_mode
 			// 
@@ -2430,9 +2253,9 @@ private: System::ComponentModel::IContainer^ components;
 			// 
 			this->right_down_panel->Controls->Add(this->f_stop_button);
 			this->right_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->right_down_panel->Location = System::Drawing::Point(0, 496);
+			this->right_down_panel->Location = System::Drawing::Point(0, 653);
 			this->right_down_panel->Name = L"right_down_panel";
-			this->right_down_panel->Size = System::Drawing::Size(251, 209);
+			this->right_down_panel->Size = System::Drawing::Size(251, 52);
 			this->right_down_panel->TabIndex = 12;
 			// 
 			// f_stop_button
@@ -2441,9 +2264,9 @@ private: System::ComponentModel::IContainer^ components;
 			this->f_stop_button->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_stop_button->ForeColor = System::Drawing::Color::WhiteSmoke;
-			this->f_stop_button->Location = System::Drawing::Point(11, 164);
+			this->f_stop_button->Location = System::Drawing::Point(3, 7);
 			this->f_stop_button->Name = L"f_stop_button";
-			this->f_stop_button->Size = System::Drawing::Size(234, 42);
+			this->f_stop_button->Size = System::Drawing::Size(245, 42);
 			this->f_stop_button->TabIndex = 0;
 			this->f_stop_button->Text = L"STOP";
 			this->f_stop_button->UseVisualStyleBackColor = false;
@@ -2914,16 +2737,16 @@ private: System::ComponentModel::IContainer^ components;
 			this->panel4->BackColor = System::Drawing::Color::White;
 			this->panel4->Controls->Add(this->down_panel);
 			this->panel4->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel4->Location = System::Drawing::Point(317, 469);
+			this->panel4->Location = System::Drawing::Point(317, 479);
 			this->panel4->Name = L"panel4";
-			this->panel4->Size = System::Drawing::Size(436, 260);
+			this->panel4->Size = System::Drawing::Size(436, 250);
 			this->panel4->TabIndex = 9;
 			// 
 			// down_panel
 			// 
 			this->down_panel->Controls->Add(this->groupBox8);
 			this->down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->down_panel->Location = System::Drawing::Point(0, 10);
+			this->down_panel->Location = System::Drawing::Point(0, 0);
 			this->down_panel->Name = L"down_panel";
 			this->down_panel->Size = System::Drawing::Size(436, 250);
 			this->down_panel->TabIndex = 0;
@@ -3013,8 +2836,20 @@ private: System::ComponentModel::IContainer^ components;
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(317, 133);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(436, 336);
+			this->panel1->Size = System::Drawing::Size(436, 346);
 			this->panel1->TabIndex = 11;
+			// 
+			// UVN_picturebox_open
+			// 
+			this->UVN_picturebox_open->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->UVN_picturebox_open->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_open.Image")));
+			this->UVN_picturebox_open->Location = System::Drawing::Point(0, 0);
+			this->UVN_picturebox_open->Name = L"UVN_picturebox_open";
+			this->UVN_picturebox_open->Size = System::Drawing::Size(436, 346);
+			this->UVN_picturebox_open->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->UVN_picturebox_open->TabIndex = 13;
+			this->UVN_picturebox_open->TabStop = false;
+			this->UVN_picturebox_open->Visible = false;
 			// 
 			// UVN_picturebox_close
 			// 
@@ -3023,27 +2858,14 @@ private: System::ComponentModel::IContainer^ components;
 			this->UVN_picturebox_close->InitialImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_close.InitialImage")));
 			this->UVN_picturebox_close->Location = System::Drawing::Point(0, 0);
 			this->UVN_picturebox_close->Name = L"UVN_picturebox_close";
-			this->UVN_picturebox_close->Size = System::Drawing::Size(436, 336);
+			this->UVN_picturebox_close->Size = System::Drawing::Size(436, 346);
 			this->UVN_picturebox_close->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->UVN_picturebox_close->TabIndex = 12;
 			this->UVN_picturebox_close->TabStop = false;
 			// 
-			// UVN_picturebox_open
-			// 
-			this->UVN_picturebox_open->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->UVN_picturebox_open->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_open.Image")));
-			this->UVN_picturebox_open->Location = System::Drawing::Point(0, 0);
-			this->UVN_picturebox_open->Name = L"UVN_picturebox_open";
-			this->UVN_picturebox_open->Size = System::Drawing::Size(436, 336);
-			this->UVN_picturebox_open->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->UVN_picturebox_open->TabIndex = 13;
-			this->UVN_picturebox_open->TabStop = false;
-			this->UVN_picturebox_open->Visible = false;
-			// 
 			// MainForm
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
-			this->AutoSize = true;
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(1004, 729);
 			this->Controls->Add(this->panel1);
@@ -3052,6 +2874,7 @@ private: System::ComponentModel::IContainer^ components;
 			this->Controls->Add(this->right_panel);
 			this->Controls->Add(this->left_panel);
 			this->Controls->Add(this->menuStrip1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->ImeMode = System::Windows::Forms::ImeMode::Katakana;
 			this->MainMenuStrip = this->menuStrip1;
@@ -3063,12 +2886,12 @@ private: System::ComponentModel::IContainer^ components;
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
 			this->left_panel->ResumeLayout(false);
-			this->left_down_panel->ResumeLayout(false);
-			this->left_down_panel->PerformLayout();
 			this->groupBox6->ResumeLayout(false);
 			this->tabControl1->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
 			this->tabPage1->PerformLayout();
+			this->left_down_panel->ResumeLayout(false);
+			this->left_down_panel->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_recording))->EndInit();
 			this->groupbox_butterfly->ResumeLayout(false);
 			this->groupbox_butterfly->PerformLayout();
@@ -3102,8 +2925,8 @@ private: System::ComponentModel::IContainer^ components;
 			this->panel_unblock->ResumeLayout(false);
 			this->panel_unblock->PerformLayout();
 			this->panel1->ResumeLayout(false);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_open))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -3540,17 +3363,17 @@ private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::Event
 
 		f_button_manual_open_flap->Enabled = true;
 		f_button_manual_close_flap->Enabled = false;
-		UVN_picturebox_open->Visible = false;
-		//UVN_picturebox_close->Visible = true;
+		
 
 		f_label_flap_status->Text = "Çàêðûòà";
 
-		if (status_block_form) {
+		if (!status_block_form) {
 
-			UVN_picturebox_open->Visible = true;
+			UVN_picturebox_open->Visible = false;
 			UVN_picturebox_close->Visible = true;
 
 		}
+
 
 	}
 
@@ -3561,6 +3384,7 @@ private: System::Void f_button_block_form_Click(System::Object^ sender, System::
 
 		MainForm_block();
 
+		status_block_form = true;
 		UVN_picturebox_close->Visible = false;
 		UVN_picturebox_open->Visible = false;
 	

@@ -2,9 +2,6 @@
 namespace UVNControlSystem2v6 {
 
 	using namespace System;
-
-	
-
 	ref class dataPLC
 	{
 	public:
@@ -35,9 +32,6 @@ namespace UVNControlSystem2v6 {
 		//Массив с ПЛК
 		array<int>^ share_mem = gcnew array<int>(30);
 
-		
-
-
 		//Переменные на ПЛК
 		int set_APG;
 		int set_WRG;
@@ -55,26 +49,6 @@ namespace UVNControlSystem2v6 {
 			return TtoD_A * temp * temp + TtoD_B * temp + TtoD_C;
 
 		}
-
-		//Обнуление массива
-
-		 void null_date () {
-
-
-			  data[0] = 20;
-			  data[1] = 0;	// cmd_word
-			  data[2] = 0;
-			  data[3] = 0;	//au_PSV1 в дискретах
-			  data[4] = 0;	//au_PSV2 в дискретах
-			  data[5] = 0;	//позиция BV (клапан-бабочка)
-			  data[6] = 0;	//au_TPlB_Iset
-			  data[7] = 0;	//au_TPlB_Uset
-			  data[8] = 0;	//Заданная температура в дискретах, требуется функция пересчета
-			  data[9] = 0;
-			  data[10] = 0;	//p_заданное давление BV
-			  data[11] = 0;	//PID
-		 }
-
 
 		   //Посылка на сервер ModbusTCPServer 	
 
@@ -107,8 +81,6 @@ namespace UVNControlSystem2v6 {
 
 		   }
 
-
-	
 	};
 
 };

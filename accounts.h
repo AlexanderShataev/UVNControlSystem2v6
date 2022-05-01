@@ -5,13 +5,7 @@
 namespace UVNControlSystem2v6 {
 
 	using namespace System;
-	using namespace System::ComponentModel;
-	using namespace System::Collections;
-	using namespace System::Windows::Forms;
-	using namespace System::Data;
-	using namespace System::Drawing;                     
-	using namespace std;
-
+	
 	
 	public ref class accounts 
 	{ 
@@ -44,7 +38,7 @@ namespace UVNControlSystem2v6 {
 			return currentID;
 		}
 
-		else if (login == "" && password == "") {  // заменить потом
+		else if (login == "demo" && password == "") {  // заменить потом
  
 			ID = login;
 			Password = password;

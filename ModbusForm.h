@@ -11,8 +11,6 @@ namespace UVNControlSystem2v6 {
 	using namespace System::Drawing;
 	using namespace EasyModbus;
 
-	#define ARRAY_SIZE 2;
-
 	/// <summary>
 	/// Сводка для ModbusForm
 	/// </summary>
@@ -20,24 +18,20 @@ namespace UVNControlSystem2v6 {
 	public ref class ModbusForm : public System::Windows::Forms::Form
 	{
 
-	public:  ModbusClient^ modbus = gcnew ModbusClient();
-
 
 	private: System::Windows::Forms::GroupBox^ groupBox1;
 	private: System::Windows::Forms::Timer^ modbus_read_sharemem;
+	private: System::Windows::Forms::PictureBox^ pictureBoxmodbus;
+
+	
 	public:
 
-	public:
-
-	public:
-
-
+		ModbusClient^ modbus = gcnew ModbusClient();
 		bool f_ReadHoldingRegisters=false;
 		bool form_open;
-	private: System::Windows::Forms::PictureBox^ pictureBoxmodbus;
-	public:
 
-		array<int>^ share_mem_readholdings = gcnew array<int>(30);
+
+		array<int>^ share_mem_readholdings = gcnew array<int>(30); 
 
 
 		void clearform() {
@@ -73,7 +67,6 @@ namespace UVNControlSystem2v6 {
 
 				else if (!f_main_connecting_status) {
 
-					modbus_read_sharemem->Enabled = false;
 					connecting_status();
 
 				}
@@ -92,6 +85,7 @@ namespace UVNControlSystem2v6 {
 					lstRegValues->Items->Clear();
 					//for (int values)
 					for (int i = 0; i < DataArray->Length; i++) {
+
 						if (i < 9) {
 
 							lstRegValues->Items->Add("ShareMem[" + i + "]      ||    Holding Register " + (i + 1) + "      ||    " + DataArray[i]);
@@ -118,7 +112,6 @@ namespace UVNControlSystem2v6 {
 
 				MessageBox::Show("Ошибка подключения", "Закрытие");
 				modbus_read_sharemem->Enabled = false;
-
 			}
 
 		}
@@ -170,9 +163,6 @@ namespace UVNControlSystem2v6 {
 				f_label_status->Text = "Error";
 
 			}
-
-
-
 		}
 
 
@@ -198,16 +188,11 @@ namespace UVNControlSystem2v6 {
 			}
 		}
 	private: System::Windows::Forms::Button^ f_button_connect;
-	protected:
 	private: System::Windows::Forms::TextBox^ f_textbox_IP;
 	private: System::Windows::Forms::TextBox^ f_textbox_socket;
 	private: System::Windows::Forms::Label^ i_label_IP;
 	private: System::Windows::Forms::Label^ i_label_port_modbus;
 	private: System::Windows::Forms::Label^ f_label_status;
-
-
-
-
 	private: System::Windows::Forms::Button^ f_button_disconnect;
 	private: System::Windows::Forms::GroupBox^ groupBox_modbus_settool;
 	private: System::Windows::Forms::GroupBox^ groupbox_holding_registers;
@@ -217,12 +202,9 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::TextBox^ f_textbox_lenght_bit;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Button^ f_button_read_tstmodbus;
-
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Timer^ modbustst_timer;
 	private: System::ComponentModel::IContainer^ components;
-
-
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.
@@ -461,8 +443,9 @@ namespace UVNControlSystem2v6 {
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->groupbox_holding_registers);
 			this->Controls->Add(this->groupBox_modbus_settool);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"ModbusForm";
-			this->Text = L"ModbusForm";
+			this->Text = L"Настройка Modbus";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &ModbusForm::ModbusForm_FormClosing);
 			this->groupBox_modbus_settool->ResumeLayout(false);
 			this->groupBox_modbus_settool->PerformLayout();
@@ -507,10 +490,8 @@ private: System::Void f_button_disconnect_Click(System::Object^ sender, System::
 	modbus->Disconnect();
 	f_label_status->Text = "Disconnected";
 
-
-
-	
 }
+
 private: System::Void modbustst_timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
 

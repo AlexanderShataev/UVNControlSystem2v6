@@ -87,25 +87,25 @@ namespace UVNControlSystem2v6 {
 			this->f_button_set_Kt = (gcnew System::Windows::Forms::Button());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
-			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->f_textbox_Kp_T = (gcnew System::Windows::Forms::TextBox());
-			this->f_textbox_Ti_T = (gcnew System::Windows::Forms::TextBox());
-			this->f_textbox_Td_T = (gcnew System::Windows::Forms::TextBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			this->f_textbox_Td_T = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_Ti_T = (gcnew System::Windows::Forms::TextBox());
+			this->f_textbox_Kp_T = (gcnew System::Windows::Forms::TextBox());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->f_textbox_Kd_D = (gcnew System::Windows::Forms::TextBox());
 			this->f_textbox_Ki_D = (gcnew System::Windows::Forms::TextBox());
 			this->f_textbox_Kp_D = (gcnew System::Windows::Forms::TextBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->tabControl1->SuspendLayout();
 			this->tabPage1->SuspendLayout();
-			this->tabPage2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
+			this->tabPage2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -164,6 +164,7 @@ namespace UVNControlSystem2v6 {
 			// 
 			// tabPage1
 			// 
+			this->tabPage1->BackColor = System::Drawing::Color::White;
 			this->tabPage1->Controls->Add(this->button1);
 			this->tabPage1->Controls->Add(this->f_textbox_Td_T);
 			this->tabPage1->Controls->Add(this->f_textbox_Ti_T);
@@ -179,8 +180,53 @@ namespace UVNControlSystem2v6 {
 			this->tabPage1->Size = System::Drawing::Size(261, 252);
 			this->tabPage1->TabIndex = 0;
 			this->tabPage1->Text = L"Традиционная форма";
-			this->tabPage1->UseVisualStyleBackColor = true;
 			this->tabPage1->Click += gcnew System::EventHandler(this, &PIDForm::tabPage1_Click);
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(151, 216);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(104, 30);
+			this->button1->TabIndex = 5;
+			this->button1->Text = L"Закрыть";
+			this->button1->UseVisualStyleBackColor = true;
+			// 
+			// f_textbox_Td_T
+			// 
+			this->f_textbox_Td_T->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_Td_T->Location = System::Drawing::Point(64, 176);
+			this->f_textbox_Td_T->Name = L"f_textbox_Td_T";
+			this->f_textbox_Td_T->Size = System::Drawing::Size(145, 27);
+			this->f_textbox_Td_T->TabIndex = 5;
+			// 
+			// f_textbox_Ti_T
+			// 
+			this->f_textbox_Ti_T->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_Ti_T->Location = System::Drawing::Point(64, 135);
+			this->f_textbox_Ti_T->Name = L"f_textbox_Ti_T";
+			this->f_textbox_Ti_T->Size = System::Drawing::Size(145, 26);
+			this->f_textbox_Ti_T->TabIndex = 4;
+			// 
+			// f_textbox_Kp_T
+			// 
+			this->f_textbox_Kp_T->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->f_textbox_Kp_T->Location = System::Drawing::Point(64, 95);
+			this->f_textbox_Kp_T->Name = L"f_textbox_Kp_T";
+			this->f_textbox_Kp_T->Size = System::Drawing::Size(145, 27);
+			this->f_textbox_Kp_T->TabIndex = 3;
+			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
+			this->pictureBox1->Location = System::Drawing::Point(6, 3);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(249, 69);
+			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->pictureBox1->TabIndex = 0;
+			this->pictureBox1->TabStop = false;
 			// 
 			// tabPage2
 			// 
@@ -201,61 +247,23 @@ namespace UVNControlSystem2v6 {
 			this->tabPage2->Text = L"Приведенная форма";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
-			// pictureBox1
+			// button2
 			// 
-			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(6, 3);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(249, 69);
-			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->pictureBox1->TabIndex = 0;
-			this->pictureBox1->TabStop = false;
+			this->button2->Location = System::Drawing::Point(151, 216);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(104, 30);
+			this->button2->TabIndex = 13;
+			this->button2->Text = L"Закрыть";
+			this->button2->UseVisualStyleBackColor = true;
 			// 
-			// f_textbox_Kp_T
+			// button3
 			// 
-			this->f_textbox_Kp_T->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->f_textbox_Kp_T->Location = System::Drawing::Point(64, 95);
-			this->f_textbox_Kp_T->Name = L"f_textbox_Kp_T";
-			this->f_textbox_Kp_T->Size = System::Drawing::Size(145, 27);
-			this->f_textbox_Kp_T->TabIndex = 3;
-			// 
-			// f_textbox_Ti_T
-			// 
-			this->f_textbox_Ti_T->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->f_textbox_Ti_T->Location = System::Drawing::Point(64, 135);
-			this->f_textbox_Ti_T->Name = L"f_textbox_Ti_T";
-			this->f_textbox_Ti_T->Size = System::Drawing::Size(145, 26);
-			this->f_textbox_Ti_T->TabIndex = 4;
-			// 
-			// f_textbox_Td_T
-			// 
-			this->f_textbox_Td_T->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->f_textbox_Td_T->Location = System::Drawing::Point(64, 176);
-			this->f_textbox_Td_T->Name = L"f_textbox_Td_T";
-			this->f_textbox_Td_T->Size = System::Drawing::Size(145, 27);
-			this->f_textbox_Td_T->TabIndex = 5;
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(151, 216);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(104, 30);
-			this->button1->TabIndex = 5;
-			this->button1->Text = L"Закрыть";
-			this->button1->UseVisualStyleBackColor = true;
-			// 
-			// pictureBox2
-			// 
-			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
-			this->pictureBox2->Location = System::Drawing::Point(3, 3);
-			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(249, 69);
-			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
-			this->pictureBox2->TabIndex = 1;
-			this->pictureBox2->TabStop = false;
+			this->button3->Location = System::Drawing::Point(6, 216);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(104, 30);
+			this->button3->TabIndex = 12;
+			this->button3->Text = L"Установить";
+			this->button3->UseVisualStyleBackColor = true;
 			// 
 			// f_textbox_Kd_D
 			// 
@@ -323,23 +331,15 @@ namespace UVNControlSystem2v6 {
 			this->label6->Text = L"Ki";
 			this->label6->Click += gcnew System::EventHandler(this, &PIDForm::label6_Click);
 			// 
-			// button2
+			// pictureBox2
 			// 
-			this->button2->Location = System::Drawing::Point(151, 216);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(104, 30);
-			this->button2->TabIndex = 13;
-			this->button2->Text = L"Закрыть";
-			this->button2->UseVisualStyleBackColor = true;
-			// 
-			// button3
-			// 
-			this->button3->Location = System::Drawing::Point(6, 216);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(104, 30);
-			this->button3->TabIndex = 12;
-			this->button3->Text = L"Установить";
-			this->button3->UseVisualStyleBackColor = true;
+			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
+			this->pictureBox2->Location = System::Drawing::Point(6, 3);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(249, 69);
+			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->pictureBox2->TabIndex = 1;
+			this->pictureBox2->TabStop = false;
 			// 
 			// PIDForm
 			// 
@@ -348,15 +348,16 @@ namespace UVNControlSystem2v6 {
 			this->ClientSize = System::Drawing::Size(287, 302);
 			this->Controls->Add(this->tabControl1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"PIDForm";
-			this->Text = L"Настройка ПИД-закона";
+			this->Text = L"ПИД-закон";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &PIDForm::PIDForm_FormClosing);
 			this->tabControl1->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
 			this->tabPage1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->tabPage2->ResumeLayout(false);
 			this->tabPage2->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			this->ResumeLayout(false);
 
