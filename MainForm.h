@@ -2683,7 +2683,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			// 
 			this->picture_not_connection->Cursor = System::Windows::Forms::Cursors::Default;
 			this->picture_not_connection->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"picture_not_connection.Image")));
-			this->picture_not_connection->Location = System::Drawing::Point(6, 25);
+			this->picture_not_connection->Location = System::Drawing::Point(12, 25);
 			this->picture_not_connection->Name = L"picture_not_connection";
 			this->picture_not_connection->Size = System::Drawing::Size(35, 23);
 			this->picture_not_connection->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
@@ -2711,7 +2711,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			this->picture_connection->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"picture_connection.Image")));
 			this->picture_connection->Location = System::Drawing::Point(12, 25);
 			this->picture_connection->Name = L"picture_connection";
-			this->picture_connection->Size = System::Drawing::Size(35, 23);
+			this->picture_connection->Size = System::Drawing::Size(33, 23);
 			this->picture_connection->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->picture_connection->TabIndex = 2;
 			this->picture_connection->TabStop = false;
@@ -2881,6 +2881,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			this->Name = L"MainForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"UVN Control System 2.0 ";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_FormClosing);
 			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &MainForm::MainForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->menuStrip1->ResumeLayout(false);
@@ -2977,9 +2978,10 @@ private: System::Void f_button_exit_Click(System::Object^ sender, System::EventA
 }
 private: System::Void MainForm_FormClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
 
-	Application::Exit();
 
 }
+
+
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 
 	if (f_button_on_off_heat->Text == "Отключить нагрев") {
@@ -3498,6 +3500,17 @@ private: System::Void f_button_set_TPlB_m_Click(System::Object^ sender, System::
 private: System::Void pid_toolset_Click(System::Object^ sender, System::EventArgs^ e) {
 
 	pidform->Show();
+}
+private: System::Void MainForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+
+
+	if (MessageBox::Show("Вы точно хотите закрыть приложение?", "UVN Control System 2.0", MessageBoxButtons::YesNo) == System::Windows::Forms::DialogResult::Yes)
+	{
+		Environment::Exit(0);
+
+	}
+
+	else e->Cancel = true;
 }
 };
 }

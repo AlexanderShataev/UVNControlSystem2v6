@@ -527,6 +527,7 @@ private: System::Void ModbusForm_FormClosing(System::Object^ sender, System::Win
 
 	clearform();
 	e->Cancel = true;
+	
 
 }
 };
