@@ -252,7 +252,11 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 		 }
 
 
+		 void Write_command(int command) {
 
+			 currentData->data[1] = command;
+
+		 }
 
 
 		 void PLC_connecting_status() {
@@ -306,6 +310,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			 catch (System::Exception^) {
 
 				 PLC_disconnect();
+				 int a; // удалить
 				 MessageBox::Show("Не удалось установить соединение с PLC", "UVN Control System 2.0 - Error connecting", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 				 
 			 }
@@ -344,6 +349,55 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 				
 				 PLC_disconnect();
 				 MessageBox::Show("Ошибка чтения", "Закрытие");
+
+			 }
+
+		 }
+
+		 void update_values() {
+
+			 try {
+
+				 f_label_trubo_percent->Text = currentData->share_mem[1].ToString();
+				 progressBar_Turbopump->Value = currentData->share_mem[1];
+
+				 f_label_temp_status_deg->Text = currentData->DiscreteToInt(currentData->share_mem[4]).ToString() + "° C";
+
+				 f_textbox_termo_voltage_V->Text = currentData->share_mem[6].ToString();
+				 f_textbox_termo_current_ma->Text = currentData->share_mem[7].ToString();
+
+				 f_textbox_magnetron_voltage_V->Text = currentData->share_mem[6].ToString();
+				 f_textbox_magnetron_current_ma->Text = currentData->share_mem[7].ToString();
+
+
+				 if (i_label_set_butterfly->Text == "Задать положение 0-1000 мВ") {
+
+					 f_label_batterfly_status->Text = currentData->share_mem[16].ToString() + " мВ";
+
+				 }
+
+				 else if (i_label_set_butterfly->Text == "Задать положение 0-100%") {
+
+					 f_label_batterfly_status->Text = (currentData->share_mem[16] / 100).ToString() + "%";
+
+				 }
+
+
+			 }
+
+			 catch (System::Exception^) {
+
+				 MessageBox::Show("Не удалось обработать данные массива PLC", "UVN Control System 2.0 - Error connecting", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+
+			 }
+
+		 }
+
+		 void process_R_quants() {
+
+			 if ((currentData->r_quants & currentData->masckon[1]) != 0) { // Если vacuum_start запущен
+
+				 f_label_backpump_status->Text = "ON";
 
 			 }
 
@@ -2988,9 +3042,13 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 
 		f_button_on_off_heat->Text = "Включить нагрев";
 		f_button_on_off_heat->ForeColor = System::Drawing::Color::Crimson;
+
+		currentData->command = currentData->nagrev;
 	}
 	
 	else if (f_button_on_off_heat->Text == "Включить нагрев") {
+
+		currentData->command = currentData->nagrev;
 
 		f_button_on_off_heat->Text = "Отключить нагрев";
 		f_button_on_off_heat->ForeColor = System::Drawing::Color::Navy;
@@ -3029,16 +3087,24 @@ private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
 	currentData->date_to_array();
 
+	Write_command(currentData->command);
+
 	Write_PLC_data();
 
 	Read_PLC_data();
 
+	update_values();
+
 	PLC_connecting_status();
+
+	process_R_quants();
 
 	if (modbusform->form_open) {
 
 		modbusform->modbusform_open (currentData->main_connecting_status, currentData->share_mem);
 	}
+
+	currentData->command = 0;
 
 }
 
@@ -3104,7 +3170,7 @@ private: System::Void f_button_start_stop_PSV1_Click(System::Object^ sender, Sys
 	if (f_button_start_stop_PSV1->Text=="Включить PSV1") {
 	
 		
-
+		currentData->command = currentData->gas_PSV1;
 		f_button_start_stop_PSV1->Text = "Выключить PSV1";
 		f_button_start_stop_PSV1->ForeColor = System::Drawing::Color::Crimson;
 		f_label_PSV1_status_mV->ForeColor = System::Drawing::Color::Crimson;
@@ -3121,6 +3187,7 @@ private: System::Void f_button_start_stop_PSV1_Click(System::Object^ sender, Sys
 
 	else if (f_button_start_stop_PSV1->Text == "Выключить PSV1") {
 
+		currentData->command = currentData->gas_PSV1;
 		f_button_start_stop_PSV1->Text = "Включить PSV1";
 		f_button_start_stop_PSV1->ForeColor = System::Drawing::Color::RoyalBlue;
 
@@ -3154,7 +3221,7 @@ private: System::Void f_button_start_stop_PSV2_Click(System::Object^ sender, Sys
 	if (f_button_start_stop_PSV2->Text == "Включить PSV2") {
 
 
-
+		currentData->command = currentData->gas_PSV2;
 		f_button_start_stop_PSV2->Text = "Выключить PSV2";
 		f_button_start_stop_PSV2->ForeColor = System::Drawing::Color::Crimson;
 		f_label_PSV2_status_mV->ForeColor = System::Drawing::Color::Crimson;
@@ -3171,6 +3238,7 @@ private: System::Void f_button_start_stop_PSV2_Click(System::Object^ sender, Sys
 
 	else if (f_button_start_stop_PSV2->Text == "Выключить PSV2") {
 
+		currentData->command = currentData->gas_PSV2;
 		f_button_start_stop_PSV2->Text = "Включить PSV2";
 		f_button_start_stop_PSV2->ForeColor = System::Drawing::Color::RoyalBlue;
 
@@ -3196,11 +3264,13 @@ private: System::Void f_button_PSV2_m30mv_Click(System::Object^ sender, System::
 }
 private: System::Void f_button_start_pump_Click(System::Object^ sender, System::EventArgs^ e) {
 
+	currentData->command = currentData->vacuum_start;
 	f_button_stop_pump->Enabled = true;
 	f_button_start_pump->Enabled = false;
 }
 private: System::Void f_button_stop_pump_Click(System::Object^ sender, System::EventArgs^ e) {
-
+	
+	currentData->command = currentData->vacuum_stop;
 	f_button_start_pump->Enabled = true;
 	f_button_stop_pump->Enabled = false;
 
@@ -3432,6 +3502,7 @@ private: System::Void f_button_TPLB_on_T_Click(System::Object^ sender, System::E
 
 	if (f_button_TPLB_on_T->Text == "Включить источник тока") {
 
+		currentData->command = currentData->TPlB_LV;
 		f_button_TPLB_on_T->Text = "Выключить источник тока";
 		f_button_TPLB_on_T->ForeColor = System::Drawing::Color::Crimson;
 		f_button_set_TPlB_t->Enabled = true;
@@ -3444,6 +3515,7 @@ private: System::Void f_button_TPLB_on_T_Click(System::Object^ sender, System::E
 
 	else if (f_button_TPLB_on_T->Text == "Выключить источник тока") {
 
+		currentData->command = currentData->TPlB_LV;
 		f_button_TPLB_on_T->Text = "Включить источник тока";
 		f_button_TPLB_on_T->ForeColor = System::Drawing::Color::Navy;
 		f_button_set_TPlB_t->Enabled = false;
@@ -3456,6 +3528,7 @@ private: System::Void f_button_TPLB_on_M_Click(System::Object^ sender, System::E
 
 	if (f_button_TPLB_on_M->Text == "Включить источник тока") {
 
+		currentData->command = currentData->TPlB_HV;
 		f_button_TPLB_on_M->Text = "Выключить источник тока";
 		f_button_TPLB_on_M->ForeColor = System::Drawing::Color::Crimson;
 		f_button_set_TPlB_m->Enabled = true;
@@ -3465,6 +3538,7 @@ private: System::Void f_button_TPLB_on_M_Click(System::Object^ sender, System::E
 
 	else if (f_button_TPLB_on_M->Text == "Выключить источник тока") {
 
+		currentData->command = currentData->TPlB_HV;
 		f_button_TPLB_on_M->Text = "Включить источник тока";
 		f_button_TPLB_on_M->ForeColor = System::Drawing::Color::Navy;
 		f_button_set_TPlB_m->Enabled = false;
@@ -3506,7 +3580,7 @@ private: System::Void MainForm_FormClosing(System::Object^ sender, System::Windo
 
 	if (MessageBox::Show("Вы точно хотите закрыть приложение?", "UVN Control System 2.0", MessageBoxButtons::YesNo) == System::Windows::Forms::DialogResult::Yes)
 	{
-		Environment::Exit(0);
+		Environment::Exit(0); // убивает полностью весь процесс, в отличие от Application()
 
 	}
 
