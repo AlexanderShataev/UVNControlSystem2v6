@@ -39,29 +39,19 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Button^ f_button_set_Kt;
-
 	private: System::Windows::Forms::TabControl^ tabControl1;
 	private: System::Windows::Forms::TabPage^ tabPage1;
 	private: System::Windows::Forms::TextBox^ f_textbox_Td_T;
-
 	private: System::Windows::Forms::TextBox^ f_textbox_Ti_T;
-
-
 	private: System::Windows::Forms::TextBox^ f_textbox_Kp_T;
-
-
-
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 	private: System::Windows::Forms::TabPage^ tabPage2;
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::TextBox^ f_textbox_Kd_D;
-
 	private: System::Windows::Forms::TextBox^ f_textbox_Ki_D;
-
 	private: System::Windows::Forms::TextBox^ f_textbox_Kp_D;
-
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label6;
@@ -150,6 +140,7 @@ namespace UVNControlSystem2v6 {
 			this->f_button_set_Kt->TabIndex = 3;
 			this->f_button_set_Kt->Text = L"Установить";
 			this->f_button_set_Kt->UseVisualStyleBackColor = true;
+			this->f_button_set_Kt->Click += gcnew System::EventHandler(this, &PIDForm::f_button_set_Kt_Click);
 			// 
 			// tabControl1
 			// 
@@ -383,6 +374,9 @@ private: System::Void PIDForm_FormClosing(System::Object^ sender, System::Window
 
 	this->Hide();
 	e->Cancel = true;
+
+}
+private: System::Void f_button_set_Kt_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }

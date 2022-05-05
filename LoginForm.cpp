@@ -1,7 +1,6 @@
 #include "LoginForm.h"
 #include <Windows.h>
 
-
 using namespace UVNControlSystem2v6; // Название проекта
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Application::EnableVisualStyles();

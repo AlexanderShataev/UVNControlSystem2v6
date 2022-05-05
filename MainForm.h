@@ -299,6 +299,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 				 ModbusPLC->IPAddress = "127.0.0.1";
 				 ModbusPLC->Port = 502;
 				 ModbusPLC->Connect();
+				 currentData->process_quants();
 
 				 if (ModbusPLC->Connected) {
 
@@ -340,7 +341,6 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 
 
 				 currentData->share_mem = ModbusPLC->ReadHoldingRegisters(startAddress, quantity);
-
 				 //currentData->recieve_data(currentData->share_mem);
 
 			 }
@@ -361,7 +361,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 				 f_label_trubo_percent->Text = currentData->share_mem[1].ToString();
 				 progressBar_Turbopump->Value = currentData->share_mem[1];
 
-				 f_label_temp_status_deg->Text = currentData->DiscreteToInt(currentData->share_mem[4]).ToString() + "° C";
+				 f_label_temp_status_deg->Text = currentData->DiscreteToDegrees(currentData->share_mem[4]).ToString() + "° C";
 
 				 f_textbox_termo_voltage_V->Text = currentData->share_mem[6].ToString();
 				 f_textbox_termo_current_ma->Text = currentData->share_mem[7].ToString();
@@ -393,15 +393,67 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 
 		 }
 
-		 void process_R_quants() {
+		 void vacuum_start() {
 
-			 if ((currentData->r_quants & currentData->masckon[1]) != 0) { // Если vacuum_start запущен
+			 if ((currentData->r_quants & currentData->masckon[1]) != 0) {
 
+				 f_label_backpump_status->ForeColor = System::Drawing::Color::SeaGreen;
 				 f_label_backpump_status->Text = "ON";
+
+				 if  (currentData->STime_start_vacuum==0) 
+				 {
+					 currentData->STime_start_vacuum = currentData->work_time;
+				 }
+					 currentData->STime_start_vacuum = currentData->work_time - currentData->STime_start_vacuum;
+
+					 f_label_timer_start_start_pump->Text = currentData->STime_start_vacuum.ToString();
+					 f_label_timer_current_start_pump->Text = currentData->STime_start_vacuum.ToString();
 
 			 }
 
 		 }
+
+		 void vacuum_stop () {
+
+
+
+		 }
+
+		 void heating() {
+
+			 if ((currentData->r_quants & currentData->masckon[10]) == 0) {
+
+					 f_button_on_off_heat->Text = "Включить нагрев";
+					 f_button_on_off_heat->ForeColor = System::Drawing::Color::Crimson;
+
+				 }
+
+			if ((currentData->r_quants & currentData->masckon[10]) != 0) {
+				 
+	
+					 f_button_on_off_heat->Text = "Отключить нагрев";
+					 f_button_on_off_heat->ForeColor = System::Drawing::Color::Navy;
+				 }
+
+		 }
+
+		 void process_R_quants() {
+
+			 currentData->r_quants = currentData->share_mem[0];
+			// if ((currentData->r_quants & currentData->masckon[1]) != 0) { // Если vacuum_start запущен
+
+			//	 f_label_backpump_status->Text = "ON";
+
+			// }
+
+			 vacuum_start();
+			 vacuum_stop(); 
+			 heating();
+		 }
+
+		
+
+
 
 
 		//DateTime^ date1 = gcnew DateTime(0);
@@ -411,7 +463,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			currentData->work_time = 0;
 
 			Work_Timer->Enabled = true;
-			Work_Timer->Interval = 1000;
+			Work_Timer->Interval = 500;
 
 		}
 
@@ -3038,24 +3090,8 @@ private: System::Void MainForm_FormClosed(System::Object^ sender, System::Window
 
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	if (f_button_on_off_heat->Text == "Отключить нагрев") {
+	currentData->command = currentData->nagrev;
 
-		f_button_on_off_heat->Text = "Включить нагрев";
-		f_button_on_off_heat->ForeColor = System::Drawing::Color::Crimson;
-
-		currentData->command = currentData->nagrev;
-	}
-	
-	else if (f_button_on_off_heat->Text == "Включить нагрев") {
-
-		currentData->command = currentData->nagrev;
-
-		f_button_on_off_heat->Text = "Отключить нагрев";
-		f_button_on_off_heat->ForeColor = System::Drawing::Color::Navy;
-	}
-
-	
-	
 
 }
 private: System::Void f_button_connect_to_PLC_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -3079,35 +3115,52 @@ private: System::Void f_button_connect_to_PLC_Click(System::Object^ sender, Syst
 }
 private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-	data_label->ForeColor = System::Drawing::Color::SeaGreen;
+	if (currentData->tick%2!=0) {							//Читаем, если тик нечетный
 
-	data_label->Text = "Старт "+ currentData->work_time.ToString()+" с.";
+		data_label->ForeColor = System::Drawing::Color::SeaGreen;
 
-	currentData->work_time++;
+		currentData->date_to_array();
 
-	currentData->date_to_array();
+		Read_PLC_data();
 
-	Write_command(currentData->command);
+		update_values();
 
-	Write_PLC_data();
+		PLC_connecting_status();
 
-	Read_PLC_data();
+		process_R_quants();
 
-	update_values();
+	}
 
-	PLC_connecting_status();
+	else if (currentData->tick % 2 == 0) {						//Отправляем, если тик четный
 
-	process_R_quants();
+		Write_command(currentData->command);
+
+		Write_PLC_data();
+
+		currentData->command = 0;
+
+	}
+
 
 	if (modbusform->form_open) {
 
-		modbusform->modbusform_open (currentData->main_connecting_status, currentData->share_mem);
+		modbusform->modbusform_open(currentData->main_connecting_status, currentData->share_mem);
 	}
 
-	currentData->command = 0;
+	currentData->tick++;
 
-}
 
+	if (currentData->tick % 2 != 0)								//Обработка отображения времени
+
+		{
+
+			currentData->work_time++;
+			data_label->Text = "Старт " + currentData->work_time.ToString() + " с.";
+
+		}
+
+
+	}
 
 private: System::Void label36_Click(System::Object^ sender, System::EventArgs^ e) {
 }
@@ -3365,14 +3418,21 @@ private: System::Void f_button_auto_start_flap_Click(System::Object^ sender, Sys
 	if (f_button_auto_start_flap->Text=="Начать") {
 
 		set_flap_auto_time = Convert::ToInt32(f_textBox_set_time_flap->Text);
+
 		flap_progress = 100/set_flap_auto_time;
+
 		flap_open = true;
+
 		Flap_auto_timer->Enabled = true;
-		Flap_auto_timer->Interval = 1000;
+
+		Flap_auto_timer->Interval = 500;
+
 		test_b->Visible = true;
+
 		f_button_auto_start_flap->Text = "Стоп";
 
 		UVN_picturebox_open->Visible = true;
+
 		UVN_picturebox_close->Visible = false;
 	} 
 
@@ -3398,8 +3458,6 @@ private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::Event
 		f_label_flap_status->Text = "Открыта";
 
 		flap_open = true;
-
-	
 
 		flap_auto_time++;
 
@@ -3574,7 +3632,10 @@ private: System::Void f_button_set_TPlB_m_Click(System::Object^ sender, System::
 private: System::Void pid_toolset_Click(System::Object^ sender, System::EventArgs^ e) {
 
 	pidform->Show();
+
 }
+
+
 private: System::Void MainForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
 
 
