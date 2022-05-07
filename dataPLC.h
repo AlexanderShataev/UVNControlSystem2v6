@@ -132,16 +132,18 @@ namespace UVNControlSystem2v6 {
 			LTime_vacuum = 0,
 			LTime_stop_vacuum = 0,
 			LTime_gases = 0,
-			LTime_TPlB = 0,
-	
-			DataTime_start_vacuum = 0,
-			DataTime_vacuum = 0,
-			DataTime_stop_vacuum = 0,
-			DataTime_gases = 0,
-			DataTime_TPlB = 0;
+			LTime_TPlB = 0;
 
-			
-		
+
+		bool gasesOnOff = false;
+
+
+		String^ DataTime_start_vacuum;
+		String^ DataTime_vacuum;
+		String^ DataTime_stop_vacuum;
+		String^ DataTime_gases;
+		String^ DataTime_TPlB;
+
 
 		//	Переменные (величины) передаваемые на PLC
 		//-------------------------------------
@@ -213,6 +215,15 @@ int DiscreteToDegrees(int Discrete) {				//Перевод дискрет в градусы
 	return DtoT_A * Discrete * Discrete + DtoT_B * Discrete + DtoT_C;
 
 }
+
+int mBarToDiscrete(int mBar) {						//Перевод давления мбар в дискреты АЦП 
+
+}
+
+int DiscreteTomBar(int Discrete) {					//Перевод дискрет АЦП в давление мбар
+
+}
+
 //--------------------------------------
 
 
@@ -225,8 +236,8 @@ void date_to_array() {
 	data[0] = 20;
 	data[1] = command;								// cmd_word
 	data[2] = work_time;
-	data[3] = set_PSV1;							//au_PSV1 в дискретах
-	data[4] = set_PSV2;							//au_PSV2 в дискретах
+	data[3] = set_PSV1;								//au_PSV1 в дискретах
+	data[4] = set_PSV2;								//au_PSV2 в дискретах
 	data[5] = set_BV;								//позиция BV (клапан-бабочка)
 	data[6] = set_TPlB_I;							//au_TPlB_Iset
 	data[7] = set_TPlB_U;							//au_TPlB_Uset
