@@ -443,6 +443,7 @@ namespace UVNControlSystem2v6 {
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->groupbox_holding_registers);
 			this->Controls->Add(this->groupBox_modbus_settool);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"ModbusForm";
 			this->Text = L"Настройка Modbus";

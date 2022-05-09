@@ -13,6 +13,11 @@ namespace UVNControlSystem2v6 {
 	using namespace System::Windows::Forms;
 	using namespace System::Drawing;
 	using namespace EasyModbus;
+	using namespace System::Globalization;
+	using namespace Microsoft::Office::Interop::Excel;
+
+
+
 
 
 	/// <summary>
@@ -45,6 +50,17 @@ namespace UVNControlSystem2v6 {
 
 		PIDForm^ pidform = gcnew PIDForm();
 
+		//Обработка данных в файле Excel
+
+		Microsoft::Office::Interop::Excel::Application^ XL = gcnew Microsoft::Office::Interop::Excel::ApplicationClass();
+
+		/*
+		
+		PrA->Range["A1", umolch]->Value2 = "test1"; // Записывает в ячейку A1 слово "test1" 
+	PrA->Range["В1", umolch]->Value2 = 1; // Записывает в ячейку A1 цифру 1
+		
+		*/
+
 
 		//TPlB
 		bool magnentron_mode=false;
@@ -52,6 +68,7 @@ namespace UVNControlSystem2v6 {
 
 
 		// auto mode flap
+		bool flap_auto_mode;	// лог. 1 - включен автоматический мод, 0 -- ручной мод
 		int flap_auto_time = 0; // так таймера автоматического режима открытия/закрытия заслонки
 		int set_flap_auto_time;
 		double flap_progress = 0;
@@ -138,9 +155,12 @@ namespace UVNControlSystem2v6 {
 
 
 	private: System::Windows::Forms::PictureBox^ UVN_picturebox_close;
-private: System::Windows::Forms::ProgressBar^ progressBar_Turbopump;
-private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
-private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
+	private: System::Windows::Forms::ProgressBar^ progressBar_Turbopump;
+	private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
+	private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
+	private: System::Windows::Forms::PictureBox^ picture_heating_on;
+
+
 
 	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_mV;
 	public:
@@ -190,6 +210,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 				hide_log_form();
 				heat_toolset->Enabled = true;
 				network_toolset->Enabled = true;
+				status_block_form = false;
 
 			}
 
@@ -215,6 +236,8 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 				f_label_system_status->Text = "user: student";
 				MainForm_unblock();
 				hide_log_form();
+				status_block_form = false;
+
 
 			}
 
@@ -247,6 +270,8 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 		 //_____________________________________
 		 //2. Обрабатываем соединение с ПЛК
 
+		 //2.1 ЗАПИСЬ ДАННЫХ В PLC
+		 //------------------------------------------------------------------------------------------
 		 void Write_PLC_data() {
 
 
@@ -255,7 +280,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 				 for (int i = 0; i <= 11; i++) {
 
 					 ModbusPLC->WriteSingleRegister(i+20, currentData->data[i]);
-
+					
 				 }
 			 }
 			 
@@ -267,18 +292,23 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 
 
 		 }
+		 //------------------------------------------------------------------------------------------
 
 
+		 //2.2 Передача cmd в PLC
+		 //------------------------------------------------------------------------------------------	
 		 void Write_command(int command) {
 
 			 currentData->data[1] = command;
 
 		 }
+		 //------------------------------------------------------------------------------------------	
 
-
+		 //2.3 Обновление статуса подключение с PLC
+		 //------------------------------------------------------------------------------------------	
 		 void PLC_connecting_status() {
 
-			 if (ModbusPLC->Connected) {
+			 if (ModbusPLC->Connected) {						//Если соединение с PLC есть
 
 				 f_button_connect_to_PLC->Enabled = false;
 				 picture_connection->Visible = true;
@@ -291,35 +321,33 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 
 			 }
 
-			 else if (!ModbusPLC->Connected) {
+			 else if (!ModbusPLC->Connected) {					//Если соединения с PLC нет
 
 				 i_button_connect_to_PLC->Text = "Нет соединения с PLC";
 				 i_button_connect_to_PLC->ForeColor = System::Drawing::Color::Crimson;
 				 f_button_connect_to_PLC->Enabled = true;
 				 picture_connection->Visible = false;
 				 picture_not_connection->Visible = true;
-				// f_label_status->Text = "Not connected";
-				// groupbox_holding_registers->Enabled = false;
 				 currentData->main_connecting_status = false;
 
 
 			 }
 		 }
+		 //------------------------------------------------------------------------------------------	
 
 
-
-
+		 //2.4 Соединение с PLC
+		 //------------------------------------------------------------------------------------------
 		 void PLC_connect() {
 
 			 try {
 
-				 ModbusPLC->IPAddress = "127.0.0.1";
-				 ModbusPLC->Port = 502;
+				 ModbusPLC->IPAddress = "127.0.0.1";	//IP-адрес заданный
+				 ModbusPLC->Port = 502;					//Port
 				 ModbusPLC->Connect();
 				 currentData->process_quants();
 
 				 if (ModbusPLC->Connected) {
-
 					 MainForm_unblock();
 					 start_timer();
 				 }
@@ -328,26 +356,32 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			 catch (System::Exception^) {
 
 				 PLC_disconnect();
-				 int a; // удалить
 				 MessageBox::Show("Не удалось установить соединение с PLC", "UVN Control System 2.0 - Error connecting", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 				 
 			 }
 		 }
+		 //------------------------------------------------------------------------------------------
 
 
-
+		 //2.5 Отсоединение от PLC
+		 //------------------------------------------------------------------------------------------
 		 void PLC_disconnect() {
 
 			 ModbusPLC->Disconnect();
-			 stop_timer();
+		
 			 
 			 if (!ModbusPLC->Connected) {
+
+				 stop_timer();
 
 				 currentData->main_connecting_status = false;
 			 }
 			 
 		 }
+		 //------------------------------------------------------------------------------------------
 
+		 //2.6 Чтение массива ShareMem[] от PLC
+		 //------------------------------------------------------------------------------------------
 		 void Read_PLC_data () {
 
 
@@ -370,45 +404,104 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			 }
 
 		 }
+		 //------------------------------------------------------------------------------------------
 
-		 void update_values() {
+
+		 //2.7 Обновление данных на экране: температуры, давления, значения источников тока, напряжения и т.д.
+		 //------------------------------------------------------------------------------------------
+		 void update_values() {							
 
 			 try {
 
-				 f_label_trubo_percent->Text = currentData->share_mem[1].ToString();
-				 progressBar_Turbopump->Value = currentData->share_mem[1];
+				 currentData->ShareMemToLocal();									//Массив передаем в переменные
+
+				 //Обновляем значения оборотов ТМН
+				 f_label_trubo_percent->Text = currentData->B_ac_TIC.ToString();
+				 progressBar_Turbopump->Value = currentData->B_ac_TIC;
+
+				 //Если обороты больше 0% -- принимаем, что он включен
 				 if (currentData->share_mem[1] > 0) {
+
 					 i_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
 					 f_label_turbopump_status->Text = "ON";
 					 f_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
-				 } 
+				 }
 				 else {
+
 					 i_label_turbopump_status->ForeColor = System::Drawing::Color::Crimson;
 					 f_label_turbopump_status->Text = "OFF";
 					 f_label_turbopump_status->ForeColor = System::Drawing::Color::Crimson;
 				 }
 
-				 f_label_temp_status_deg->Text = currentData->DiscreteToDegrees(currentData->share_mem[4]).ToString() + "° C";
+				 //Обновляем значение температуры
+				 f_label_temp_status_deg->Text = currentData->DiscreteToDegrees(currentData->ac_Tact).ToString() + "° C";
 
-				 f_textbox_termo_voltage_V->Text = currentData->share_mem[6].ToString();
-				 f_textbox_termo_current_ma->Text = currentData->share_mem[7].ToString();
+				 //Обновляем значения фактических напряжения и силы тока TPlB
+				 f_textbox_termo_voltage_V->Text = currentData->ac_TPlB_Uact.ToString();
+				 f_textbox_termo_current_ma->Text = currentData->ac_TPlB_Iact.ToString();
 
-				 f_textbox_magnetron_voltage_V->Text = currentData->share_mem[6].ToString();
-				 f_textbox_magnetron_current_ma->Text = currentData->share_mem[7].ToString();
+				 f_textbox_magnetron_voltage_V->Text = currentData->ac_TPlB_Uact.ToString();
+				 f_textbox_magnetron_current_ma->Text = currentData->ac_TPlB_Iact.ToString();
 
+				 //Обновляем значения положения клапана-бабочки
+				 if (i_label_set_butterfly->Text == "Задать положение 0-10000 мВ") {
 
-				 if (i_label_set_butterfly->Text == "Задать положение 0-1000 мВ") {
-
-					 f_label_batterfly_status->Text = currentData->share_mem[16].ToString() + " мВ";
+					 f_label_batterfly_status->Text = currentData->act_BV_position.ToString() + " мВ";
 
 				 }
 
 				 else if (i_label_set_butterfly->Text == "Задать положение 0-100%") {
 
-					 f_label_batterfly_status->Text = (currentData->share_mem[16] / 100).ToString() + "%";
+					 f_label_batterfly_status->Text = (currentData->act_BV_position / 100).ToString() + "%";
 
 				 }
 
+				 //Отображения значения APG и WRG
+				 f_label_APG_status->Text = currentData->showAPG();
+
+				 f_label_WRG_status->Text = currentData->showWRG();
+
+				 //Отображения значения уст. PSV1 и PSV2
+				 f_label_PSV1_status_mV->Text = currentData->au_PSV1.ToString();
+
+				 f_label_PSV2_status_mV->Text = currentData->au_PSV2.ToString();
+
+				 //Отображения положения заслонки подложки
+				 if (!flap_auto_mode) {
+
+				 if (currentData->rg_dc & currentData->masckon[0] != 0) {
+
+						 if (!status_block_form) {
+
+							 UVN_picturebox_open->Visible = true;
+						 }
+
+						 f_button_manual_open_flap->Enabled = false;
+						 f_button_manual_close_flap->Enabled = true;
+						 //UVN_picturebox_close->Visible = false;
+						 f_label_flap_status->Text = "Открыта";
+						 flap_open = true;
+
+					 }
+
+					 else if ((currentData->rg_dc & currentData->masckon[0]) == 0) {
+
+						 if (!status_block_form) {
+
+							 UVN_picturebox_open->Visible = false;
+						 }
+
+						 f_button_manual_open_flap->Enabled = true;
+						 f_button_manual_close_flap->Enabled = false;
+						 UVN_picturebox_open->Visible = false;
+						 //UVN_picturebox_close->Visible = true;
+						 flap_open = false;
+
+						 f_label_flap_status->Text = "Закрыта";
+
+					 }
+
+				 }	
 
 			 }
 
@@ -419,7 +512,8 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			 }
 
 		 }
-		 //-------------------------------Обработка R_quants -- Слово состояние----------------------------------------
+
+		 //2.8-------------------------------Обработка R_quants -- Слово состояние----------------------------------------
 		 // 
 		 //					
 		 //-------------------------------------------------------------------------------------------------------------
@@ -482,9 +576,6 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 		 // 
 		 //-------------------------------------------------------------------------------------------------------------
 	   	 // 2. vacuum - 2 bit
-		 //
-		 // 
-		 //
 		 void vacuum() {
 
 			 if ((currentData->r_quants & currentData->masckon[2]) != 0) {
@@ -770,12 +861,16 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 
 					 f_button_on_off_heat->Text = "Включить нагрев";
 					 f_button_on_off_heat->ForeColor = System::Drawing::Color::Crimson;
-
+					 picture_heating_on->Visible = false;
+					 f_label_temp_status_deg->ForeColor = System::Drawing::Color::DarkSlateBlue;
+					 i_label_temp_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
 				 }
 
 			if ((currentData->r_quants & currentData->masckon[10]) != 0) {
-				 
-	
+					
+					f_label_temp_status_deg->ForeColor = System::Drawing::Color::Crimson;
+					i_label_temp_status->ForeColor = System::Drawing::Color::Crimson;
+					 picture_heating_on->Visible = true;
 					 f_button_on_off_heat->Text = "Отключить нагрев";
 					 f_button_on_off_heat->ForeColor = System::Drawing::Color::Navy;
 				 }
@@ -938,6 +1033,7 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 			f_button_connect_to_PLC->Enabled = true;
 			i_button_connect_to_PLC->Text = "Нет соединения с PLC";
 			i_button_connect_to_PLC->ForeColor = System::Drawing::Color::Crimson;
+
 		}
 
 
@@ -1000,7 +1096,8 @@ private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 	private: System::Windows::Forms::Label^ i_label_backpump_status;
 	private: System::Windows::Forms::GroupBox^ groupBox3;
 	private: System::Windows::Forms::Label^ f_label_temp_status_deg;
-	private: System::Windows::Forms::Label^ label11;
+private: System::Windows::Forms::Label^ i_label_temp_status;
+
 	private: System::Windows::Forms::Button^ f_button_set_temp;
 	private: System::Windows::Forms::TextBox^ f_textbox_set_temp;
 	private: System::Windows::Forms::Label^ label14;
@@ -1203,7 +1300,8 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_button_on_off_heat = (gcnew System::Windows::Forms::Button());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->f_label_temp_status_deg = (gcnew System::Windows::Forms::Label());
-			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->i_label_temp_status = (gcnew System::Windows::Forms::Label());
+			this->picture_heating_on = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->label20 = (gcnew System::Windows::Forms::Label());
 			this->label18 = (gcnew System::Windows::Forms::Label());
@@ -1261,6 +1359,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->subgroupBox_mode->SuspendLayout();
 			this->right_down_panel->SuspendLayout();
 			this->groupBox3->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_heating_on))->BeginInit();
 			this->groupBox2->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->panel6->SuspendLayout();
@@ -1278,7 +1377,6 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			// menuStrip1
 			// 
 			this->menuStrip1->BackColor = System::Drawing::Color::White;
-			this->menuStrip1->GripMargin = System::Windows::Forms::Padding(2, 2, 0, 2);
 			this->menuStrip1->ImageScalingSize = System::Drawing::Size(32, 32);
 			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
 				this->управлениеПроцессомToolStripMenuItem,
@@ -1286,7 +1384,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1004, 48);
+			this->menuStrip1->Size = System::Drawing::Size(1004, 24);
 			this->menuStrip1->TabIndex = 6;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -1297,20 +1395,20 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 					this->автоматическийРежимToolStripMenuItem
 			});
 			this->управлениеПроцессомToolStripMenuItem->Name = L"управлениеПроцессомToolStripMenuItem";
-			this->управлениеПроцессомToolStripMenuItem->Size = System::Drawing::Size(298, 44);
+			this->управлениеПроцессомToolStripMenuItem->Size = System::Drawing::Size(150, 20);
 			this->управлениеПроцессомToolStripMenuItem->Text = L"Управление процессом";
 			// 
 			// автоматизированныйРежимToolStripMenuItem
 			// 
 			this->автоматизированныйРежимToolStripMenuItem->Enabled = false;
 			this->автоматизированныйРежимToolStripMenuItem->Name = L"автоматизированныйРежимToolStripMenuItem";
-			this->автоматизированныйРежимToolStripMenuItem->Size = System::Drawing::Size(474, 44);
+			this->автоматизированныйРежимToolStripMenuItem->Size = System::Drawing::Size(236, 22);
 			this->автоматизированныйРежимToolStripMenuItem->Text = L"Автоматизированный режим";
 			// 
 			// автоматическийРежимToolStripMenuItem
 			// 
 			this->автоматическийРежимToolStripMenuItem->Name = L"автоматическийРежимToolStripMenuItem";
-			this->автоматическийРежимToolStripMenuItem->Size = System::Drawing::Size(474, 44);
+			this->автоматическийРежимToolStripMenuItem->Size = System::Drawing::Size(236, 22);
 			this->автоматическийРежимToolStripMenuItem->Text = L"Автоматический режим";
 			// 
 			// heat_toolset
@@ -1320,26 +1418,26 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 					this->pid_toolset, this->настройкаШИМToolStripMenuItem
 			});
 			this->heat_toolset->Name = L"heat_toolset";
-			this->heat_toolset->Size = System::Drawing::Size(245, 44);
+			this->heat_toolset->Size = System::Drawing::Size(124, 20);
 			this->heat_toolset->Text = L"Настройка нагрева";
 			// 
 			// выборРегулятораToolStripMenuItem
 			// 
 			this->выборРегулятораToolStripMenuItem->Name = L"выборРегулятораToolStripMenuItem";
-			this->выборРегулятораToolStripMenuItem->Size = System::Drawing::Size(352, 44);
+			this->выборРегулятораToolStripMenuItem->Size = System::Drawing::Size(176, 22);
 			this->выборРегулятораToolStripMenuItem->Text = L"Выбор регулятора";
 			// 
 			// pid_toolset
 			// 
 			this->pid_toolset->Name = L"pid_toolset";
-			this->pid_toolset->Size = System::Drawing::Size(352, 44);
+			this->pid_toolset->Size = System::Drawing::Size(176, 22);
 			this->pid_toolset->Text = L"Настройка ПИД";
 			this->pid_toolset->Click += gcnew System::EventHandler(this, &MainForm::pid_toolset_Click);
 			// 
 			// настройкаШИМToolStripMenuItem
 			// 
 			this->настройкаШИМToolStripMenuItem->Name = L"настройкаШИМToolStripMenuItem";
-			this->настройкаШИМToolStripMenuItem->Size = System::Drawing::Size(352, 44);
+			this->настройкаШИМToolStripMenuItem->Size = System::Drawing::Size(176, 22);
 			this->настройкаШИМToolStripMenuItem->Text = L"Настройка ШИМ";
 			// 
 			// network_and_accs
@@ -1349,13 +1447,13 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 					this->учетнаяЗаписьToolStripMenuItem
 			});
 			this->network_and_accs->Name = L"network_and_accs";
-			this->network_and_accs->Size = System::Drawing::Size(113, 44);
+			this->network_and_accs->Size = System::Drawing::Size(58, 20);
 			this->network_and_accs->Text = L"Доступ";
 			// 
 			// network_toolset
 			// 
 			this->network_toolset->Name = L"network_toolset";
-			this->network_toolset->Size = System::Drawing::Size(322, 44);
+			this->network_toolset->Size = System::Drawing::Size(159, 22);
 			this->network_toolset->Text = L"Сетевой доступ";
 			this->network_toolset->Click += gcnew System::EventHandler(this, &MainForm::network_toolset_Click);
 			// 
@@ -1366,35 +1464,35 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 					this->strip_student_user, this->демоверсияToolStripMenuItem
 			});
 			this->учетнаяЗаписьToolStripMenuItem->Name = L"учетнаяЗаписьToolStripMenuItem";
-			this->учетнаяЗаписьToolStripMenuItem->Size = System::Drawing::Size(322, 44);
+			this->учетнаяЗаписьToolStripMenuItem->Size = System::Drawing::Size(159, 22);
 			this->учетнаяЗаписьToolStripMenuItem->Text = L"Учетная запись";
 			// 
 			// strip_admin_user
 			// 
 			this->strip_admin_user->Enabled = false;
 			this->strip_admin_user->Name = L"strip_admin_user";
-			this->strip_admin_user->Size = System::Drawing::Size(297, 44);
+			this->strip_admin_user->Size = System::Drawing::Size(147, 22);
 			this->strip_admin_user->Text = L"Admin";
 			this->strip_admin_user->Click += gcnew System::EventHandler(this, &MainForm::strip_admin_user_Click);
 			// 
 			// strip_student_user
 			// 
 			this->strip_student_user->Name = L"strip_student_user";
-			this->strip_student_user->Size = System::Drawing::Size(297, 44);
+			this->strip_student_user->Size = System::Drawing::Size(147, 22);
 			this->strip_student_user->Text = L"Student";
 			this->strip_student_user->Click += gcnew System::EventHandler(this, &MainForm::studentToolStripMenuItem_Click);
 			// 
 			// демоверсияToolStripMenuItem
 			// 
 			this->демоверсияToolStripMenuItem->Name = L"демоверсияToolStripMenuItem";
-			this->демоверсияToolStripMenuItem->Size = System::Drawing::Size(297, 44);
+			this->демоверсияToolStripMenuItem->Size = System::Drawing::Size(147, 22);
 			this->демоверсияToolStripMenuItem->Text = L"Демо-версия";
 			// 
 			// настройкиОтображенияToolStripMenuItem
 			// 
 			this->настройкиОтображенияToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->клапанБабочкаToolStripMenuItem });
 			this->настройкиОтображенияToolStripMenuItem->Name = L"настройкиОтображенияToolStripMenuItem";
-			this->настройкиОтображенияToolStripMenuItem->Size = System::Drawing::Size(309, 44);
+			this->настройкиОтображенияToolStripMenuItem->Size = System::Drawing::Size(156, 20);
 			this->настройкиОтображенияToolStripMenuItem->Text = L"Настройки отображения";
 			// 
 			// клапанБабочкаToolStripMenuItem
@@ -1404,21 +1502,21 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 					this->menu_strip_butterfly_mV
 			});
 			this->клапанБабочкаToolStripMenuItem->Name = L"клапанБабочкаToolStripMenuItem";
-			this->клапанБабочкаToolStripMenuItem->Size = System::Drawing::Size(327, 44);
+			this->клапанБабочкаToolStripMenuItem->Size = System::Drawing::Size(163, 22);
 			this->клапанБабочкаToolStripMenuItem->Text = L"Клапан бабочка";
 			// 
 			// menu_strip_butterfly_percent
 			// 
 			this->menu_strip_butterfly_percent->Enabled = false;
 			this->menu_strip_butterfly_percent->Name = L"menu_strip_butterfly_percent";
-			this->menu_strip_butterfly_percent->Size = System::Drawing::Size(428, 44);
+			this->menu_strip_butterfly_percent->Size = System::Drawing::Size(210, 22);
 			this->menu_strip_butterfly_percent->Text = L"Проценты, 0-100%";
 			this->menu_strip_butterfly_percent->Click += gcnew System::EventHandler(this, &MainForm::menu_strip_butterfly_percent_Click);
 			// 
 			// menu_strip_butterfly_mV
 			// 
 			this->menu_strip_butterfly_mV->Name = L"menu_strip_butterfly_mV";
-			this->menu_strip_butterfly_mV->Size = System::Drawing::Size(428, 44);
+			this->menu_strip_butterfly_mV->Size = System::Drawing::Size(210, 22);
 			this->menu_strip_butterfly_mV->Text = L"Напряжение, 0-10000 мВ";
 			this->menu_strip_butterfly_mV->Click += gcnew System::EventHandler(this, &MainForm::menu_strip_butterfly_mV_Click);
 			// 
@@ -1430,9 +1528,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->left_panel->Controls->Add(this->groupbox_butterfly);
 			this->left_panel->Controls->Add(this->groupBox_time);
 			this->left_panel->Dock = System::Windows::Forms::DockStyle::Left;
-			this->left_panel->Location = System::Drawing::Point(0, 48);
+			this->left_panel->Location = System::Drawing::Point(0, 24);
 			this->left_panel->Name = L"left_panel";
-			this->left_panel->Size = System::Drawing::Size(317, 681);
+			this->left_panel->Size = System::Drawing::Size(317, 705);
 			this->left_panel->TabIndex = 7;
 			// 
 			// groupBox6
@@ -1482,10 +1580,10 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->tabPage1->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->tabPage1->ForeColor = System::Drawing::SystemColors::ActiveCaptionText;
-			this->tabPage1->Location = System::Drawing::Point(8, 46);
+			this->tabPage1->Location = System::Drawing::Point(4, 24);
 			this->tabPage1->Name = L"tabPage1";
 			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage1->Size = System::Drawing::Size(276, 258);
+			this->tabPage1->Size = System::Drawing::Size(284, 284);
 			this->tabPage1->TabIndex = 0;
 			this->tabPage1->Text = L"Ручной режим";
 			this->tabPage1->UseVisualStyleBackColor = true;
@@ -1546,7 +1644,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_PSV1_status_mV->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_PSV1_status_mV->Location = System::Drawing::Point(134, 4);
 			this->f_label_PSV1_status_mV->Name = L"f_label_PSV1_status_mV";
-			this->f_label_PSV1_status_mV->Size = System::Drawing::Size(106, 51);
+			this->f_label_PSV1_status_mV->Size = System::Drawing::Size(56, 26);
 			this->f_label_PSV1_status_mV->TabIndex = 34;
 			this->f_label_PSV1_status_mV->Text = L"1200";
 			// 
@@ -1575,7 +1673,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label8->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label8->Location = System::Drawing::Point(73, 180);
 			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(294, 46);
+			this->label8->Size = System::Drawing::Size(148, 23);
 			this->label8->TabIndex = 38;
 			this->label8->Text = L"Напуск газа PSV2";
 			// 
@@ -1587,7 +1685,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label7->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label7->Location = System::Drawing::Point(62, 4);
 			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(128, 51);
+			this->label7->Size = System::Drawing::Size(66, 26);
 			this->label7->TabIndex = 33;
 			this->label7->Text = L"PSV 1 ";
 			// 
@@ -1614,7 +1712,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label9->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label9->Location = System::Drawing::Point(192, 137);
 			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(73, 51);
+			this->label9->Size = System::Drawing::Size(37, 26);
 			this->label9->TabIndex = 36;
 			this->label9->Text = L"мВ";
 			// 
@@ -1626,7 +1724,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label5->ForeColor = System::Drawing::Color::Black;
 			this->label5->Location = System::Drawing::Point(105, 30);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(156, 37);
+			this->label5->Size = System::Drawing::Size(78, 18);
 			this->label5->TabIndex = 35;
 			this->label5->Text = L"(сигнал au)";
 			// 
@@ -1638,7 +1736,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label12->ForeColor = System::Drawing::Color::Black;
 			this->label12->Location = System::Drawing::Point(105, 160);
 			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(156, 37);
+			this->label12->Size = System::Drawing::Size(78, 18);
 			this->label12->TabIndex = 35;
 			this->label12->Text = L"(сигнал au)";
 			// 
@@ -1650,7 +1748,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label2->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label2->Location = System::Drawing::Point(192, 4);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(73, 51);
+			this->label2->Size = System::Drawing::Size(37, 26);
 			this->label2->TabIndex = 38;
 			this->label2->Text = L"мВ";
 			// 
@@ -1662,7 +1760,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_PSV2_status_mV->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_PSV2_status_mV->Location = System::Drawing::Point(134, 137);
 			this->f_label_PSV2_status_mV->Name = L"f_label_PSV2_status_mV";
-			this->f_label_PSV2_status_mV->Size = System::Drawing::Size(106, 51);
+			this->f_label_PSV2_status_mV->Size = System::Drawing::Size(56, 26);
 			this->f_label_PSV2_status_mV->TabIndex = 34;
 			this->f_label_PSV2_status_mV->Text = L"1200";
 			// 
@@ -1674,7 +1772,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label16->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->label16->Location = System::Drawing::Point(62, 137);
 			this->label16->Name = L"label16";
-			this->label16->Size = System::Drawing::Size(128, 51);
+			this->label16->Size = System::Drawing::Size(66, 26);
 			this->label16->TabIndex = 33;
 			this->label16->Text = L"PSV 2 ";
 			// 
@@ -1702,16 +1800,16 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label4->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label4->Location = System::Drawing::Point(73, 47);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(294, 46);
+			this->label4->Size = System::Drawing::Size(148, 23);
 			this->label4->TabIndex = 37;
 			this->label4->Text = L"Напуск газа PSV1";
 			// 
 			// tabPage2
 			// 
-			this->tabPage2->Location = System::Drawing::Point(8, 46);
+			this->tabPage2->Location = System::Drawing::Point(4, 24);
 			this->tabPage2->Name = L"tabPage2";
 			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage2->Size = System::Drawing::Size(276, 258);
+			this->tabPage2->Size = System::Drawing::Size(284, 284);
 			this->tabPage2->TabIndex = 1;
 			this->tabPage2->Text = L"Автоматический режим";
 			this->tabPage2->UseVisualStyleBackColor = true;
@@ -1723,7 +1821,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->left_down_panel->Controls->Add(this->pictureBox_recording);
 			this->left_down_panel->Controls->Add(this->i_label_name_recording);
 			this->left_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->left_down_panel->Location = System::Drawing::Point(0, 651);
+			this->left_down_panel->Location = System::Drawing::Point(0, 675);
 			this->left_down_panel->Name = L"left_down_panel";
 			this->left_down_panel->Size = System::Drawing::Size(317, 30);
 			this->left_down_panel->TabIndex = 21;
@@ -1736,7 +1834,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_recording->ForeColor = System::Drawing::Color::Crimson;
 			this->f_label_recording->Location = System::Drawing::Point(35, 5);
 			this->f_label_recording->Name = L"f_label_recording";
-			this->f_label_recording->Size = System::Drawing::Size(164, 37);
+			this->f_label_recording->Size = System::Drawing::Size(81, 18);
 			this->f_label_recording->TabIndex = 1;
 			this->f_label_recording->Text = L"RECORDING";
 			this->f_label_recording->Click += gcnew System::EventHandler(this, &MainForm::f_label_recording_Click);
@@ -1749,7 +1847,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_name_recording->ForeColor = System::Drawing::Color::Black;
 			this->f_label_name_recording->Location = System::Drawing::Point(231, 4);
 			this->f_label_name_recording->Name = L"f_label_name_recording";
-			this->f_label_name_recording->Size = System::Drawing::Size(152, 39);
+			this->f_label_name_recording->Size = System::Drawing::Size(76, 19);
 			this->f_label_name_recording->TabIndex = 3;
 			this->f_label_name_recording->Text = L"Hst121.txt";
 			// 
@@ -1772,7 +1870,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_name_recording->ForeColor = System::Drawing::Color::Black;
 			this->i_label_name_recording->Location = System::Drawing::Point(187, 4);
 			this->i_label_name_recording->Name = L"i_label_name_recording";
-			this->i_label_name_recording->Size = System::Drawing::Size(84, 39);
+			this->i_label_name_recording->Size = System::Drawing::Size(42, 19);
 			this->i_label_name_recording->TabIndex = 2;
 			this->i_label_name_recording->Text = L"Имя:";
 			// 
@@ -1804,7 +1902,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_set_butterfly->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->i_label_set_butterfly->Location = System::Drawing::Point(58, 71);
 			this->i_label_set_butterfly->Name = L"i_label_set_butterfly";
-			this->i_label_set_butterfly->Size = System::Drawing::Size(372, 39);
+			this->i_label_set_butterfly->Size = System::Drawing::Size(189, 19);
 			this->i_label_set_butterfly->TabIndex = 19;
 			this->i_label_set_butterfly->Text = L"Задать положение 0-100%";
 			// 
@@ -1814,11 +1912,11 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_button_set_butterfly->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->f_button_set_butterfly->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->f_button_set_butterfly->Location = System::Drawing::Point(77, 99);
+			this->f_button_set_butterfly->Location = System::Drawing::Point(74, 99);
 			this->f_button_set_butterfly->Name = L"f_button_set_butterfly";
-			this->f_button_set_butterfly->Size = System::Drawing::Size(208, 27);
+			this->f_button_set_butterfly->Size = System::Drawing::Size(214, 27);
 			this->f_button_set_butterfly->TabIndex = 18;
-			this->f_button_set_butterfly->Text = L" Установить";
+			this->f_button_set_butterfly->Text = L" Установить положение";
 			this->f_button_set_butterfly->UseVisualStyleBackColor = false;
 			this->f_button_set_butterfly->Click += gcnew System::EventHandler(this, &MainForm::f_button_set_butterfly_Click);
 			// 
@@ -1829,7 +1927,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_textbox_butterfly_pos->HideSelection = false;
 			this->f_textbox_butterfly_pos->Location = System::Drawing::Point(11, 99);
 			this->f_textbox_butterfly_pos->Name = L"f_textbox_butterfly_pos";
-			this->f_textbox_butterfly_pos->Size = System::Drawing::Size(57, 47);
+			this->f_textbox_butterfly_pos->Size = System::Drawing::Size(57, 27);
 			this->f_textbox_butterfly_pos->TabIndex = 17;
 			this->f_textbox_butterfly_pos->Text = L"100";
 			this->f_textbox_butterfly_pos->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -1840,9 +1938,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label40->Font = (gcnew System::Drawing::Font(L"Calibri", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label40->ForeColor = System::Drawing::Color::Black;
-			this->label40->Location = System::Drawing::Point(86, 51);
+			this->label40->Location = System::Drawing::Point(90, 53);
 			this->label40->Name = L"label40";
-			this->label40->Size = System::Drawing::Size(238, 33);
+			this->label40->Size = System::Drawing::Size(123, 17);
 			this->label40->TabIndex = 13;
 			this->label40->Text = L"(открытие клапана)";
 			// 
@@ -1852,9 +1950,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_batterfly_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_batterfly_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_batterfly_status->Location = System::Drawing::Point(177, 25);
+			this->f_label_batterfly_status->Location = System::Drawing::Point(171, 27);
 			this->f_label_batterfly_status->Name = L"f_label_batterfly_status";
-			this->f_label_batterfly_status->Size = System::Drawing::Size(115, 51);
+			this->f_label_batterfly_status->Size = System::Drawing::Size(60, 26);
 			this->f_label_batterfly_status->TabIndex = 12;
 			this->f_label_batterfly_status->Text = L"100%";
 			// 
@@ -1864,11 +1962,12 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label42->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label42->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label42->Location = System::Drawing::Point(65, 25);
+			this->label42->Location = System::Drawing::Point(64, 27);
 			this->label42->Name = L"label42";
-			this->label42->Size = System::Drawing::Size(228, 51);
+			this->label42->Size = System::Drawing::Size(114, 26);
 			this->label42->TabIndex = 11;
 			this->label42->Text = L"Положение";
+			this->label42->Click += gcnew System::EventHandler(this, &MainForm::label42_Click);
 			// 
 			// groupBox_time
 			// 
@@ -1911,7 +2010,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_time_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_time_stop_pump->Location = System::Drawing::Point(246, 137);
 			this->f_label_timer_time_stop_pump->Name = L"f_label_timer_time_stop_pump";
-			this->f_label_timer_time_stop_pump->Size = System::Drawing::Size(32, 46);
+			this->f_label_timer_time_stop_pump->Size = System::Drawing::Size(16, 23);
 			this->f_label_timer_time_stop_pump->TabIndex = 22;
 			this->f_label_timer_time_stop_pump->Text = L"-";
 			// 
@@ -1923,7 +2022,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_current_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_current_stop_pump->Location = System::Drawing::Point(197, 137);
 			this->f_label_timer_current_stop_pump->Name = L"f_label_timer_current_stop_pump";
-			this->f_label_timer_current_stop_pump->Size = System::Drawing::Size(32, 46);
+			this->f_label_timer_current_stop_pump->Size = System::Drawing::Size(16, 23);
 			this->f_label_timer_current_stop_pump->TabIndex = 21;
 			this->f_label_timer_current_stop_pump->Text = L"-";
 			// 
@@ -1935,7 +2034,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_start_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_start_stop_pump->Location = System::Drawing::Point(145, 137);
 			this->f_label_timer_start_stop_pump->Name = L"f_label_timer_start_stop_pump";
-			this->f_label_timer_start_stop_pump->Size = System::Drawing::Size(32, 46);
+			this->f_label_timer_start_stop_pump->Size = System::Drawing::Size(16, 23);
 			this->f_label_timer_start_stop_pump->TabIndex = 20;
 			this->f_label_timer_start_stop_pump->Text = L"-";
 			this->f_label_timer_start_stop_pump->Click += gcnew System::EventHandler(this, &MainForm::label36_Click);
@@ -1948,7 +2047,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_time_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_time_TPlB->Location = System::Drawing::Point(246, 110);
 			this->f_label_timer_time_TPlB->Name = L"f_label_timer_time_TPlB";
-			this->f_label_timer_time_TPlB->Size = System::Drawing::Size(106, 46);
+			this->f_label_timer_time_TPlB->Size = System::Drawing::Size(55, 23);
 			this->f_label_timer_time_TPlB->TabIndex = 19;
 			this->f_label_timer_time_TPlB->Text = L"13:01";
 			// 
@@ -1960,7 +2059,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_time_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_time_gases->Location = System::Drawing::Point(246, 83);
 			this->f_label_timer_time_gases->Name = L"f_label_timer_time_gases";
-			this->f_label_timer_time_gases->Size = System::Drawing::Size(106, 46);
+			this->f_label_timer_time_gases->Size = System::Drawing::Size(55, 23);
 			this->f_label_timer_time_gases->TabIndex = 18;
 			this->f_label_timer_time_gases->Text = L"13:00";
 			// 
@@ -1972,7 +2071,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_time_stop_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->i_label_time_stop_pump->Location = System::Drawing::Point(12, 137);
 			this->i_label_time_stop_pump->Name = L"i_label_time_stop_pump";
-			this->i_label_time_stop_pump->Size = System::Drawing::Size(241, 46);
+			this->i_label_time_stop_pump->Size = System::Drawing::Size(119, 23);
 			this->i_label_time_stop_pump->TabIndex = 17;
 			this->i_label_time_stop_pump->Text = L"Стоп откачки:";
 			// 
@@ -1984,7 +2083,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_current_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_current_TPlB->Location = System::Drawing::Point(197, 110);
 			this->f_label_timer_current_TPlB->Name = L"f_label_timer_current_TPlB";
-			this->f_label_timer_current_TPlB->Size = System::Drawing::Size(77, 46);
+			this->f_label_timer_current_TPlB->Size = System::Drawing::Size(40, 23);
 			this->f_label_timer_current_TPlB->TabIndex = 16;
 			this->f_label_timer_current_TPlB->Text = L"274";
 			// 
@@ -1996,7 +2095,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_start_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_start_TPlB->Location = System::Drawing::Point(145, 110);
 			this->f_label_timer_start_TPlB->Name = L"f_label_timer_start_TPlB";
-			this->f_label_timer_start_TPlB->Size = System::Drawing::Size(77, 46);
+			this->f_label_timer_start_TPlB->Size = System::Drawing::Size(40, 23);
 			this->f_label_timer_start_TPlB->TabIndex = 15;
 			this->f_label_timer_start_TPlB->Text = L"360";
 			// 
@@ -2008,7 +2107,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_timer_TPlB->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->i_label_timer_TPlB->Location = System::Drawing::Point(2, 110);
 			this->i_label_timer_TPlB->Name = L"i_label_timer_TPlB";
-			this->i_label_timer_TPlB->Size = System::Drawing::Size(261, 46);
+			this->i_label_timer_TPlB->Size = System::Drawing::Size(129, 23);
 			this->i_label_timer_TPlB->TabIndex = 14;
 			this->i_label_timer_TPlB->Text = L"Источник тока:";
 			// 
@@ -2020,7 +2119,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_current_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_current_gases->Location = System::Drawing::Point(197, 83);
 			this->f_label_timer_current_gases->Name = L"f_label_timer_current_gases";
-			this->f_label_timer_current_gases->Size = System::Drawing::Size(77, 46);
+			this->f_label_timer_current_gases->Size = System::Drawing::Size(40, 23);
 			this->f_label_timer_current_gases->TabIndex = 13;
 			this->f_label_timer_current_gases->Text = L"214";
 			// 
@@ -2032,7 +2131,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_start_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_start_gases->Location = System::Drawing::Point(145, 83);
 			this->f_label_timer_start_gases->Name = L"f_label_timer_start_gases";
-			this->f_label_timer_start_gases->Size = System::Drawing::Size(77, 46);
+			this->f_label_timer_start_gases->Size = System::Drawing::Size(40, 23);
 			this->f_label_timer_start_gases->TabIndex = 12;
 			this->f_label_timer_start_gases->Text = L"320";
 			// 
@@ -2044,7 +2143,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_timer_gases->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->i_label_timer_gases->Location = System::Drawing::Point(12, 83);
 			this->i_label_timer_gases->Name = L"i_label_timer_gases";
-			this->i_label_timer_gases->Size = System::Drawing::Size(237, 46);
+			this->i_label_timer_gases->Size = System::Drawing::Size(119, 23);
 			this->i_label_timer_gases->TabIndex = 11;
 			this->i_label_timer_gases->Text = L"Напуск газов:";
 			// 
@@ -2056,7 +2155,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_current_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_current_pump->Location = System::Drawing::Point(197, 55);
 			this->f_label_timer_current_pump->Name = L"f_label_timer_current_pump";
-			this->f_label_timer_current_pump->Size = System::Drawing::Size(77, 46);
+			this->f_label_timer_current_pump->Size = System::Drawing::Size(40, 23);
 			this->f_label_timer_current_pump->TabIndex = 10;
 			this->f_label_timer_current_pump->Text = L"234";
 			// 
@@ -2068,7 +2167,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_current_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_current_start_pump->Location = System::Drawing::Point(197, 27);
 			this->f_label_timer_current_start_pump->Name = L"f_label_timer_current_start_pump";
-			this->f_label_timer_current_start_pump->Size = System::Drawing::Size(39, 46);
+			this->f_label_timer_current_start_pump->Size = System::Drawing::Size(20, 23);
 			this->f_label_timer_current_start_pump->TabIndex = 9;
 			this->f_label_timer_current_start_pump->Text = L"0";
 			// 
@@ -2080,7 +2179,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_time_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_time_pump->Location = System::Drawing::Point(246, 55);
 			this->f_label_timer_time_pump->Name = L"f_label_timer_time_pump";
-			this->f_label_timer_time_pump->Size = System::Drawing::Size(106, 46);
+			this->f_label_timer_time_pump->Size = System::Drawing::Size(55, 23);
 			this->f_label_timer_time_pump->TabIndex = 8;
 			this->f_label_timer_time_pump->Text = L"12:59";
 			// 
@@ -2092,7 +2191,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_start_pump->Location = System::Drawing::Point(145, 55);
 			this->f_label_timer_start_pump->Name = L"f_label_timer_start_pump";
-			this->f_label_timer_start_pump->Size = System::Drawing::Size(77, 46);
+			this->f_label_timer_start_pump->Size = System::Drawing::Size(40, 23);
 			this->f_label_timer_start_pump->TabIndex = 7;
 			this->f_label_timer_start_pump->Text = L"300";
 			// 
@@ -2104,7 +2203,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_time_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->i_label_time_pump->Location = System::Drawing::Point(49, 55);
 			this->i_label_time_pump->Name = L"i_label_time_pump";
-			this->i_label_time_pump->Size = System::Drawing::Size(158, 46);
+			this->i_label_time_pump->Size = System::Drawing::Size(80, 23);
 			this->i_label_time_pump->TabIndex = 6;
 			this->i_label_time_pump->Text = L"Откачка:";
 			// 
@@ -2116,7 +2215,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_start_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_start_start_pump->Location = System::Drawing::Point(145, 27);
 			this->f_label_timer_start_start_pump->Name = L"f_label_timer_start_start_pump";
-			this->f_label_timer_start_start_pump->Size = System::Drawing::Size(39, 46);
+			this->f_label_timer_start_start_pump->Size = System::Drawing::Size(20, 23);
 			this->f_label_timer_start_start_pump->TabIndex = 5;
 			this->f_label_timer_start_start_pump->Text = L"0";
 			// 
@@ -2128,7 +2227,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_timer_time_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->f_label_timer_time_start_pump->Location = System::Drawing::Point(246, 27);
 			this->f_label_timer_time_start_pump->Name = L"f_label_timer_time_start_pump";
-			this->f_label_timer_time_start_pump->Size = System::Drawing::Size(106, 46);
+			this->f_label_timer_time_start_pump->Size = System::Drawing::Size(55, 23);
 			this->f_label_timer_time_start_pump->TabIndex = 4;
 			this->f_label_timer_time_start_pump->Text = L"12:52";
 			// 
@@ -2140,7 +2239,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_time_start_pump->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->i_label_time_start_pump->Location = System::Drawing::Point(2, 27);
 			this->i_label_time_start_pump->Name = L"i_label_time_start_pump";
-			this->i_label_time_start_pump->Size = System::Drawing::Size(254, 46);
+			this->i_label_time_start_pump->Size = System::Drawing::Size(125, 23);
 			this->i_label_time_start_pump->TabIndex = 3;
 			this->i_label_time_start_pump->Text = L"Старт откачки:";
 			// 
@@ -2184,10 +2283,10 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->tabpage_TPlB_Termo->Controls->Add(this->label54);
 			this->tabpage_TPlB_Termo->Controls->Add(this->label6);
 			this->tabpage_TPlB_Termo->Controls->Add(this->f_textbox_set_U_T);
-			this->tabpage_TPlB_Termo->Location = System::Drawing::Point(8, 46);
+			this->tabpage_TPlB_Termo->Location = System::Drawing::Point(4, 24);
 			this->tabpage_TPlB_Termo->Name = L"tabpage_TPlB_Termo";
 			this->tabpage_TPlB_Termo->Padding = System::Windows::Forms::Padding(3);
-			this->tabpage_TPlB_Termo->Size = System::Drawing::Size(396, 114);
+			this->tabpage_TPlB_Termo->Size = System::Drawing::Size(404, 140);
 			this->tabpage_TPlB_Termo->TabIndex = 0;
 			this->tabpage_TPlB_Termo->Text = L"Термическое испарение";
 			this->tabpage_TPlB_Termo->UseVisualStyleBackColor = true;
@@ -2216,7 +2315,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_low_voltage->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->i_label_low_voltage->Location = System::Drawing::Point(283, 94);
 			this->i_label_low_voltage->Name = L"i_label_low_voltage";
-			this->i_label_low_voltage->Size = System::Drawing::Size(216, 74);
+			this->i_label_low_voltage->Size = System::Drawing::Size(107, 36);
 			this->i_label_low_voltage->TabIndex = 35;
 			this->i_label_low_voltage->Text = L"  Режим TPlB: \r\nНизковольтный";
 			this->i_label_low_voltage->Click += gcnew System::EventHandler(this, &MainForm::label29_Click);
@@ -2245,7 +2344,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_textbox_termo_current_ma->ForeColor = System::Drawing::Color::Crimson;
 			this->f_textbox_termo_current_ma->Location = System::Drawing::Point(142, 59);
 			this->f_textbox_termo_current_ma->Name = L"f_textbox_termo_current_ma";
-			this->f_textbox_termo_current_ma->Size = System::Drawing::Size(90, 42);
+			this->f_textbox_termo_current_ma->Size = System::Drawing::Size(46, 22);
 			this->f_textbox_termo_current_ma->TabIndex = 45;
 			this->f_textbox_termo_current_ma->Text = L"9000";
 			this->f_textbox_termo_current_ma->Click += gcnew System::EventHandler(this, &MainForm::f_textbox_current_ma_Click);
@@ -2258,7 +2357,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label56->ForeColor = System::Drawing::Color::MediumBlue;
 			this->label56->Location = System::Drawing::Point(11, 27);
 			this->label56->Name = L"label56";
-			this->label56->Size = System::Drawing::Size(242, 42);
+			this->label56->Size = System::Drawing::Size(125, 22);
 			this->label56->TabIndex = 11;
 			this->label56->Text = L"Напряжение, В";
 			this->label56->Click += gcnew System::EventHandler(this, &MainForm::label56_Click);
@@ -2271,7 +2370,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_textbox_termo_voltage_V->ForeColor = System::Drawing::Color::DarkBlue;
 			this->f_textbox_termo_voltage_V->Location = System::Drawing::Point(142, 27);
 			this->f_textbox_termo_voltage_V->Name = L"f_textbox_termo_voltage_V";
-			this->f_textbox_termo_voltage_V->Size = System::Drawing::Size(54, 42);
+			this->f_textbox_termo_voltage_V->Size = System::Drawing::Size(28, 22);
 			this->f_textbox_termo_voltage_V->TabIndex = 42;
 			this->f_textbox_termo_voltage_V->Text = L"24";
 			this->f_textbox_termo_voltage_V->Click += gcnew System::EventHandler(this, &MainForm::f_textbox_voltage_V_Click);
@@ -2282,7 +2381,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_set_I_T->Location = System::Drawing::Point(198, 55);
 			this->f_textbox_set_I_T->Name = L"f_textbox_set_I_T";
-			this->f_textbox_set_I_T->Size = System::Drawing::Size(63, 50);
+			this->f_textbox_set_I_T->Size = System::Drawing::Size(63, 29);
 			this->f_textbox_set_I_T->TabIndex = 17;
 			this->f_textbox_set_I_T->Text = L"9000";
 			this->f_textbox_set_I_T->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -2296,7 +2395,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label15->ForeColor = System::Drawing::Color::Black;
 			this->label15->Location = System::Drawing::Point(214, 4);
 			this->label15->Name = L"label15";
-			this->label15->Size = System::Drawing::Size(61, 32);
+			this->label15->Size = System::Drawing::Size(30, 15);
 			this->label15->TabIndex = 44;
 			this->label15->Text = L"Зад.";
 			this->label15->Click += gcnew System::EventHandler(this, &MainForm::label15_Click);
@@ -2309,7 +2408,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label54->ForeColor = System::Drawing::Color::Crimson;
 			this->label54->Location = System::Drawing::Point(11, 59);
 			this->label54->Name = L"label54";
-			this->label54->Size = System::Drawing::Size(217, 41);
+			this->label54->Size = System::Drawing::Size(111, 21);
 			this->label54->TabIndex = 22;
 			this->label54->Text = L"Сила тока, мА";
 			this->label54->Click += gcnew System::EventHandler(this, &MainForm::label54_Click);
@@ -2322,7 +2421,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label6->ForeColor = System::Drawing::Color::Black;
 			this->label6->Location = System::Drawing::Point(147, 4);
 			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(73, 32);
+			this->label6->Size = System::Drawing::Size(36, 15);
 			this->label6->TabIndex = 43;
 			this->label6->Text = L"Факт.";
 			this->label6->Click += gcnew System::EventHandler(this, &MainForm::label6_Click);
@@ -2333,7 +2432,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_set_U_T->Location = System::Drawing::Point(198, 21);
 			this->f_textbox_set_U_T->Name = L"f_textbox_set_U_T";
-			this->f_textbox_set_U_T->Size = System::Drawing::Size(63, 50);
+			this->f_textbox_set_U_T->Size = System::Drawing::Size(63, 29);
 			this->f_textbox_set_U_T->TabIndex = 28;
 			this->f_textbox_set_U_T->Text = L"24";
 			this->f_textbox_set_U_T->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -2352,10 +2451,10 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->label26);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->label28);
 			this->tabpage_TPlB_Magnetron->Controls->Add(this->f_textbox_set_U_M);
-			this->tabpage_TPlB_Magnetron->Location = System::Drawing::Point(8, 46);
+			this->tabpage_TPlB_Magnetron->Location = System::Drawing::Point(4, 24);
 			this->tabpage_TPlB_Magnetron->Name = L"tabpage_TPlB_Magnetron";
 			this->tabpage_TPlB_Magnetron->Padding = System::Windows::Forms::Padding(3);
-			this->tabpage_TPlB_Magnetron->Size = System::Drawing::Size(396, 114);
+			this->tabpage_TPlB_Magnetron->Size = System::Drawing::Size(404, 140);
 			this->tabpage_TPlB_Magnetron->TabIndex = 1;
 			this->tabpage_TPlB_Magnetron->Text = L"Магнетронное распыление";
 			this->tabpage_TPlB_Magnetron->UseVisualStyleBackColor = true;
@@ -2384,7 +2483,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_high_voltage->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->i_label_high_voltage->Location = System::Drawing::Point(283, 94);
 			this->i_label_high_voltage->Name = L"i_label_high_voltage";
-			this->i_label_high_voltage->Size = System::Drawing::Size(233, 74);
+			this->i_label_high_voltage->Size = System::Drawing::Size(116, 36);
 			this->i_label_high_voltage->TabIndex = 57;
 			this->i_label_high_voltage->Text = L"  Режим TPlB: \r\nВысоковольтный";
 			// 
@@ -2412,7 +2511,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_textbox_magnetron_current_ma->ForeColor = System::Drawing::Color::Crimson;
 			this->f_textbox_magnetron_current_ma->Location = System::Drawing::Point(142, 59);
 			this->f_textbox_magnetron_current_ma->Name = L"f_textbox_magnetron_current_ma";
-			this->f_textbox_magnetron_current_ma->Size = System::Drawing::Size(72, 42);
+			this->f_textbox_magnetron_current_ma->Size = System::Drawing::Size(37, 22);
 			this->f_textbox_magnetron_current_ma->TabIndex = 54;
 			this->f_textbox_magnetron_current_ma->Text = L"150";
 			this->f_textbox_magnetron_current_ma->Click += gcnew System::EventHandler(this, &MainForm::label21_Click);
@@ -2425,7 +2524,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label23->ForeColor = System::Drawing::Color::MediumBlue;
 			this->label23->Location = System::Drawing::Point(11, 27);
 			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(242, 42);
+			this->label23->Size = System::Drawing::Size(125, 22);
 			this->label23->TabIndex = 46;
 			this->label23->Text = L"Напряжение, В";
 			this->label23->Click += gcnew System::EventHandler(this, &MainForm::label23_Click);
@@ -2438,7 +2537,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_textbox_magnetron_voltage_V->ForeColor = System::Drawing::Color::DarkBlue;
 			this->f_textbox_magnetron_voltage_V->Location = System::Drawing::Point(142, 27);
 			this->f_textbox_magnetron_voltage_V->Name = L"f_textbox_magnetron_voltage_V";
-			this->f_textbox_magnetron_voltage_V->Size = System::Drawing::Size(72, 42);
+			this->f_textbox_magnetron_voltage_V->Size = System::Drawing::Size(37, 22);
 			this->f_textbox_magnetron_voltage_V->TabIndex = 51;
 			this->f_textbox_magnetron_voltage_V->Text = L"400";
 			this->f_textbox_magnetron_voltage_V->Click += gcnew System::EventHandler(this, &MainForm::label24_Click);
@@ -2449,7 +2548,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_set_I_M->Location = System::Drawing::Point(198, 55);
 			this->f_textbox_set_I_M->Name = L"f_textbox_set_I_M";
-			this->f_textbox_set_I_M->Size = System::Drawing::Size(63, 50);
+			this->f_textbox_set_I_M->Size = System::Drawing::Size(63, 29);
 			this->f_textbox_set_I_M->TabIndex = 47;
 			this->f_textbox_set_I_M->Text = L"0";
 			this->f_textbox_set_I_M->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -2463,7 +2562,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label25->ForeColor = System::Drawing::Color::Black;
 			this->label25->Location = System::Drawing::Point(214, 4);
 			this->label25->Name = L"label25";
-			this->label25->Size = System::Drawing::Size(61, 32);
+			this->label25->Size = System::Drawing::Size(30, 15);
 			this->label25->TabIndex = 53;
 			this->label25->Text = L"Зад.";
 			this->label25->Click += gcnew System::EventHandler(this, &MainForm::label25_Click);
@@ -2476,7 +2575,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label26->ForeColor = System::Drawing::Color::Crimson;
 			this->label26->Location = System::Drawing::Point(11, 59);
 			this->label26->Name = L"label26";
-			this->label26->Size = System::Drawing::Size(217, 41);
+			this->label26->Size = System::Drawing::Size(111, 21);
 			this->label26->TabIndex = 48;
 			this->label26->Text = L"Сила тока, мА";
 			this->label26->Click += gcnew System::EventHandler(this, &MainForm::label26_Click);
@@ -2489,7 +2588,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label28->ForeColor = System::Drawing::Color::Black;
 			this->label28->Location = System::Drawing::Point(147, 4);
 			this->label28->Name = L"label28";
-			this->label28->Size = System::Drawing::Size(73, 32);
+			this->label28->Size = System::Drawing::Size(36, 15);
 			this->label28->TabIndex = 52;
 			this->label28->Text = L"Факт.";
 			this->label28->Click += gcnew System::EventHandler(this, &MainForm::label28_Click);
@@ -2500,7 +2599,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_set_U_M->Location = System::Drawing::Point(198, 21);
 			this->f_textbox_set_U_M->Name = L"f_textbox_set_U_M";
-			this->f_textbox_set_U_M->Size = System::Drawing::Size(63, 50);
+			this->f_textbox_set_U_M->Size = System::Drawing::Size(63, 29);
 			this->f_textbox_set_U_M->TabIndex = 49;
 			this->f_textbox_set_U_M->Text = L"0";
 			this->f_textbox_set_U_M->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -2515,9 +2614,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->right_panel->Controls->Add(this->groupBox2);
 			this->right_panel->Controls->Add(this->groupBox1);
 			this->right_panel->Dock = System::Windows::Forms::DockStyle::Right;
-			this->right_panel->Location = System::Drawing::Point(753, 48);
+			this->right_panel->Location = System::Drawing::Point(753, 24);
 			this->right_panel->Name = L"right_panel";
-			this->right_panel->Size = System::Drawing::Size(251, 681);
+			this->right_panel->Size = System::Drawing::Size(251, 705);
 			this->right_panel->TabIndex = 8;
 			this->right_panel->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::panel2_Paint);
 			// 
@@ -2553,9 +2652,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->test_b->ForeColor = System::Drawing::Color::DarkSlateBlue;
 			this->test_b->Location = System::Drawing::Point(156, 23);
 			this->test_b->Name = L"test_b";
-			this->test_b->Size = System::Drawing::Size(112, 46);
+			this->test_b->Size = System::Drawing::Size(37, 23);
 			this->test_b->TabIndex = 24;
-			this->test_b->Text = L"100 c.";
+			this->test_b->Text = L"0 c.";
 			this->test_b->Visible = false;
 			this->test_b->Click += gcnew System::EventHandler(this, &MainForm::test_b_Click);
 			// 
@@ -2568,7 +2667,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_flap_auto_info->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->f_label_flap_auto_info->Location = System::Drawing::Point(97, 199);
 			this->f_label_flap_auto_info->Name = L"f_label_flap_auto_info";
-			this->f_label_flap_auto_info->Size = System::Drawing::Size(252, 39);
+			this->f_label_flap_auto_info->Size = System::Drawing::Size(130, 19);
 			this->f_label_flap_auto_info->TabIndex = 24;
 			this->f_label_flap_auto_info->Text = L"Ожидание старта";
 			// 
@@ -2596,7 +2695,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->I_label_set_time_flap->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->I_label_set_time_flap->Location = System::Drawing::Point(8, 130);
 			this->I_label_set_time_flap->Name = L"I_label_set_time_flap";
-			this->I_label_set_time_flap->Size = System::Drawing::Size(258, 39);
+			this->I_label_set_time_flap->Size = System::Drawing::Size(132, 19);
 			this->I_label_set_time_flap->TabIndex = 33;
 			this->I_label_set_time_flap->Text = L"Установить время";
 			this->I_label_set_time_flap->Visible = false;
@@ -2607,7 +2706,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textBox_set_time_flap->Location = System::Drawing::Point(171, 127);
 			this->f_textBox_set_time_flap->Name = L"f_textBox_set_time_flap";
-			this->f_textBox_set_time_flap->Size = System::Drawing::Size(47, 47);
+			this->f_textBox_set_time_flap->Size = System::Drawing::Size(47, 27);
 			this->f_textBox_set_time_flap->TabIndex = 19;
 			this->f_textBox_set_time_flap->Text = L"100";
 			this->f_textBox_set_time_flap->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -2641,10 +2740,11 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->radioButton_flap_auto_mode->ForeColor = System::Drawing::Color::Black;
 			this->radioButton_flap_auto_mode->Location = System::Drawing::Point(10, 38);
 			this->radioButton_flap_auto_mode->Name = L"radioButton_flap_auto_mode";
-			this->radioButton_flap_auto_mode->Size = System::Drawing::Size(271, 43);
+			this->radioButton_flap_auto_mode->Size = System::Drawing::Size(140, 23);
 			this->radioButton_flap_auto_mode->TabIndex = 1;
 			this->radioButton_flap_auto_mode->Text = L"Автоматический";
 			this->radioButton_flap_auto_mode->UseVisualStyleBackColor = true;
+			this->radioButton_flap_auto_mode->CheckedChanged += gcnew System::EventHandler(this, &MainForm::radioButton_flap_auto_mode_CheckedChanged_1);
 			this->radioButton_flap_auto_mode->Click += gcnew System::EventHandler(this, &MainForm::radioButton_flap_auto_mode_CheckedChanged);
 			// 
 			// radioButton_flap_manual_mode
@@ -2654,7 +2754,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->radioButton_flap_manual_mode->ForeColor = System::Drawing::Color::Black;
 			this->radioButton_flap_manual_mode->Location = System::Drawing::Point(10, 18);
 			this->radioButton_flap_manual_mode->Name = L"radioButton_flap_manual_mode";
-			this->radioButton_flap_manual_mode->Size = System::Drawing::Size(145, 43);
+			this->radioButton_flap_manual_mode->Size = System::Drawing::Size(76, 23);
 			this->radioButton_flap_manual_mode->TabIndex = 0;
 			this->radioButton_flap_manual_mode->TabStop = true;
 			this->radioButton_flap_manual_mode->Text = L"Ручной";
@@ -2699,7 +2799,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_flap_status->ForeColor = System::Drawing::Color::Black;
 			this->i_label_flap_status->Location = System::Drawing::Point(37, 45);
 			this->i_label_flap_status->Name = L"i_label_flap_status";
-			this->i_label_flap_status->Size = System::Drawing::Size(265, 32);
+			this->i_label_flap_status->Size = System::Drawing::Size(134, 15);
 			this->i_label_flap_status->TabIndex = 13;
 			this->i_label_flap_status->Text = L"(положение заслонки)";
 			// 
@@ -2709,9 +2809,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_flap_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_flap_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_flap_status->Location = System::Drawing::Point(61, 21);
+			this->f_label_flap_status->Location = System::Drawing::Point(63, 21);
 			this->f_label_flap_status->Name = L"f_label_flap_status";
-			this->f_label_flap_status->Size = System::Drawing::Size(171, 51);
+			this->f_label_flap_status->Size = System::Drawing::Size(87, 26);
 			this->f_label_flap_status->TabIndex = 12;
 			this->f_label_flap_status->Text = L"Открыта";
 			// 
@@ -2719,7 +2819,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			// 
 			this->right_down_panel->Controls->Add(this->f_stop_button);
 			this->right_down_panel->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->right_down_panel->Location = System::Drawing::Point(0, 629);
+			this->right_down_panel->Location = System::Drawing::Point(0, 653);
 			this->right_down_panel->Name = L"right_down_panel";
 			this->right_down_panel->Size = System::Drawing::Size(251, 52);
 			this->right_down_panel->TabIndex = 12;
@@ -2746,7 +2846,8 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->groupBox3->Controls->Add(this->f_button_on_off_heat);
 			this->groupBox3->Controls->Add(this->label13);
 			this->groupBox3->Controls->Add(this->f_label_temp_status_deg);
-			this->groupBox3->Controls->Add(this->label11);
+			this->groupBox3->Controls->Add(this->i_label_temp_status);
+			this->groupBox3->Controls->Add(this->picture_heating_on);
 			this->groupBox3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
@@ -2778,7 +2879,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_set_temp->Location = System::Drawing::Point(12, 80);
 			this->f_textbox_set_temp->Name = L"f_textbox_set_temp";
-			this->f_textbox_set_temp->Size = System::Drawing::Size(63, 50);
+			this->f_textbox_set_temp->Size = System::Drawing::Size(63, 29);
 			this->f_textbox_set_temp->TabIndex = 17;
 			this->f_textbox_set_temp->Text = L"100";
 			this->f_textbox_set_temp->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -2792,7 +2893,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label14->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label14->Location = System::Drawing::Point(35, 58);
 			this->label14->Name = L"label14";
-			this->label14->Size = System::Drawing::Size(286, 39);
+			this->label14->Size = System::Drawing::Size(145, 19);
 			this->label14->TabIndex = 16;
 			this->label14->Text = L"Задать температуру";
 			// 
@@ -2819,7 +2920,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label13->ForeColor = System::Drawing::Color::Black;
 			this->label13->Location = System::Drawing::Point(63, 42);
 			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(183, 32);
+			this->label13->Size = System::Drawing::Size(92, 15);
 			this->label13->TabIndex = 13;
 			this->label13->Text = L"(показание ДТ)";
 			// 
@@ -2829,24 +2930,35 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_temp_status_deg->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_temp_status_deg->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_temp_status_deg->Location = System::Drawing::Point(97, 20);
+			this->f_label_temp_status_deg->Location = System::Drawing::Point(92, 20);
 			this->f_label_temp_status_deg->Name = L"f_label_temp_status_deg";
-			this->f_label_temp_status_deg->Size = System::Drawing::Size(99, 51);
+			this->f_label_temp_status_deg->Size = System::Drawing::Size(52, 26);
 			this->f_label_temp_status_deg->TabIndex = 12;
 			this->f_label_temp_status_deg->Text = L"720°";
 			// 
-			// label11
+			// i_label_temp_status
 			// 
-			this->label11->AutoSize = true;
-			this->label11->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->i_label_temp_status->AutoSize = true;
+			this->i_label_temp_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label11->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label11->Location = System::Drawing::Point(70, 20);
-			this->label11->Name = L"label11";
-			this->label11->Size = System::Drawing::Size(63, 51);
-			this->label11->TabIndex = 11;
-			this->label11->Text = L"T=";
-			this->label11->Click += gcnew System::EventHandler(this, &MainForm::label11_Click);
+			this->i_label_temp_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
+			this->i_label_temp_status->Location = System::Drawing::Point(65, 20);
+			this->i_label_temp_status->Name = L"i_label_temp_status";
+			this->i_label_temp_status->Size = System::Drawing::Size(32, 26);
+			this->i_label_temp_status->TabIndex = 11;
+			this->i_label_temp_status->Text = L"T=";
+			this->i_label_temp_status->Click += gcnew System::EventHandler(this, &MainForm::label11_Click);
+			// 
+			// picture_heating_on
+			// 
+			this->picture_heating_on->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"picture_heating_on.Image")));
+			this->picture_heating_on->Location = System::Drawing::Point(169, 30);
+			this->picture_heating_on->Name = L"picture_heating_on";
+			this->picture_heating_on->Size = System::Drawing::Size(54, 42);
+			this->picture_heating_on->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->picture_heating_on->TabIndex = 19;
+			this->picture_heating_on->TabStop = false;
+			this->picture_heating_on->Visible = false;
 			// 
 			// groupBox2
 			// 
@@ -2881,7 +2993,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label20->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label20->Location = System::Drawing::Point(7, 70);
 			this->label20->Name = L"label20";
-			this->label20->Size = System::Drawing::Size(95, 46);
+			this->label20->Size = System::Drawing::Size(47, 23);
 			this->label20->TabIndex = 20;
 			this->label20->Text = L"ТМН";
 			// 
@@ -2894,7 +3006,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label18->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label18->Location = System::Drawing::Point(35, 97);
 			this->label18->Name = L"label18";
-			this->label18->Size = System::Drawing::Size(315, 39);
+			this->label18->Size = System::Drawing::Size(159, 19);
 			this->label18->TabIndex = 19;
 			this->label18->Text = L"Управление системой";
 			// 
@@ -2935,7 +3047,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_trubo_percent->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->f_label_trubo_percent->Location = System::Drawing::Point(175, 73);
 			this->f_label_trubo_percent->Name = L"f_label_trubo_percent";
-			this->f_label_trubo_percent->Size = System::Drawing::Size(65, 39);
+			this->f_label_trubo_percent->Size = System::Drawing::Size(33, 19);
 			this->f_label_trubo_percent->TabIndex = 8;
 			this->f_label_trubo_percent->Text = L"100";
 			this->f_label_trubo_percent->Click += gcnew System::EventHandler(this, &MainForm::f_label_trubo_percent_Click);
@@ -2948,7 +3060,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->label10->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->label10->Location = System::Drawing::Point(205, 73);
 			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(40, 39);
+			this->label10->Size = System::Drawing::Size(20, 19);
 			this->label10->TabIndex = 7;
 			this->label10->Text = L"%";
 			this->label10->Click += gcnew System::EventHandler(this, &MainForm::label10_Click);
@@ -2970,7 +3082,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
 			this->f_label_turbopump_status->Location = System::Drawing::Point(156, 42);
 			this->f_label_turbopump_status->Name = L"f_label_turbopump_status";
-			this->f_label_turbopump_status->Size = System::Drawing::Size(71, 46);
+			this->f_label_turbopump_status->Size = System::Drawing::Size(36, 23);
 			this->f_label_turbopump_status->TabIndex = 4;
 			this->f_label_turbopump_status->Text = L"ON";
 			// 
@@ -2982,7 +3094,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_backpump_status->ForeColor = System::Drawing::Color::SeaGreen;
 			this->f_label_backpump_status->Location = System::Drawing::Point(156, 22);
 			this->f_label_backpump_status->Name = L"f_label_backpump_status";
-			this->f_label_backpump_status->Size = System::Drawing::Size(71, 46);
+			this->f_label_backpump_status->Size = System::Drawing::Size(36, 23);
 			this->f_label_backpump_status->TabIndex = 3;
 			this->f_label_backpump_status->Text = L"ON";
 			// 
@@ -2994,7 +3106,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
 			this->i_label_turbopump_status->Location = System::Drawing::Point(14, 42);
 			this->i_label_turbopump_status->Name = L"i_label_turbopump_status";
-			this->i_label_turbopump_status->Size = System::Drawing::Size(209, 46);
+			this->i_label_turbopump_status->Size = System::Drawing::Size(104, 23);
 			this->i_label_turbopump_status->TabIndex = 2;
 			this->i_label_turbopump_status->Text = L"Turbo pump";
 			// 
@@ -3006,7 +3118,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_label_backpump_status->ForeColor = System::Drawing::Color::SeaGreen;
 			this->i_label_backpump_status->Location = System::Drawing::Point(14, 22);
 			this->i_label_backpump_status->Name = L"i_label_backpump_status";
-			this->i_label_backpump_status->Size = System::Drawing::Size(200, 46);
+			this->i_label_backpump_status->Size = System::Drawing::Size(99, 23);
 			this->i_label_backpump_status->TabIndex = 0;
 			this->i_label_backpump_status->Text = L"Back  pump";
 			this->i_label_backpump_status->Click += gcnew System::EventHandler(this, &MainForm::label8_Click);
@@ -3023,7 +3135,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->groupBox1->ForeColor = System::Drawing::Color::RoyalBlue;
 			this->groupBox1->Location = System::Drawing::Point(11, 3);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(231, 78);
+			this->groupBox1->Size = System::Drawing::Size(231, 85);
 			this->groupBox1->TabIndex = 1;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Давление системы";
@@ -3031,48 +3143,48 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			// f_label_WRG_status
 			// 
 			this->f_label_WRG_status->AutoSize = true;
-			this->f_label_WRG_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_WRG_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_WRG_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_WRG_status->Location = System::Drawing::Point(87, 45);
+			this->f_label_WRG_status->Location = System::Drawing::Point(80, 50);
 			this->f_label_WRG_status->Name = L"f_label_WRG_status";
-			this->f_label_WRG_status->Size = System::Drawing::Size(221, 46);
+			this->f_label_WRG_status->Size = System::Drawing::Size(125, 26);
 			this->f_label_WRG_status->TabIndex = 3;
 			this->f_label_WRG_status->Text = L"5x10+3 mbar";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label3->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label3->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label3->Location = System::Drawing::Point(18, 45);
+			this->label3->Location = System::Drawing::Point(15, 50);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(99, 46);
+			this->label3->Size = System::Drawing::Size(55, 26);
 			this->label3->TabIndex = 2;
 			this->label3->Text = L"WRG";
 			// 
 			// f_label_APG_status
 			// 
 			this->f_label_APG_status->AutoSize = true;
-			this->f_label_APG_status->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->f_label_APG_status->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->f_label_APG_status->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->f_label_APG_status->Location = System::Drawing::Point(87, 22);
+			this->f_label_APG_status->Location = System::Drawing::Point(80, 22);
 			this->f_label_APG_status->Name = L"f_label_APG_status";
-			this->f_label_APG_status->Size = System::Drawing::Size(221, 46);
+			this->f_label_APG_status->Size = System::Drawing::Size(125, 26);
 			this->f_label_APG_status->TabIndex = 1;
 			this->f_label_APG_status->Text = L"5x10+3 mbar";
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Calibri", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label1->Font = (gcnew System::Drawing::Font(L"Calibri", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
 			this->label1->ForeColor = System::Drawing::Color::DarkSlateBlue;
-			this->label1->Location = System::Drawing::Point(18, 22);
+			this->label1->Location = System::Drawing::Point(15, 22);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(86, 46);
+			this->label1->Size = System::Drawing::Size(48, 26);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"APG";
 			// 
@@ -3081,7 +3193,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->panel6->BackColor = System::Drawing::Color::White;
 			this->panel6->Controls->Add(this->groupBox5);
 			this->panel6->Dock = System::Windows::Forms::DockStyle::Top;
-			this->panel6->Location = System::Drawing::Point(317, 48);
+			this->panel6->Location = System::Drawing::Point(317, 24);
 			this->panel6->Name = L"panel6";
 			this->panel6->Size = System::Drawing::Size(436, 109);
 			this->panel6->TabIndex = 10;
@@ -3113,7 +3225,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_system_status->ForeColor = System::Drawing::Color::DarkGreen;
 			this->f_label_system_status->Location = System::Drawing::Point(320, 17);
 			this->f_label_system_status->Name = L"f_label_system_status";
-			this->f_label_system_status->Size = System::Drawing::Size(102, 39);
+			this->f_label_system_status->Size = System::Drawing::Size(52, 19);
 			this->f_label_system_status->TabIndex = 13;
 			this->f_label_system_status->Text = L"Статус";
 			this->f_label_system_status->TextAlign = System::Drawing::ContentAlignment::TopRight;
@@ -3140,7 +3252,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->data_label->ForeColor = System::Drawing::Color::Crimson;
 			this->data_label->Location = System::Drawing::Point(320, 36);
 			this->data_label->Name = L"data_label";
-			this->data_label->Size = System::Drawing::Size(167, 39);
+			this->data_label->Size = System::Drawing::Size(87, 19);
 			this->data_label->TabIndex = 11;
 			this->data_label->Text = L"Ожидание ";
 			this->data_label->TextAlign = System::Drawing::ContentAlignment::TopRight;
@@ -3190,7 +3302,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->i_button_connect_to_PLC->ForeColor = System::Drawing::Color::SeaGreen;
 			this->i_button_connect_to_PLC->Location = System::Drawing::Point(45, 27);
 			this->i_button_connect_to_PLC->Name = L"i_button_connect_to_PLC";
-			this->i_button_connect_to_PLC->Size = System::Drawing::Size(437, 39);
+			this->i_button_connect_to_PLC->Size = System::Drawing::Size(224, 19);
 			this->i_button_connect_to_PLC->TabIndex = 1;
 			this->i_button_connect_to_PLC->Text = L"Cоединение с PLC установлено";
 			// 
@@ -3259,7 +3371,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_pas->Location = System::Drawing::Point(79, 63);
 			this->f_textbox_pas->Name = L"f_textbox_pas";
-			this->f_textbox_pas->Size = System::Drawing::Size(176, 47);
+			this->f_textbox_pas->Size = System::Drawing::Size(176, 27);
 			this->f_textbox_pas->TabIndex = 9;
 			this->f_textbox_pas->UseSystemPasswordChar = true;
 			// 
@@ -3269,7 +3381,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->f_textbox_log->Location = System::Drawing::Point(79, 23);
 			this->f_textbox_log->Name = L"f_textbox_log";
-			this->f_textbox_log->Size = System::Drawing::Size(176, 47);
+			this->f_textbox_log->Size = System::Drawing::Size(176, 27);
 			this->f_textbox_log->TabIndex = 8;
 			// 
 			// label21
@@ -3279,7 +3391,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->label21->Location = System::Drawing::Point(14, 67);
 			this->label21->Name = L"label21";
-			this->label21->Size = System::Drawing::Size(116, 39);
+			this->label21->Size = System::Drawing::Size(59, 19);
 			this->label21->TabIndex = 7;
 			this->label21->Text = L"Пароль";
 			// 
@@ -3290,7 +3402,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 				static_cast<System::Byte>(204)));
 			this->label24->Location = System::Drawing::Point(14, 27);
 			this->label24->Name = L"label24";
-			this->label24->Size = System::Drawing::Size(99, 39);
+			this->label24->Size = System::Drawing::Size(51, 19);
 			this->label24->TabIndex = 6;
 			this->label24->Text = L"Логин";
 			// 
@@ -3300,9 +3412,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->panel1->Controls->Add(this->UVN_picturebox_close);
 			this->panel1->Controls->Add(this->panel_unblock);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->panel1->Location = System::Drawing::Point(317, 157);
+			this->panel1->Location = System::Drawing::Point(317, 133);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(436, 322);
+			this->panel1->Size = System::Drawing::Size(436, 346);
 			this->panel1->TabIndex = 11;
 			// 
 			// UVN_picturebox_open
@@ -3311,7 +3423,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->UVN_picturebox_open->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_open.Image")));
 			this->UVN_picturebox_open->Location = System::Drawing::Point(0, 0);
 			this->UVN_picturebox_open->Name = L"UVN_picturebox_open";
-			this->UVN_picturebox_open->Size = System::Drawing::Size(436, 322);
+			this->UVN_picturebox_open->Size = System::Drawing::Size(436, 346);
 			this->UVN_picturebox_open->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->UVN_picturebox_open->TabIndex = 13;
 			this->UVN_picturebox_open->TabStop = false;
@@ -3324,7 +3436,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->UVN_picturebox_close->InitialImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"UVN_picturebox_close.InitialImage")));
 			this->UVN_picturebox_close->Location = System::Drawing::Point(0, 0);
 			this->UVN_picturebox_close->Name = L"UVN_picturebox_close";
-			this->UVN_picturebox_close->Size = System::Drawing::Size(436, 322);
+			this->UVN_picturebox_close->Size = System::Drawing::Size(436, 346);
 			this->UVN_picturebox_close->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
 			this->UVN_picturebox_close->TabIndex = 12;
 			this->UVN_picturebox_close->TabStop = false;
@@ -3378,6 +3490,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->right_down_panel->ResumeLayout(false);
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox3->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picture_heating_on))->EndInit();
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
@@ -3415,7 +3528,7 @@ private: System::Void f_stop_button_Click(System::Object^ sender, System::EventA
 }
 private: System::Void radioButton_flap_auto_mode_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-	
+		flap_auto_mode = true;
 		groupBox_flap->Height = 229;
 		f_button_manual_close_flap->Visible = false;
 		f_button_manual_open_flap->Visible = false;
@@ -3428,6 +3541,8 @@ private: System::Void radioButton_flap_auto_mode_CheckedChanged(System::Object^ 
 
 }
 private: System::Void radioButton_flap_manual_mode_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+
+	flap_auto_mode = false;
 	groupBox_flap->Height = 180;
 	f_button_manual_close_flap->Visible = true;
 	f_button_manual_open_flap->Visible = true;
@@ -3440,7 +3555,7 @@ private: System::Void radioButton_flap_manual_mode_CheckedChanged(System::Object
 }
 private: System::Void f_button_exit_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	Application::Exit();
+	System::Windows::Forms::Application::Exit();
 }
 private: System::Void MainForm_FormClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
 
@@ -3488,6 +3603,8 @@ private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 		PLC_connecting_status();
 
 		process_R_quants();
+
+		currentData->ShareMemToLocal();
 
 	}
 
@@ -3784,16 +3901,23 @@ private: System::Void menu_strip_butterfly_percent_Click(System::Object^ sender,
 }
 private: System::Void f_button_manual_open_flap_Click(System::Object^ sender, System::EventArgs^ e) {
 
+
+	currentData->command = currentData->flap;
+	/* 
 	f_button_manual_open_flap->Enabled = false;
 	f_button_manual_close_flap->Enabled = true;
 	UVN_picturebox_open->Visible = true;
 	//UVN_picturebox_close->Visible = false;
 	f_label_flap_status->Text = "Открыта";
 	flap_open = true;
-
+	*/
 }
 private: System::Void f_button_manual_close_flap_Click(System::Object^ sender, System::EventArgs^ e) {
 
+	currentData->command = currentData->flap;
+
+	/*
+	
 	f_button_manual_open_flap->Enabled = true;
 	f_button_manual_close_flap->Enabled = false;
 	UVN_picturebox_open->Visible = false;
@@ -3801,103 +3925,117 @@ private: System::Void f_button_manual_close_flap_Click(System::Object^ sender, S
 	flap_open = false;
 
 	f_label_flap_status->Text = "Закрыта";
+	
+	*/
+	
 
 }
 private: System::Void f_button_auto_start_flap_Click(System::Object^ sender, System::EventArgs^ e) {
 
+	currentData->command = currentData->flap;
 
-	if (f_button_auto_start_flap->Text=="Начать") {
+	flap_auto_mode = true;
+
+	//if (f_button_auto_start_flap->Text=="Начать") {
 
 		set_flap_auto_time = Convert::ToInt32(f_textBox_set_time_flap->Text);
 
 		flap_progress = 100/set_flap_auto_time;
 
-		flap_open = true;
+		flap_open = false;
 
 		Flap_auto_timer->Enabled = true;
 
-		Flap_auto_timer->Interval = 500;
+		Flap_auto_timer->Interval = 1000;
 
-		test_b->Visible = true;
+		//test_b->Visible = true;
 
-		f_button_auto_start_flap->Text = "Стоп";
+		//f_button_auto_start_flap->Text = "Стоп";
 
-		UVN_picturebox_open->Visible = true;
+		//UVN_picturebox_open->Visible = true;
 
-		UVN_picturebox_close->Visible = false;
-	} 
+		//UVN_picturebox_close->Visible = false;
+	//}
 
-	else if  (f_button_auto_start_flap->Text == "Стоп") {
+	//else if  (f_button_auto_start_flap->Text == "Стоп") {
+//
+	//	flap_auto_mode = false;
 
-		set_flap_auto_time = Convert::ToInt32(f_textBox_set_time_flap->Text);
+		//set_flap_auto_time = Convert::ToInt32(f_textBox_set_time_flap->Text);
 
-		Flap_auto_timer->Enabled = false;
+	//	Flap_auto_timer->Enabled = false;
 
-		f_button_auto_start_flap->Text = "Начать";
+		//f_button_auto_start_flap->Text = "Начать";
 
-		flap_auto_time = 0;
+//		flap_auto_time = 0;
 
 
-		}
+	//	}
 	
 
 }
+
 private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 	
-	if (flap_auto_time != set_flap_auto_time) {
+	if (currentData->rg_dc & currentData->masckon[0] != 0) {
 
-		f_label_flap_status->Text = "Открыта";
+		if (flap_auto_time != set_flap_auto_time) {
 
-		flap_open = true;
+			f_label_flap_status->Text = "Открыта";
 
-		flap_auto_time++;
+			flap_open = true;
 
-		progressBar_flap->Value = flap_auto_time*flap_progress;
+			flap_auto_time++;
 
-		test_b->Text = flap_auto_time.ToString()+" c.";
+			progressBar_flap->Value = flap_auto_time * flap_progress;
 
-		f_label_flap_auto_info->ForeColor = System::Drawing::Color::Crimson;
-		f_label_flap_auto_info->Text = "Идет процесс";
+			test_b->Text = flap_auto_time.ToString() + " c.";
 
-	}
-
-	else {
-
-		f_label_flap_status->Text = "Закрыта";
-
-		flap_open = false;
-
-		progressBar_flap->Value = 100;
-
-		Flap_auto_timer->Enabled = false;
-
-		progressBar_flap->Value = 0;
-
-		Flap_auto_timer->Enabled = false;
-
-		f_button_auto_start_flap->Text = "Начать";
-
-		flap_auto_time = 0;
-
-		f_label_flap_auto_info->ForeColor = System::Drawing::Color::RoyalBlue;
-		f_label_flap_auto_info->Text = "Процесс окончен";
-
-		f_button_manual_open_flap->Enabled = true;
-		f_button_manual_close_flap->Enabled = false;
-		
-
-		f_label_flap_status->Text = "Закрыта";
-
-		if (!status_block_form) {
-
-			UVN_picturebox_open->Visible = false;
-			UVN_picturebox_close->Visible = true;
+			f_label_flap_auto_info->ForeColor = System::Drawing::Color::Crimson;
+			f_label_flap_auto_info->Text = "Идет процесс";
 
 		}
 
+		else {
 
+			currentData->command = currentData->flap;
+			//Flap_auto_timer->Enabled = false;
+			//flap_open = true;
+
+		}
 	}
 
+	else if (((currentData->rg_dc & currentData->masckon[0]) == 0)&&flap_open) {
+
+			f_label_flap_status->Text = "Закрыта";
+
+			progressBar_flap->Value = 0;
+
+			f_button_auto_start_flap->Text = "Начать";
+
+			flap_auto_time = 0;
+
+			f_label_flap_auto_info->ForeColor = System::Drawing::Color::RoyalBlue;
+
+			f_label_flap_auto_info->Text = "Процесс окончен";
+
+			f_button_manual_open_flap->Enabled = true;
+			f_button_manual_close_flap->Enabled = false;
+
+			f_label_flap_status->Text = "Закрыта";
+
+			if (!status_block_form) {
+
+				UVN_picturebox_open->Visible = false;
+				UVN_picturebox_close->Visible = true;
+
+			}
+
+			Flap_auto_timer->Enabled = false;
+			flap_open = false;
+		
+	}
+	
 }
 private: System::Void test_b_Click(System::Object^ sender, System::EventArgs^ e) {
 }
@@ -3921,7 +4059,7 @@ private: System::Void f_button_unblock_Click(System::Object^ sender, System::Eve
 
 	if (user->get_login(f_textbox_log->Text, f_textbox_pas->Text)) {
 		
-		status_block_form = true;
+		//status_block_form = true;
 		access_user();
 
 		if (flap_open) {
@@ -4083,6 +4221,13 @@ private: System::Void strip_admin_user_Click(System::Object^ sender, System::Eve
 	f_textbox_log->Enabled = false;
 	UVN_picturebox_close->Visible = false;
 	UVN_picturebox_open->Visible = false;
+
+}
+private: System::Void label42_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void radioButton_flap_auto_mode_CheckedChanged_1(System::Object^ sender, System::EventArgs^ e) {
+
+	flap_auto_mode = true;
 
 }
 };

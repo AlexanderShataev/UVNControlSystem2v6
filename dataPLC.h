@@ -1,13 +1,20 @@
 #pragma once
+#include "math.h"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+
 namespace UVNControlSystem2v6 {
 
 	using namespace System;
+	
+
 	ref class dataPLC
 	{
 	public:
 
 		//Данный класс содержит в себе данные о памяти обмена с PLC. ниже преведена минимальная информация 
-		//о передаваемых данных:
+		//о передаваемых данны :
 		//================ SharedMemory  type Unsigned Int =====================
 
 		//№Rg-Sh_Mem[№]-Value------------------------Примечание-----------------------------------------------
@@ -96,9 +103,12 @@ namespace UVNControlSystem2v6 {
 		//
 		TtoD_A = -0.000837733,	
 		TtoD_B = 5.302,		
-		TtoD_C = 612.3;		
+		TtoD_C = 612.3,	
+		//
+		//	ПЕРЕВОД ДИСКРЕТ В МБАР
+		//
+		C_discr = 0.002784;
 		//--------------------------------------
-
 
 		//	Переменные и массивы
 		//--------------------------------------
@@ -169,7 +179,8 @@ namespace UVNControlSystem2v6 {
 			TPlB_HV			=  8,
 			TPlB_IU_S		=  9,
 			nagrev			= 10,
-			process			= 11;
+			process			= 11,
+			flap			= 17;
 		//--------------------------------------
 
 
@@ -195,7 +206,7 @@ au_TPlB_Uset,									//Фактическое установленное значение напряжения TPlB
 rg_dc,											//Регистр ДК 	Биты соответствуют маскам DC
 rd_dm,											//Регистр ДУ 	Биты соответствуют маскам DM
 buffer_PLC_error,								//См. "Коды_ошибок.С" 
-act_PV_position,								//Фактическое положение бабочки
+act_BV_position,								//Фактическое положение бабочки
 pressureBV,										//Давление с бабочки
 learn;
 //--------------------------------------
@@ -216,14 +227,26 @@ int DiscreteToDegrees(int Discrete) {				//Перевод дискрет в градусы
 
 }
 
-int mBarToDiscrete(int mBar) {						//Перевод давления мбар в дискреты АЦП 
+int mBarToDiscrete(int mBar) {		
+	
+
+	return 0;
+}
+
+double DiscreteTomBarWRG(int Discrete) {			//Перевод дискрет АЦП в давление мбар
+
+	//Перевод давления мбар в дискреты АЦП			
+	//R := Power(10, (Share_Mem[4]*1.5*C_discr)-12)	//WRG -- описание
+	return pow(10, (Discrete*1.5*C_discr)-12);
 
 }
 
-int DiscreteTomBar(int Discrete) {					//Перевод дискрет АЦП в давление мбар
+double DiscreteTomBarAPG(int Discrete) {			//Перевод дискрет АЦП в давление мбар
 
+	//Перевод давления мбар в дискреты АЦП 
+	//R := Power(10, (Share_Mem[5]*C_discr)-6)		//APG -- описание
+	return pow(10, (Discrete * C_discr) - 6);
 }
-
 //--------------------------------------
 
 
@@ -301,6 +324,45 @@ void recieve_data(int recieving[30]) {
 
 
 }
+
+	void ShareMemToLocal() {
+
+		r_quants= share_mem[0];
+		B_ac_TIC= share_mem[1];
+		ac_APG= share_mem[2];
+		ac_WRG=share_mem[3];
+		ac_Tact=share_mem[4];
+		ac_BVact = share_mem[5];
+		ac_TPlB_Uact=share_mem[6];
+		ac_TPlB_Iact= share_mem[7];
+		ac_TPlB_Pact= share_mem[8];
+		au_PSV1 = share_mem[9];
+		au_PSV2= share_mem[10];
+		au_TPlB_Iset = share_mem[11];
+		au_TPlB_Uset = share_mem[12];
+		rg_dc = share_mem[13];
+		rd_dm = share_mem[14];
+		buffer_PLC_error = share_mem[15];
+		act_BV_position = share_mem[16];
+		pressureBV = share_mem[17];
+		learn = share_mem[18];
+
+	}
+
+	String^ showAPG() {
+
+		return DiscreteTomBarAPG(ac_APG).ToString(("#.##E+0") + " mbar");
+		
+
+	}
+
+	String^ showWRG() {
+
+		return DiscreteTomBarWRG(ac_WRG).ToString(("#.##E+0") + " mbar");
+
+
+	}
+
 
 	};
 
