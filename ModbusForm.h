@@ -30,6 +30,12 @@ namespace UVNControlSystem2v6 {
 		bool f_ReadHoldingRegisters=false;
 		bool form_open;
 
+		String^ f_IP_modbus;
+
+		int f_Port_modbus;
+
+	private: System::Windows::Forms::Button^ f_button_setIPPort;
+	public:
 
 		array<int>^ share_mem_readholdings = gcnew array<int>(30); 
 
@@ -240,6 +246,7 @@ namespace UVNControlSystem2v6 {
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->modbus_read_sharemem = (gcnew System::Windows::Forms::Timer(this->components));
 			this->pictureBoxmodbus = (gcnew System::Windows::Forms::PictureBox());
+			this->f_button_setIPPort = (gcnew System::Windows::Forms::Button());
 			this->groupBox_modbus_settool->SuspendLayout();
 			this->groupbox_holding_registers->SuspendLayout();
 			this->groupBox1->SuspendLayout();
@@ -248,7 +255,7 @@ namespace UVNControlSystem2v6 {
 			// 
 			// f_button_connect
 			// 
-			this->f_button_connect->Location = System::Drawing::Point(135, 19);
+			this->f_button_connect->Location = System::Drawing::Point(6, 93);
 			this->f_button_connect->Name = L"f_button_connect";
 			this->f_button_connect->Size = System::Drawing::Size(96, 30);
 			this->f_button_connect->TabIndex = 0;
@@ -303,7 +310,7 @@ namespace UVNControlSystem2v6 {
 			// 
 			// f_button_disconnect
 			// 
-			this->f_button_disconnect->Location = System::Drawing::Point(135, 55);
+			this->f_button_disconnect->Location = System::Drawing::Point(146, 93);
 			this->f_button_disconnect->Name = L"f_button_disconnect";
 			this->f_button_disconnect->Size = System::Drawing::Size(96, 30);
 			this->f_button_disconnect->TabIndex = 6;
@@ -313,6 +320,7 @@ namespace UVNControlSystem2v6 {
 			// 
 			// groupBox_modbus_settool
 			// 
+			this->groupBox_modbus_settool->Controls->Add(this->f_button_setIPPort);
 			this->groupBox_modbus_settool->Controls->Add(this->f_textbox_IP);
 			this->groupBox_modbus_settool->Controls->Add(this->f_button_disconnect);
 			this->groupBox_modbus_settool->Controls->Add(this->f_textbox_socket);
@@ -321,7 +329,7 @@ namespace UVNControlSystem2v6 {
 			this->groupBox_modbus_settool->Controls->Add(this->i_label_port_modbus);
 			this->groupBox_modbus_settool->Location = System::Drawing::Point(12, 77);
 			this->groupBox_modbus_settool->Name = L"groupBox_modbus_settool";
-			this->groupBox_modbus_settool->Size = System::Drawing::Size(248, 102);
+			this->groupBox_modbus_settool->Size = System::Drawing::Size(248, 129);
 			this->groupBox_modbus_settool->TabIndex = 7;
 			this->groupBox_modbus_settool->TabStop = false;
 			this->groupBox_modbus_settool->Text = L"Сетевой упраление";
@@ -334,7 +342,7 @@ namespace UVNControlSystem2v6 {
 			this->groupbox_holding_registers->Controls->Add(this->f_button_read_tstmodbus);
 			this->groupbox_holding_registers->Controls->Add(this->label2);
 			this->groupbox_holding_registers->Enabled = false;
-			this->groupbox_holding_registers->Location = System::Drawing::Point(12, 185);
+			this->groupbox_holding_registers->Location = System::Drawing::Point(12, 222);
 			this->groupbox_holding_registers->Name = L"groupbox_holding_registers";
 			this->groupbox_holding_registers->Size = System::Drawing::Size(248, 151);
 			this->groupbox_holding_registers->TabIndex = 8;
@@ -432,6 +440,16 @@ namespace UVNControlSystem2v6 {
 			this->pictureBoxmodbus->TabIndex = 7;
 			this->pictureBoxmodbus->TabStop = false;
 			// 
+			// f_button_setIPPort
+			// 
+			this->f_button_setIPPort->Location = System::Drawing::Point(146, 28);
+			this->f_button_setIPPort->Name = L"f_button_setIPPort";
+			this->f_button_setIPPort->Size = System::Drawing::Size(96, 48);
+			this->f_button_setIPPort->TabIndex = 7;
+			this->f_button_setIPPort->Text = L"Set IP and Port";
+			this->f_button_setIPPort->UseVisualStyleBackColor = true;
+			this->f_button_setIPPort->Click += gcnew System::EventHandler(this, &ModbusForm::f_button_setIPPort_Click);
+			// 
 			// ModbusForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -528,6 +546,13 @@ private: System::Void ModbusForm_FormClosing(System::Object^ sender, System::Win
 
 	clearform();
 	e->Cancel = true;
+	
+
+}
+private: System::Void f_button_setIPPort_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	f_IP_modbus = f_textbox_IP->Text;
+	f_Port_modbus = Convert::ToInt32(f_textbox_socket->Text);
 	
 
 }

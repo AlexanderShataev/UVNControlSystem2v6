@@ -302,7 +302,7 @@ namespace UVNControlSystem2v6 {
 			// 
 			this->label5->AutoSize = true;
 			this->label5->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
+				 static_cast<System::Byte>(204)));
 			this->label5->Location = System::Drawing::Point(22, 179);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(27, 19);

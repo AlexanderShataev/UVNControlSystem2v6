@@ -46,6 +46,9 @@ namespace UVNControlSystem2v6 {
 
 		bool modbus_connecting_status = false; // лог. переменная false -- соединение нет, true --соединение есть//
 
+		String^ ModbusIPAdress;
+		int	ModbusPort;
+
 		//ПИД-закон
 
 		PIDForm^ pidform = gcnew PIDForm();
@@ -159,6 +162,7 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
 	private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
 	private: System::Windows::Forms::PictureBox^ picture_heating_on;
+private: System::Windows::Forms::ToolStripSeparator^ toolStripSeparator1;
 
 
 
@@ -341,9 +345,11 @@ namespace UVNControlSystem2v6 {
 		 void PLC_connect() {
 
 			 try {
+				
+				 ModbusPLC->IPAddress = modbusform->f_IP_modbus;
+				 //IP-адрес заданный
+				 ModbusPLC->Port = modbusform->f_Port_modbus;			//Port
 
-				 ModbusPLC->IPAddress = "127.0.0.1";	//IP-адрес заданный
-				 ModbusPLC->Port = 502;					//Port
 				 ModbusPLC->Connect();
 				 currentData->process_quants();
 
@@ -1341,6 +1347,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->UVN_picturebox_open = (gcnew System::Windows::Forms::PictureBox());
 			this->UVN_picturebox_close = (gcnew System::Windows::Forms::PictureBox());
+			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->menuStrip1->SuspendLayout();
 			this->left_panel->SuspendLayout();
 			this->groupBox6->SuspendLayout();
@@ -1442,9 +1449,9 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			// 
 			// network_and_accs
 			// 
-			this->network_and_accs->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+			this->network_and_accs->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->network_toolset,
-					this->учетнаяЗаписьToolStripMenuItem
+					this->учетнаяЗаписьToolStripMenuItem, this->toolStripSeparator1
 			});
 			this->network_and_accs->Name = L"network_and_accs";
 			this->network_and_accs->Size = System::Drawing::Size(58, 20);
@@ -1453,7 +1460,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			// network_toolset
 			// 
 			this->network_toolset->Name = L"network_toolset";
-			this->network_toolset->Size = System::Drawing::Size(159, 22);
+			this->network_toolset->Size = System::Drawing::Size(180, 22);
 			this->network_toolset->Text = L"Сетевой доступ";
 			this->network_toolset->Click += gcnew System::EventHandler(this, &MainForm::network_toolset_Click);
 			// 
@@ -1464,7 +1471,7 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 					this->strip_student_user, this->демоверсияToolStripMenuItem
 			});
 			this->учетнаяЗаписьToolStripMenuItem->Name = L"учетнаяЗаписьToolStripMenuItem";
-			this->учетнаяЗаписьToolStripMenuItem->Size = System::Drawing::Size(159, 22);
+			this->учетнаяЗаписьToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->учетнаяЗаписьToolStripMenuItem->Text = L"Учетная запись";
 			// 
 			// strip_admin_user
@@ -3441,6 +3448,11 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->UVN_picturebox_close->TabIndex = 12;
 			this->UVN_picturebox_close->TabStop = false;
 			// 
+			// toolStripSeparator1
+			// 
+			this->toolStripSeparator1->Name = L"toolStripSeparator1";
+			this->toolStripSeparator1->Size = System::Drawing::Size(177, 6);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -3622,6 +3634,7 @@ private: System::Void Timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 	if (modbusform->form_open) {
 
 		modbusform->modbusform_open(currentData->main_connecting_status, currentData->share_mem);
+
 	}
 
 	currentData->tick++;
@@ -3987,10 +4000,15 @@ private: System::Void Flap_auto_timer_Tick(System::Object^ sender, System::Event
 
 			flap_auto_time++;
 
+			f_button_manual_open_flap->Enabled = true;
+			f_button_manual_close_flap->Enabled = false;
+
+
+
 			progressBar_flap->Value = flap_auto_time * flap_progress;
 
 			test_b->Text = flap_auto_time.ToString() + " c.";
-
+			UVN_picturebox_open->Visible = true;
 			f_label_flap_auto_info->ForeColor = System::Drawing::Color::Crimson;
 			f_label_flap_auto_info->Text = "Идет процесс";
 
