@@ -14,7 +14,7 @@ namespace UVNControlSystem2v6 {
 	using namespace System::Drawing;
 	using namespace EasyModbus;
 	using namespace System::Globalization;
-	using namespace Microsoft::Office::Interop::Excel;
+	//using namespace Microsoft::Office::Interop::Excel;
 
 
 
@@ -55,7 +55,7 @@ namespace UVNControlSystem2v6 {
 
 		//Îáðàáîòêà äàííûõ â ôàéëå Excel
 
-		Microsoft::Office::Interop::Excel::Application^ XL = gcnew Microsoft::Office::Interop::Excel::ApplicationClass();
+		//Microsoft::Office::Interop::Excel::Application^ XL = gcnew Microsoft::Office::Interop::Excel::ApplicationClass();
 
 		/*
 		
@@ -129,16 +129,16 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::Label^ i_label_low_voltage;
 	private: System::Windows::Forms::Button^ f_button_set_TPlB_m;
 	private: System::Windows::Forms::Label^ i_label_high_voltage;
-	private: System::Windows::Forms::ToolStripMenuItem^ àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ strip_admin_user;
-	private: System::Windows::Forms::ToolStripMenuItem^ strip_student_user;
 
 
-	private: System::Windows::Forms::ToolStripMenuItem^ äåìîâåðñèÿToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ êëàïàíÁàáî÷êàToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_percent;
+
+
+
+
+
+
+
+
 	private: System::Windows::Forms::Timer^ Flap_auto_timer;
 	private: System::Windows::Forms::Label^ test_b;
 	private: System::Windows::Forms::Label^ data_label;
@@ -161,12 +161,37 @@ namespace UVNControlSystem2v6 {
 	private: System::Windows::Forms::ProgressBar^ progressBar_Turbopump;
 	private: System::Windows::Forms::RadioButton^ radioButton_flap_auto_mode;
 	private: System::Windows::Forms::PictureBox^ UVN_picturebox_open;
+private: System::Windows::Forms::ToolStripMenuItem^ óïðàâëåíèåÏðîöåññîìToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ heat_toolset;
+private: System::Windows::Forms::ToolStripMenuItem^ âûáîðÐåãóëÿòîðàToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ pid_toolset;
+private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêàØÈÌToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ network_and_accs;
+private: System::Windows::Forms::ToolStripMenuItem^ network_toolset;
+private: System::Windows::Forms::ToolStripMenuItem^ ó÷åòíàÿÇàïèñüToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ strip_admin_user;
+private: System::Windows::Forms::ToolStripMenuItem^ strip_student_user;
+private: System::Windows::Forms::ToolStripMenuItem^ äåìîâåðñèÿToolStripMenuItem;
+
+
+private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ êëàïàíÁàáî÷êàToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_percent;
+private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_mV;
+private: System::Windows::Forms::MenuStrip^ menuStrip1;
+
+
+
 	private: System::Windows::Forms::PictureBox^ picture_heating_on;
-private: System::Windows::Forms::ToolStripSeparator^ toolStripSeparator1;
 
 
 
-	private: System::Windows::Forms::ToolStripMenuItem^ menu_strip_butterfly_mV;
+
+
+
+
 	public:
 
 
@@ -422,11 +447,22 @@ private: System::Windows::Forms::ToolStripSeparator^ toolStripSeparator1;
 				 currentData->ShareMemToLocal();									//Ìàññèâ ïåðåäàåì â ïåðåìåííûå
 
 				 //Îáíîâëÿåì çíà÷åíèÿ îáîðîòîâ ÒÌÍ
-				 f_label_trubo_percent->Text = currentData->B_ac_TIC.ToString();
-				 progressBar_Turbopump->Value = currentData->B_ac_TIC;
+
+				 if (currentData->B_ac_TIC <= 3200) {
+
+					 f_label_trubo_percent->Text = (currentData->B_ac_TIC / 31).ToString()+" %";
+
+					 progressBar_Turbopump->Value = currentData->B_ac_TIC;
+				 }
+				 if (currentData->B_ac_TIC > 4000) {
+
+					 f_label_trubo_percent->Text = "0 %";
+					 
+					 progressBar_Turbopump->Value = 0;
+				 }
 
 				 //Åñëè îáîðîòû áîëüøå 0% -- ïðèíèìàåì, ÷òî îí âêëþ÷åí
-				 if (currentData->share_mem[1] > 0) {
+				 if (currentData->share_mem[1] > 100) {
 
 					 i_label_turbopump_status->ForeColor = System::Drawing::Color::SeaGreen;
 					 f_label_turbopump_status->Text = "ON";
@@ -1073,15 +1109,15 @@ private: System::Windows::Forms::ToolStripSeparator^ toolStripSeparator1;
 
 
 
-	private: System::Windows::Forms::MenuStrip^ menuStrip1;
-	private: System::Windows::Forms::ToolStripMenuItem^ óïðàâëåíèåÏðîöåññîìToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ heat_toolset;
-	private: System::Windows::Forms::ToolStripMenuItem^ âûáîðÐåãóëÿòîðàToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ pid_toolset;
-	private: System::Windows::Forms::ToolStripMenuItem^ íàñòðîéêàØÈÌToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^ network_and_accs;
-	private: System::Windows::Forms::ToolStripMenuItem^ network_toolset;
-	private: System::Windows::Forms::ToolStripMenuItem^ ó÷åòíàÿÇàïèñüToolStripMenuItem;
+
+
+
+
+
+
+
+
+
 	private: System::Windows::Forms::Panel^ left_panel;
 	private: System::Windows::Forms::Panel^ right_panel;
 	private: System::Windows::Forms::Button^ f_stop_button;
@@ -1094,7 +1130,7 @@ private: System::Windows::Forms::ToolStripSeparator^ toolStripSeparator1;
 	private: System::Windows::Forms::Button^ f_button_stop_pump;
 	private: System::Windows::Forms::Button^ f_button_start_pump;
 	private: System::Windows::Forms::Label^ f_label_trubo_percent;
-	private: System::Windows::Forms::Label^ label10;
+
 
 	private: System::Windows::Forms::Label^ f_label_turbopump_status;
 	private: System::Windows::Forms::Label^ f_label_backpump_status;
@@ -1184,24 +1220,6 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 		{
 			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->heat_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->âûáîðÐåãóëÿòîðàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->pid_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->íàñòðîéêàØÈÌToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->network_and_accs = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->network_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->ó÷åòíàÿÇàïèñüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->strip_admin_user = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->strip_student_user = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->äåìîâåðñèÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->êëàïàíÁàáî÷êàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->menu_strip_butterfly_percent = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->menu_strip_butterfly_mV = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->left_panel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
@@ -1314,7 +1332,6 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_button_stop_pump = (gcnew System::Windows::Forms::Button());
 			this->f_button_start_pump = (gcnew System::Windows::Forms::Button());
 			this->f_label_trubo_percent = (gcnew System::Windows::Forms::Label());
-			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->progressBar_Turbopump = (gcnew System::Windows::Forms::ProgressBar());
 			this->f_label_turbopump_status = (gcnew System::Windows::Forms::Label());
 			this->f_label_backpump_status = (gcnew System::Windows::Forms::Label());
@@ -1347,8 +1364,24 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->UVN_picturebox_open = (gcnew System::Windows::Forms::PictureBox());
 			this->UVN_picturebox_close = (gcnew System::Windows::Forms::PictureBox());
-			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
-			this->menuStrip1->SuspendLayout();
+			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->heat_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->âûáîðÐåãóëÿòîðàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->pid_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->íàñòðîéêàØÈÌToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->network_and_accs = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->network_toolset = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ó÷åòíàÿÇàïèñüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->strip_admin_user = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->strip_student_user = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->äåìîâåðñèÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->êëàïàíÁàáî÷êàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->menu_strip_butterfly_percent = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->menu_strip_butterfly_mV = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->left_panel->SuspendLayout();
 			this->groupBox6->SuspendLayout();
 			this->tabControl1->SuspendLayout();
@@ -1379,153 +1412,8 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_open))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->BeginInit();
+			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
-			// 
-			// menuStrip1
-			// 
-			this->menuStrip1->BackColor = System::Drawing::Color::White;
-			this->menuStrip1->ImageScalingSize = System::Drawing::Size(32, 32);
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
-				this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem,
-					this->heat_toolset, this->network_and_accs, this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem
-			});
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1004, 24);
-			this->menuStrip1->TabIndex = 6;
-			this->menuStrip1->Text = L"menuStrip1";
-			// 
-			// óïðàâëåíèåÏðîöåññîìToolStripMenuItem
-			// 
-			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem,
-					this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem
-			});
-			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->Name = L"óïðàâëåíèåÏðîöåññîìToolStripMenuItem";
-			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->Size = System::Drawing::Size(150, 20);
-			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->Text = L"Óïðàâëåíèå ïðîöåññîì";
-			// 
-			// àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem
-			// 
-			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Enabled = false;
-			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Name = L"àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem";
-			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(236, 22);
-			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Text = L"Àâòîìàòèçèðîâàííûé ðåæèì";
-			// 
-			// àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem
-			// 
-			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Name = L"àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem";
-			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(236, 22);
-			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Text = L"Àâòîìàòè÷åñêèé ðåæèì";
-			// 
-			// heat_toolset
-			// 
-			this->heat_toolset->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
-				this->âûáîðÐåãóëÿòîðàToolStripMenuItem,
-					this->pid_toolset, this->íàñòðîéêàØÈÌToolStripMenuItem
-			});
-			this->heat_toolset->Name = L"heat_toolset";
-			this->heat_toolset->Size = System::Drawing::Size(124, 20);
-			this->heat_toolset->Text = L"Íàñòðîéêà íàãðåâà";
-			// 
-			// âûáîðÐåãóëÿòîðàToolStripMenuItem
-			// 
-			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Name = L"âûáîðÐåãóëÿòîðàToolStripMenuItem";
-			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Size = System::Drawing::Size(176, 22);
-			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Text = L"Âûáîð ðåãóëÿòîðà";
-			// 
-			// pid_toolset
-			// 
-			this->pid_toolset->Name = L"pid_toolset";
-			this->pid_toolset->Size = System::Drawing::Size(176, 22);
-			this->pid_toolset->Text = L"Íàñòðîéêà ÏÈÄ";
-			this->pid_toolset->Click += gcnew System::EventHandler(this, &MainForm::pid_toolset_Click);
-			// 
-			// íàñòðîéêàØÈÌToolStripMenuItem
-			// 
-			this->íàñòðîéêàØÈÌToolStripMenuItem->Name = L"íàñòðîéêàØÈÌToolStripMenuItem";
-			this->íàñòðîéêàØÈÌToolStripMenuItem->Size = System::Drawing::Size(176, 22);
-			this->íàñòðîéêàØÈÌToolStripMenuItem->Text = L"Íàñòðîéêà ØÈÌ";
-			// 
-			// network_and_accs
-			// 
-			this->network_and_accs->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
-				this->network_toolset,
-					this->ó÷åòíàÿÇàïèñüToolStripMenuItem, this->toolStripSeparator1
-			});
-			this->network_and_accs->Name = L"network_and_accs";
-			this->network_and_accs->Size = System::Drawing::Size(58, 20);
-			this->network_and_accs->Text = L"Äîñòóï";
-			// 
-			// network_toolset
-			// 
-			this->network_toolset->Name = L"network_toolset";
-			this->network_toolset->Size = System::Drawing::Size(180, 22);
-			this->network_toolset->Text = L"Ñåòåâîé äîñòóï";
-			this->network_toolset->Click += gcnew System::EventHandler(this, &MainForm::network_toolset_Click);
-			// 
-			// ó÷åòíàÿÇàïèñüToolStripMenuItem
-			// 
-			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
-				this->strip_admin_user,
-					this->strip_student_user, this->äåìîâåðñèÿToolStripMenuItem
-			});
-			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->Name = L"ó÷åòíàÿÇàïèñüToolStripMenuItem";
-			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->Text = L"Ó÷åòíàÿ çàïèñü";
-			// 
-			// strip_admin_user
-			// 
-			this->strip_admin_user->Enabled = false;
-			this->strip_admin_user->Name = L"strip_admin_user";
-			this->strip_admin_user->Size = System::Drawing::Size(147, 22);
-			this->strip_admin_user->Text = L"Admin";
-			this->strip_admin_user->Click += gcnew System::EventHandler(this, &MainForm::strip_admin_user_Click);
-			// 
-			// strip_student_user
-			// 
-			this->strip_student_user->Name = L"strip_student_user";
-			this->strip_student_user->Size = System::Drawing::Size(147, 22);
-			this->strip_student_user->Text = L"Student";
-			this->strip_student_user->Click += gcnew System::EventHandler(this, &MainForm::studentToolStripMenuItem_Click);
-			// 
-			// äåìîâåðñèÿToolStripMenuItem
-			// 
-			this->äåìîâåðñèÿToolStripMenuItem->Name = L"äåìîâåðñèÿToolStripMenuItem";
-			this->äåìîâåðñèÿToolStripMenuItem->Size = System::Drawing::Size(147, 22);
-			this->äåìîâåðñèÿToolStripMenuItem->Text = L"Äåìî-âåðñèÿ";
-			// 
-			// íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem
-			// 
-			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->êëàïàíÁàáî÷êàToolStripMenuItem });
-			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->Name = L"íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem";
-			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->Size = System::Drawing::Size(156, 20);
-			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->Text = L"Íàñòðîéêè îòîáðàæåíèÿ";
-			// 
-			// êëàïàíÁàáî÷êàToolStripMenuItem
-			// 
-			this->êëàïàíÁàáî÷êàToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->menu_strip_butterfly_percent,
-					this->menu_strip_butterfly_mV
-			});
-			this->êëàïàíÁàáî÷êàToolStripMenuItem->Name = L"êëàïàíÁàáî÷êàToolStripMenuItem";
-			this->êëàïàíÁàáî÷êàToolStripMenuItem->Size = System::Drawing::Size(163, 22);
-			this->êëàïàíÁàáî÷êàToolStripMenuItem->Text = L"Êëàïàí áàáî÷êà";
-			// 
-			// menu_strip_butterfly_percent
-			// 
-			this->menu_strip_butterfly_percent->Enabled = false;
-			this->menu_strip_butterfly_percent->Name = L"menu_strip_butterfly_percent";
-			this->menu_strip_butterfly_percent->Size = System::Drawing::Size(210, 22);
-			this->menu_strip_butterfly_percent->Text = L"Ïðîöåíòû, 0-100%";
-			this->menu_strip_butterfly_percent->Click += gcnew System::EventHandler(this, &MainForm::menu_strip_butterfly_percent_Click);
-			// 
-			// menu_strip_butterfly_mV
-			// 
-			this->menu_strip_butterfly_mV->Name = L"menu_strip_butterfly_mV";
-			this->menu_strip_butterfly_mV->Size = System::Drawing::Size(210, 22);
-			this->menu_strip_butterfly_mV->Text = L"Íàïðÿæåíèå, 0-10000 ìÂ";
-			this->menu_strip_butterfly_mV->Click += gcnew System::EventHandler(this, &MainForm::menu_strip_butterfly_mV_Click);
 			// 
 			// left_panel
 			// 
@@ -2974,7 +2862,6 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->groupBox2->Controls->Add(this->f_button_stop_pump);
 			this->groupBox2->Controls->Add(this->f_button_start_pump);
 			this->groupBox2->Controls->Add(this->f_label_trubo_percent);
-			this->groupBox2->Controls->Add(this->label10);
 			this->groupBox2->Controls->Add(this->progressBar_Turbopump);
 			this->groupBox2->Controls->Add(this->f_label_turbopump_status);
 			this->groupBox2->Controls->Add(this->f_label_backpump_status);
@@ -3059,27 +2946,15 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->f_label_trubo_percent->Text = L"100";
 			this->f_label_trubo_percent->Click += gcnew System::EventHandler(this, &MainForm::f_label_trubo_percent_Click);
 			// 
-			// label10
-			// 
-			this->label10->AutoSize = true;
-			this->label10->Font = (gcnew System::Drawing::Font(L"Calibri", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(204)));
-			this->label10->ForeColor = System::Drawing::Color::RoyalBlue;
-			this->label10->Location = System::Drawing::Point(205, 73);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(20, 19);
-			this->label10->TabIndex = 7;
-			this->label10->Text = L"%";
-			this->label10->Click += gcnew System::EventHandler(this, &MainForm::label10_Click);
-			// 
 			// progressBar_Turbopump
 			// 
 			this->progressBar_Turbopump->Location = System::Drawing::Point(58, 70);
+			this->progressBar_Turbopump->Maximum = 3100;
 			this->progressBar_Turbopump->Name = L"progressBar_Turbopump";
 			this->progressBar_Turbopump->Size = System::Drawing::Size(113, 23);
 			this->progressBar_Turbopump->Style = System::Windows::Forms::ProgressBarStyle::Continuous;
 			this->progressBar_Turbopump->TabIndex = 5;
-			this->progressBar_Turbopump->Value = 100;
+			this->progressBar_Turbopump->Value = 15;
 			// 
 			// f_label_turbopump_status
 			// 
@@ -3448,10 +3323,152 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->UVN_picturebox_close->TabIndex = 12;
 			this->UVN_picturebox_close->TabStop = false;
 			// 
-			// toolStripSeparator1
+			// óïðàâëåíèåÏðîöåññîìToolStripMenuItem
 			// 
-			this->toolStripSeparator1->Name = L"toolStripSeparator1";
-			this->toolStripSeparator1->Size = System::Drawing::Size(177, 6);
+			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem,
+					this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem
+			});
+			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->Name = L"óïðàâëåíèåÏðîöåññîìToolStripMenuItem";
+			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->Size = System::Drawing::Size(150, 20);
+			this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem->Text = L"Óïðàâëåíèå ïðîöåññîì";
+			// 
+			// àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem
+			// 
+			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Enabled = false;
+			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Name = L"àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem";
+			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(236, 22);
+			this->àâòîìàòèçèðîâàííûéÐåæèìToolStripMenuItem->Text = L"Àâòîìàòèçèðîâàííûé ðåæèì";
+			// 
+			// àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem
+			// 
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Name = L"àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem";
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(236, 22);
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Text = L"Àâòîìàòè÷åñêèé ðåæèì";
+			// 
+			// heat_toolset
+			// 
+			this->heat_toolset->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->âûáîðÐåãóëÿòîðàToolStripMenuItem,
+					this->pid_toolset, this->íàñòðîéêàØÈÌToolStripMenuItem
+			});
+			this->heat_toolset->Name = L"heat_toolset";
+			this->heat_toolset->Size = System::Drawing::Size(124, 20);
+			this->heat_toolset->Text = L"Íàñòðîéêà íàãðåâà";
+			// 
+			// âûáîðÐåãóëÿòîðàToolStripMenuItem
+			// 
+			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Name = L"âûáîðÐåãóëÿòîðàToolStripMenuItem";
+			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Size = System::Drawing::Size(176, 22);
+			this->âûáîðÐåãóëÿòîðàToolStripMenuItem->Text = L"Âûáîð ðåãóëÿòîðà";
+			// 
+			// pid_toolset
+			// 
+			this->pid_toolset->Name = L"pid_toolset";
+			this->pid_toolset->Size = System::Drawing::Size(176, 22);
+			this->pid_toolset->Text = L"Íàñòðîéêà ÏÈÄ";
+			this->pid_toolset->Click += gcnew System::EventHandler(this, &MainForm::pid_toolset_Click);
+			// 
+			// íàñòðîéêàØÈÌToolStripMenuItem
+			// 
+			this->íàñòðîéêàØÈÌToolStripMenuItem->Name = L"íàñòðîéêàØÈÌToolStripMenuItem";
+			this->íàñòðîéêàØÈÌToolStripMenuItem->Size = System::Drawing::Size(176, 22);
+			this->íàñòðîéêàØÈÌToolStripMenuItem->Text = L"Íàñòðîéêà ØÈÌ";
+			// 
+			// network_and_accs
+			// 
+			this->network_and_accs->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->network_toolset,
+					this->ó÷åòíàÿÇàïèñüToolStripMenuItem
+			});
+			this->network_and_accs->Name = L"network_and_accs";
+			this->network_and_accs->Size = System::Drawing::Size(58, 20);
+			this->network_and_accs->Text = L"Äîñòóï";
+			// 
+			// network_toolset
+			// 
+			this->network_toolset->Name = L"network_toolset";
+			this->network_toolset->Size = System::Drawing::Size(159, 22);
+			this->network_toolset->Text = L"Ñåòåâîé äîñòóï";
+			this->network_toolset->Click += gcnew System::EventHandler(this, &MainForm::network_toolset_Click);
+			// 
+			// ó÷åòíàÿÇàïèñüToolStripMenuItem
+			// 
+			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->strip_admin_user,
+					this->strip_student_user, this->äåìîâåðñèÿToolStripMenuItem
+			});
+			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->Name = L"ó÷åòíàÿÇàïèñüToolStripMenuItem";
+			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->Size = System::Drawing::Size(159, 22);
+			this->ó÷åòíàÿÇàïèñüToolStripMenuItem->Text = L"Ó÷åòíàÿ çàïèñü";
+			// 
+			// strip_admin_user
+			// 
+			this->strip_admin_user->Enabled = false;
+			this->strip_admin_user->Name = L"strip_admin_user";
+			this->strip_admin_user->Size = System::Drawing::Size(147, 22);
+			this->strip_admin_user->Text = L"Admin";
+			this->strip_admin_user->Click += gcnew System::EventHandler(this, &MainForm::strip_admin_user_Click);
+			// 
+			// strip_student_user
+			// 
+			this->strip_student_user->Name = L"strip_student_user";
+			this->strip_student_user->Size = System::Drawing::Size(147, 22);
+			this->strip_student_user->Text = L"Student";
+			this->strip_student_user->Click += gcnew System::EventHandler(this, &MainForm::studentToolStripMenuItem_Click);
+			// 
+			// äåìîâåðñèÿToolStripMenuItem
+			// 
+			this->äåìîâåðñèÿToolStripMenuItem->Name = L"äåìîâåðñèÿToolStripMenuItem";
+			this->äåìîâåðñèÿToolStripMenuItem->Size = System::Drawing::Size(147, 22);
+			this->äåìîâåðñèÿToolStripMenuItem->Text = L"Äåìî-âåðñèÿ";
+			// 
+			// íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem
+			// 
+			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->êëàïàíÁàáî÷êàToolStripMenuItem });
+			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->Name = L"íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem";
+			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->Size = System::Drawing::Size(156, 20);
+			this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem->Text = L"Íàñòðîéêè îòîáðàæåíèÿ";
+			// 
+			// êëàïàíÁàáî÷êàToolStripMenuItem
+			// 
+			this->êëàïàíÁàáî÷êàToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->menu_strip_butterfly_percent,
+					this->menu_strip_butterfly_mV
+			});
+			this->êëàïàíÁàáî÷êàToolStripMenuItem->Name = L"êëàïàíÁàáî÷êàToolStripMenuItem";
+			this->êëàïàíÁàáî÷êàToolStripMenuItem->Size = System::Drawing::Size(163, 22);
+			this->êëàïàíÁàáî÷êàToolStripMenuItem->Text = L"Êëàïàí áàáî÷êà";
+			// 
+			// menu_strip_butterfly_percent
+			// 
+			this->menu_strip_butterfly_percent->Enabled = false;
+			this->menu_strip_butterfly_percent->Name = L"menu_strip_butterfly_percent";
+			this->menu_strip_butterfly_percent->Size = System::Drawing::Size(210, 22);
+			this->menu_strip_butterfly_percent->Text = L"Ïðîöåíòû, 0-100%";
+			this->menu_strip_butterfly_percent->Click += gcnew System::EventHandler(this, &MainForm::menu_strip_butterfly_percent_Click);
+			// 
+			// menu_strip_butterfly_mV
+			// 
+			this->menu_strip_butterfly_mV->Name = L"menu_strip_butterfly_mV";
+			this->menu_strip_butterfly_mV->Size = System::Drawing::Size(210, 22);
+			this->menu_strip_butterfly_mV->Text = L"Íàïðÿæåíèå, 0-10000 ìÂ";
+			this->menu_strip_butterfly_mV->Click += gcnew System::EventHandler(this, &MainForm::menu_strip_butterfly_mV_Click);
+			// 
+			// menuStrip1
+			// 
+			this->menuStrip1->BackColor = System::Drawing::Color::White;
+			this->menuStrip1->GripStyle = System::Windows::Forms::ToolStripGripStyle::Visible;
+			this->menuStrip1->ImageScalingSize = System::Drawing::Size(32, 32);
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
+				this->óïðàâëåíèåÏðîöåññîìToolStripMenuItem,
+					this->heat_toolset, this->network_and_accs, this->íàñòðîéêèÎòîáðàæåíèÿToolStripMenuItem
+			});
+			this->menuStrip1->Location = System::Drawing::Point(0, 0);
+			this->menuStrip1->Name = L"menuStrip1";
+			this->menuStrip1->Size = System::Drawing::Size(1004, 24);
+			this->menuStrip1->TabIndex = 6;
+			this->menuStrip1->Text = L"menuStrip1";
 			// 
 			// MainForm
 			// 
@@ -3474,8 +3491,6 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_FormClosing);
 			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &MainForm::MainForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
-			this->menuStrip1->ResumeLayout(false);
-			this->menuStrip1->PerformLayout();
 			this->left_panel->ResumeLayout(false);
 			this->groupBox6->ResumeLayout(false);
 			this->tabControl1->ResumeLayout(false);
@@ -3519,6 +3534,8 @@ private: System::Windows::Forms::Label^ i_label_time_start_pump;
 			this->panel1->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_open))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->UVN_picturebox_close))->EndInit();
+			this->menuStrip1->ResumeLayout(false);
+			this->menuStrip1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

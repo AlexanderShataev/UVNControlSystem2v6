@@ -258,7 +258,7 @@ void date_to_array() {
 
 	data[0] = 20;
 	data[1] = command;								// cmd_word
-	data[2] = work_time;
+	//data[2] = work_time;				
 	data[3] = set_PSV1;								//au_PSV1 в дискретах
 	data[4] = set_PSV2;								//au_PSV2 в дискретах
 	data[5] = set_BV;								//позиция BV (клапан-бабочка)
@@ -267,7 +267,7 @@ void date_to_array() {
 	data[8] = DegreesToDiscrete(set_temp);			//Заданная температура в дискретах, требуется функция пересчета
 	data[9] = 0;
 	data[10] = 0;									//p_заданное давление BV
-	data[11] = work_time;							//PID
+	//data[11] = work_time;							//PID
 
 }
 

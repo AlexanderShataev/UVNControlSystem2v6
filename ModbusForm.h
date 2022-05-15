@@ -30,9 +30,9 @@ namespace UVNControlSystem2v6 {
 		bool f_ReadHoldingRegisters=false;
 		bool form_open;
 
-		String^ f_IP_modbus;
+		String^ f_IP_modbus= "172.16.11.242";
 
-		int f_Port_modbus;
+		int f_Port_modbus=502;
 
 	private: System::Windows::Forms::Button^ f_button_setIPPort;
 	public:
